@@ -61,7 +61,7 @@ namespace TurnBased.Battle.Managers {
             return _characters;
         }
 
-        public List<Character> GetPlayerCharacters() {
+        public List<Character> GetAllyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
                 if (c.Data.team == Data.CharacterTeam.Player) {
