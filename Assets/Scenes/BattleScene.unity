@@ -681,6 +681,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshParent: {fileID: 569938301}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
+<<<<<<< Updated upstream
 --- !u!1 &321690138
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,6 +787,9 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+=======
+  e_State: 0
+>>>>>>> Stashed changes
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -873,8 +877,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
+<<<<<<< Updated upstream
   m_LocalRotation: {x: 0.039263226, y: 0.7060159, z: -0.039263222, w: 0.7060159}
   m_LocalPosition: {x: 5.648, y: 1.462, z: 3.243}
+=======
+  m_LocalRotation: {x: -0.016237935, y: -0.79728335, z: 0.036949366, w: 0.6022544}
+  m_LocalPosition: {x: 10.559, y: 1.783, z: -0.801}
+>>>>>>> Stashed changes
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1144,6 +1153,7 @@ Transform:
   - {fileID: 1416878755}
   - {fileID: 690216470}
   - {fileID: 368595185}
+  - {fileID: 501844473}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &460884537
@@ -1553,12 +1563,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 501844472}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.1730123, y: -4.6978416, z: -3.7178705}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.3569875, y: -5.6978416, z: -0.7678704}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 460884536}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &511891506
 GameObject:
@@ -3792,6 +3802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshParent: {fileID: 2144431987}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
+  e_State: 0
 --- !u!1 &1659023350
 GameObject:
   m_ObjectHideFlags: 0
@@ -4150,6 +4161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshParent: {fileID: 199472528}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
+  e_State: 0
 --- !u!1 &1833642819
 GameObject:
   m_ObjectHideFlags: 0
@@ -4197,6 +4209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshParent: {fileID: 1860971316}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
+  e_State: 0
 --- !u!1 &1844921017
 GameObject:
   m_ObjectHideFlags: 0
@@ -4244,6 +4257,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshParent: {fileID: 699633457}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
+  e_State: 0
 --- !u!1 &1857732767
 GameObject:
   m_ObjectHideFlags: 0
@@ -4836,7 +4850,6 @@ MeshFilter:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 501844473}
   - {fileID: 460884536}
   - {fileID: 26079256}
   - {fileID: 1136303482}
