@@ -4,7 +4,7 @@ using TurnBased.Battle.Managers;
 using TurnBased.Data;
 
 namespace TurnBased.Entities.Battle {
-    public class TestPlayerCharacter : Character {
+    public class TestPlayerCharacterTargetMulti : Character {
         public override void CastSkill() {
             base.CastSkill();
             EndTurn();
@@ -25,12 +25,12 @@ namespace TurnBased.Entities.Battle {
 
         public override void PrepareAttack() {
             base.PrepareAttack();
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Triple, CharacterTeam.Enemy);
         }
 
         public override void PrepareSkill() {
             base.PrepareSkill();
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.All, CharacterTeam.Enemy);
         }
 
         public override void PrepareUlt() {

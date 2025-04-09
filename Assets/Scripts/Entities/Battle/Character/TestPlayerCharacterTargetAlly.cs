@@ -1,10 +1,9 @@
 using UnityEngine;
 using TurnBased.Battle;
 using TurnBased.Battle.Managers;
-using TurnBased.Data;
 
 namespace TurnBased.Entities.Battle {
-    public class TestPlayerCharacter : Character {
+    public class TestPlayerCharacterTargetAlly : Character {
         public override void CastSkill() {
             base.CastSkill();
             EndTurn();
@@ -25,12 +24,12 @@ namespace TurnBased.Entities.Battle {
 
         public override void PrepareAttack() {
             base.PrepareAttack();
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Self);
         }
 
         public override void PrepareSkill() {
             base.PrepareSkill();
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Triple);
         }
 
         public override void PrepareUlt() {

@@ -41,5 +41,21 @@ namespace TurnBased.Battle.Managers {
                 }
             }
         }
+
+        /// <summary>
+        /// 스킬 공격
+        /// </summary>
+        /// <param name="inputValue"></param>
+        private void OnSkill(InputValue inputValue) {
+            var currentCharacter = TurnManager.instance.CurrentCharacter;
+            if (currentCharacter.WantCmd && currentCharacter.Data.team == Data.CharacterTeam.Player) {
+                if (currentCharacter.CurrentState == Character.CharacterState.PrepareSkill) {
+                    currentCharacter.CastSkill();
+                }
+                else {
+                    currentCharacter.PrepareSkill();
+                }
+            }
+        }
     }
 }

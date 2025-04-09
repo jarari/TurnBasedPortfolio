@@ -104,6 +104,31 @@ namespace TurnBased.Battle.Managers {
             }
         }
 
+        public float GetRemainingTime(Character c) {
+            foreach (var turnData in _turnQueue) {
+                if (turnData.Type == TurnType.Normal && turnData.Character == c) {
+                    return turnData.RemainingTimeToAct;
+                }
+            }
+            return 10000f;
+        }
+
+        public void ModRemainingTime(Character c, float f) {
+            foreach (var turnData in _turnQueue) {
+                if (turnData.Type == TurnType.Normal && turnData.Character == c) {
+                    turnData.ModRemainingTime(f);
+                    break;
+                }
+            }
+        }
+
+        public void ProcessAVSpeedChange() {
+            foreach (var turnData in _turnQueue) {
+                turnData.AdvanceTurn(0);
+            }
+            _turnQueue = _turnQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
+        }
+
         private IEnumerator StartNextTurnDelayed() {
             yield return null;
             StartNextTurn();
