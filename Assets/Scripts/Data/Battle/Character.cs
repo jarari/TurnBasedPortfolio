@@ -5,6 +5,8 @@ using TurnBased.Battle.Managers;
 
 namespace TurnBased.Battle {
     public abstract class Character : MonoBehaviour {
+        public GameObject meshParent;
+
         [Header("Character Data")]
         [SerializeField]
         protected CharacterData _baseData;
@@ -23,18 +25,24 @@ namespace TurnBased.Battle {
         public Action<Character> OnTurnStart;
         public Action<Character> OnTurnEnd;
         public Action<Character, string, string> OnAnimationEvent;
+        public Action<Character, bool> OnVisibilityChange;
 
         public CharacterData Data { get; private set; }
 
         public CharacterState CurrentState { get; protected set; }
         public bool WantCmd { get; set; }
         public CharacterState WantState { get; protected set; } = CharacterState.PrepareAttack;
+        public bool IsVisible { get; set; }
 
 
         protected virtual void Awake() {
             Data = Instantiate(_baseData);
             Data.stats.CurrentToughness = Data.stats.MaxToughness;
             Data.stats.CurrentHP = Data.stats.MaxHP;
+        }
+
+        protected virtual void Start() {
+            SetVisible(true);
         }
 
         public virtual void TakeTurn() {
@@ -91,6 +99,12 @@ namespace TurnBased.Battle {
         public virtual void CastUlt() {
             CurrentState = CharacterState.CastUlt;
             WantCmd = false;
+        }
+
+        public virtual void SetVisible(bool visibility) {
+            meshParent?.SetActive(visibility);
+            IsVisible = visibility;
+            OnVisibilityChange?.Invoke(this, visibility);
         }
     }
 }
