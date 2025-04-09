@@ -22,6 +22,11 @@ namespace TurnBased.Battle {
             CastUlt
         }
 
+        public enum MeshLayer {
+            Default,
+            SkillTimeine
+        }
+
         public Action<Character> OnTurnStart;
         public Action<Character> OnTurnEnd;
         public Action<Character, string, string> OnAnimationEvent;
@@ -73,7 +78,7 @@ namespace TurnBased.Battle {
         /// <summary>
         /// 애니메이션 이벤트 처리. 이벤트는 이벤트명.추가정보로 구분 (예: SkillCast.1)
         /// </summary>
-        public virtual void ProcessAnimationEvent(string animEvent) {
+        public void ProcessAnimationEvent(string animEvent) {
             string[] args = animEvent.Split(".");
             string argument = args[0];
             string payload = "";
@@ -138,6 +143,16 @@ namespace TurnBased.Battle {
             meshParent?.SetActive(visibility);
             IsVisible = visibility;
             OnVisibilityChange?.Invoke(this, visibility);
+        }
+
+        public virtual void SetMeshLayer(MeshLayer layer) {
+            int layerID = 0;
+            if (layer == MeshLayer.SkillTimeine) {
+                layerID = 6;
+            }
+            foreach (var child in meshParent.GetComponentsInChildren<Transform>(true)) {
+                child.gameObject.layer = layerID;
+            }
         }
     }
 }
