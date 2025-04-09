@@ -12,18 +12,27 @@ namespace TurnBased.Battle.Managers {
             instance = this;
         }
 
+        private bool CanCharacterTakeInput() {
+            var currentCharacter = TurnManager.instance.CurrentCharacter;
+            return currentCharacter.WantCmd && currentCharacter.Data.team == Data.CharacterTeam.Player;
+        }
+
         /// <summary>
         /// Å¸°Ù ÀüÈ¯ - ÁÂ
         /// </summary>
         private void OnLeft(InputValue inputValue) {
-            TargetManager.instance.SelectLeftTarget();
+            if (CanCharacterTakeInput()) {
+                TargetManager.instance.SelectLeftTarget();
+            }
         }
 
         /// <summary>
         /// Å¸°Ù ÀüÈ¯ - ¿ì
         /// </summary>
         private void OnRight(InputValue inputValue) {
-            TargetManager.instance.SelectRightTarget();
+            if (CanCharacterTakeInput()) {
+                TargetManager.instance.SelectRightTarget();
+            }
         }
 
         /// <summary>
@@ -32,7 +41,7 @@ namespace TurnBased.Battle.Managers {
         /// <param name="inputValue"></param>
         private void OnAttack(InputValue inputValue) {
             var currentCharacter = TurnManager.instance.CurrentCharacter;
-            if (currentCharacter.WantCmd && currentCharacter.Data.team == Data.CharacterTeam.Player) {
+            if (CanCharacterTakeInput()) {
                 if (currentCharacter.CurrentState == Character.CharacterState.PrepareAttack) {
                     currentCharacter.DoAttack();
                 }
@@ -48,7 +57,7 @@ namespace TurnBased.Battle.Managers {
         /// <param name="inputValue"></param>
         private void OnSkill(InputValue inputValue) {
             var currentCharacter = TurnManager.instance.CurrentCharacter;
-            if (currentCharacter.WantCmd && currentCharacter.Data.team == Data.CharacterTeam.Player) {
+            if (CanCharacterTakeInput()) {
                 if (currentCharacter.CurrentState == Character.CharacterState.PrepareSkill) {
                     currentCharacter.CastSkill();
                 }
