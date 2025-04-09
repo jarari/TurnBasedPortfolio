@@ -13,6 +13,7 @@ namespace TurnBased.Entities.Battle {
                 
         protected override void Start()
         {
+            base.Start();
             // 시작시 에너미의 상태를 Nomal로 한다
             e_State = EnemyState.Nomal;            
             
