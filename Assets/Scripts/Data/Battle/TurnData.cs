@@ -47,6 +47,16 @@ namespace TurnBased.Battle {
             CurrentAV = Mathf.Min(CurrentAV + deltaTime * Character.Data.stats.Speed, AVCap);
             RemainingTimeToAct = (AVCap - CurrentAV) / Character.Data.stats.Speed;
         }
+
+        /// <summary>
+        /// 행동 게이지 변경
+        /// </summary>
+        /// <param name="time"></param>
+        public void ModRemainingTime(float time) {
+            RemainingTimeToAct = time;
+            CurrentAV = AVCap - RemainingTimeToAct * Character.Data.stats.Speed;
+        }
+
         /// <summary>
         /// 행동력 초기화
         /// </summary>
