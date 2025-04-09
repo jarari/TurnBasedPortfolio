@@ -73,7 +73,7 @@ namespace TurnBased.Battle {
         /// <summary>
         /// 애니메이션 이벤트 처리. 이벤트는 이벤트명.추가정보로 구분 (예: SkillCast.1)
         /// </summary>
-        public virtual void ProcessAnimationEvent(string animEvent) {
+        public void ProcessAnimationEvent(string animEvent) {
             string[] args = animEvent.Split(".");
             string argument = args[0];
             string payload = "";
