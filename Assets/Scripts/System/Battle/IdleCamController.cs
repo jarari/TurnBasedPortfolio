@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TurnBased.Battle.Managers;
+using TurnBased.Data;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ namespace TurnBased.Battle {
     public class IdleCamController : MonoBehaviour {
         public GameObject cmIdleCam;
         public GameObject cmTurnChangeCam;
+        public CinemachineCamera cmSelfCam;
+        public CinemachineCamera cmAllCam;
         public Transform dollySwing;
         public List<IdleCamController> hideOnTurn;
 
@@ -27,21 +30,34 @@ namespace TurnBased.Battle {
 
         private bool _characterTurn;
 
-        private IEnumerator AnimateIdleCam() {
-            // 카메라 전환시까지 캐릭터를 숨김
+        private void HideAllyCharacters() {
             foreach (var c in CharacterManager.instance.GetAllyCharacters()) {
                 c.SetVisible(false);
             }
-            // 카메라 전환 기다리기
-            yield return new WaitWhile(() => !CinemachineCore.IsLive(_turnChangeCam));
-            // 가려질 캐릭터 가려주기
+        }
+
+        private void ShowAllyCharacters() {
             foreach (var c in CharacterManager.instance.GetAllyCharacters()) {
                 c.SetVisible(true);
             }
+        }
+
+        private void CheckVisibleCharacters() {
+            ShowAllyCharacters();
             foreach (var con in hideOnTurn) {
                 if (con.Initialized) {
                     con.SetCharacterVisible(false);
                 }
+            }
+        }
+
+        private IEnumerator AnimateIdleCam() {
+            if (TargetManager.instance.TargetTeam == CharacterTeam.Enemy) {
+                // 카메라 전환시까지 캐릭터를 숨김
+                HideAllyCharacters();
+                // 카메라 전환 기다리기
+                yield return new WaitWhile(() => !CinemachineCore.IsLive(_turnChangeCam));
+                CheckVisibleCharacters();
             }
             // 턴 전환 카메라 -> 유휴상태 카메라 전환
             _turnChangeCam.Priority = 0;
@@ -66,13 +82,38 @@ namespace TurnBased.Battle {
             // 턴 종료 시 카메라 및 코루틴 정리
             _idleCam.Priority = 0;
             _turnChangeCam.Priority = 0;
+            cmSelfCam.Priority = 0;
+            cmAllCam.Priority = 0;
             _characterTurn = false;
             _idleAnimationCoroutine = null;
         }
 
         private void OnCamTargetUpdate(float pos) {
             // 타겟 매니저와 카메라 돌리 위치 동기화
-            _idleSplineDolly.CameraPosition = pos;
+            if (TargetManager.instance.TargetTeam == CharacterTeam.Enemy) {
+                _idleSplineDolly.CameraPosition = pos;
+            }
+        }
+
+        private void OnTargetSettingChanged() {
+            if (TurnManager.instance.CurrentCharacter == _character) {
+                var tm = TargetManager.instance;
+                if (tm.Mode == TargetManager.TargetMode.Self) {
+                    cmSelfCam.Priority = 3;
+                    cmAllCam.Priority = 0;
+                    ShowAllyCharacters();
+                }
+                else if (tm.TargetTeam == CharacterTeam.Player) {
+                    cmSelfCam.Priority = 0;
+                    cmAllCam.Priority = 3;
+                    ShowAllyCharacters();
+                }
+                else {
+                    cmSelfCam.Priority = 0;
+                    cmAllCam.Priority = 0;
+                    CheckVisibleCharacters();
+                }
+            }
         }
 
         public void InitializeController() {
@@ -83,6 +124,7 @@ namespace TurnBased.Battle {
             _idleCam = cmIdleCam.GetComponent<CinemachineCamera>();
             _turnChangeCam = cmTurnChangeCam.GetComponent<CinemachineCamera>();
             TargetManager.instance.OnCamTargetUpdate += OnCamTargetUpdate;
+            TargetManager.instance.OnTargetSettingChanged += OnTargetSettingChanged;
             Initialized = true;
         }
 
