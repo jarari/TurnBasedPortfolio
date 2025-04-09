@@ -11,7 +11,7 @@ namespace TurnBased.Entities.Battle {
         public EnemyState e_State;
         // 현제 게임 오브젝트를 가져온다
                 
-        private void Start()
+        protected override void Start()
         {
             // 시작시 에너미의 상태를 Nomal로 한다
             e_State = EnemyState.Nomal;            
