@@ -28,8 +28,18 @@ namespace TurnBased.Entities.Battle {
             // 부모 클래스에서 TakeTurn 실행 후 실행
             base.TakeTurn();
 
-            // 공격하는 함수
-            DoAttack();
+            // 강인도가 0이하가 되었을때
+            if (Data.stats.CurrentToughness <= 0)
+            {
+                // 턴을 끝낸다
+                EndTurn();
+            }
+            // 강인도가 0이하가 아닐때
+            else
+            { 
+                // 공격하는 함수
+                DoAttack();
+            }
         }
         // 스킬을 사용할때
         public override void CastSkill() {
@@ -84,13 +94,10 @@ namespace TurnBased.Entities.Battle {
             base.PrepareUlt();
         }
 
-        // 그로기 상태 함수
-        public void Groggy()
-        {
-            // 강인도가 0이하가 되었을때
-            if (Data.stats.CurrentToughness <= 0)
-            { 
-            }
+        // 데미지를 받았을때
+        public void Damaged()
+        { 
+            
         }
               
 
