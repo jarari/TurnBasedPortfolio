@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -45,7 +46,7 @@ namespace TurnBased.Battle.Managers {
             StartNextTurn();
         }
 
-        private void StartNextTurn() {
+        public void StartNextTurn() {
             var first = _turnQueue.First();
             _turnQueue.Remove(first);
             CurrentCharacter = first.Character;
@@ -78,6 +79,11 @@ namespace TurnBased.Battle.Managers {
             }
         }
 
+        private IEnumerator StartNextTurnDelayed() {
+            yield return null;
+            StartNextTurn();
+        }
+
         public void EndTurn() {
             if (_roundRemaining <= 0) {
                 _roundRemaining += RoundRestTime;
@@ -86,7 +92,7 @@ namespace TurnBased.Battle.Managers {
                     OnRoundChanged?.Invoke();
                 }
             }
-            StartNextTurn();
+            StartCoroutine(StartNextTurnDelayed());
         }
 
         public List<TurnData> GetPredictedTurnQueue() {

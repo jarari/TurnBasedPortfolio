@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TurnBased.Battle.Managers;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -8,6 +9,9 @@ namespace TurnBased.Battle {
         public GameObject cmIdleCam;
         public GameObject cmTurnChangeCam;
         public Transform dollySwing;
+        public List<IdleCamController> hideOnTurn;
+
+        public bool Initialized { get; private set; }
 
         private Character _character;
         private CinemachineSplineDolly _idleSplineDolly;
@@ -18,18 +22,32 @@ namespace TurnBased.Battle {
         private float _swingSpeed = 0.75f;
         private float _swingAmount = 0.15f;
 
+        private bool _characterTurn;
+
         private IEnumerator AnimateIdleCam() {
-            yield return null;
+            yield return new WaitWhile(() => !CinemachineCore.IsLive(_turnChangeCam));
             _turnChangeCam.Priority = 0;
-            while (true) {
+            while (_characterTurn) {
                 dollySwing.localPosition = new Vector3(0, 0, Mathf.Cos(Time.time * _swingSpeed) * _swingAmount);
                 yield return null;
+            }
+            yield return new WaitWhile(() => CinemachineCore.IsLive(_idleCam));
+            foreach (var con in hideOnTurn) {
+                if (con.Initialized) {
+                    con.SetCharacterVisible(true);
+                }
             }
         }
 
         private void OnCharacterTurnStart(Character c) {
             _idleCam.Priority = 1;
             _turnChangeCam.Priority = 2;
+            _characterTurn = true;
+            foreach (var con in hideOnTurn) {
+                if (con.Initialized) {
+                    con.SetCharacterVisible(false);
+                }
+            }
             if (_idleAnimationCoroutine == null) {
                 _idleAnimationCoroutine = StartCoroutine(AnimateIdleCam());
             }
@@ -38,7 +56,7 @@ namespace TurnBased.Battle {
         private void OnCharacterTurnEnd(Character c) {
             _idleCam.Priority = 0;
             _turnChangeCam.Priority = 0;
-            StopCoroutine(_idleAnimationCoroutine);
+            _characterTurn = false;
             _idleAnimationCoroutine = null;
         }
 
@@ -54,6 +72,11 @@ namespace TurnBased.Battle {
             _idleCam = cmIdleCam.GetComponent<CinemachineCamera>();
             _turnChangeCam = cmTurnChangeCam.GetComponent<CinemachineCamera>();
             TargetManager.instance.OnCamTargetUpdate += OnCamTargetUpdate;
+            Initialized = true;
+        }
+
+        public void SetCharacterVisible(bool visibility) {
+            _character?.SetVisible(visibility);
         }
     }
 }

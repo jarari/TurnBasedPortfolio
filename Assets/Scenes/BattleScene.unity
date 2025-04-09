@@ -170,7 +170,8 @@ MonoBehaviour:
   cmIdleCam: {fileID: 1066866643}
   cmTurnChangeCam: {fileID: 1857732767}
   dollySwing: {fileID: 1932597997}
-  tempCharacter: {fileID: 826882229}
+  hideOnTurn:
+  - {fileID: 1136303483}
 --- !u!1 &75268291
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,6 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b8271fd59cebc2448c60969cc04dec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshParent: {fileID: 927851530}
   _baseData: {fileID: 11400000, guid: a9e6b7aa63d165f4f8fe2cd9c33796b5, type: 2}
 --- !u!1 &147480282
 GameObject:
@@ -564,6 +566,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda8a69c00ebbf446bbaa533e1155bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshParent: {fileID: 569938301}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
 --- !u!1 &330585543
 GameObject:
@@ -626,7 +629,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -652,8 +655,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.016237935, y: -0.79728335, z: 0.036949366, w: 0.6022544}
-  m_LocalPosition: {x: 10.559, y: 1.783, z: -0.801}
+  m_LocalRotation: {x: 0.01889392, y: 0.9248345, z: -0.046844393, w: -0.377001}
+  m_LocalPosition: {x: 10.363999, y: 2.4359999, z: 6.899}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -939,7 +942,9 @@ MonoBehaviour:
   cmIdleCam: {fileID: 1158846613}
   cmTurnChangeCam: {fileID: 1416878754}
   dollySwing: {fileID: 368595185}
-  tempCharacter: {fileID: 950614745}
+  hideOnTurn:
+  - {fileID: 26079257}
+  - {fileID: 1136303483}
 --- !u!1 &492902726
 GameObject:
   m_ObjectHideFlags: 0
@@ -1814,6 +1819,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b8271fd59cebc2448c60969cc04dec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshParent: {fileID: 1659023350}
   _baseData: {fileID: 11400000, guid: a9e6b7aa63d165f4f8fe2cd9c33796b5, type: 2}
 --- !u!1 &827808743
 GameObject:
@@ -2136,6 +2142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b8271fd59cebc2448c60969cc04dec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshParent: {fileID: 1342835891}
   _baseData: {fileID: 11400000, guid: a9e6b7aa63d165f4f8fe2cd9c33796b5, type: 2}
 --- !u!1 &962230268
 GameObject:
@@ -2468,7 +2475,7 @@ MonoBehaviour:
   cmIdleCam: {fileID: 962230268}
   cmTurnChangeCam: {fileID: 2078293849}
   dollySwing: {fileID: 824129551}
-  tempCharacter: {fileID: 138415364}
+  hideOnTurn: []
 --- !u!1 &1158846613
 GameObject:
   m_ObjectHideFlags: 0
@@ -3187,6 +3194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda8a69c00ebbf446bbaa533e1155bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshParent: {fileID: 2144431987}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
 --- !u!1 &1659023350
 GameObject:
@@ -3513,6 +3521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda8a69c00ebbf446bbaa533e1155bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshParent: {fileID: 199472528}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
 --- !u!1 &1833642819
 GameObject:
@@ -3559,6 +3568,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda8a69c00ebbf446bbaa533e1155bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshParent: {fileID: 1860971316}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
 --- !u!1 &1844921017
 GameObject:
@@ -3605,6 +3615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda8a69c00ebbf446bbaa533e1155bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshParent: {fileID: 699633457}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
 --- !u!1 &1857732767
 GameObject:
@@ -3632,7 +3643,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857732767}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.019233547, y: 0.8856029, z: -0.03682223, w: -0.46258157}
+  m_LocalRotation: {x: -0.019233549, y: 0.8856029, z: -0.036822233, w: -0.46258157}
   m_LocalPosition: {x: 2.049, y: 1.436, z: 3.656}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
