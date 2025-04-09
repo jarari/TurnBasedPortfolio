@@ -9,8 +9,6 @@ namespace TurnBased.Battle {
         public GameObject cmTurnChangeCam;
         public Transform dollySwing;
 
-        public Character tempCharacter;
-
         private Character _character;
         private CinemachineSplineDolly _idleSplineDolly;
         private CinemachineCamera _idleCam;
