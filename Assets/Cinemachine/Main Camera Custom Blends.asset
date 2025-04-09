@@ -23,7 +23,7 @@ MonoBehaviour:
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
+        m_RotationOrder: 4
   - From: '**ANY CAMERA**'
     To: CM Cam Turn Changed
     Blend:
@@ -34,4 +34,48 @@ MonoBehaviour:
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
+        m_RotationOrder: 4
+  - From: CM Cam Idle
+    To: CM Cam Self
+    Blend:
+      Style: 0
+      Time: 0.15
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 4
+  - From: CM Cam Idle
+    To: CM Cam All
+    Blend:
+      Style: 0
+      Time: 0.15
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 4
+  - From: CM Cam Self
+    To: '**ANY CAMERA**'
+    Blend:
+      Style: 0
+      Time: 0.15
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 4
+  - From: CM Cam All
+    To: '**ANY CAMERA**'
+    Blend:
+      Style: 0
+      Time: 0.15
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 4
