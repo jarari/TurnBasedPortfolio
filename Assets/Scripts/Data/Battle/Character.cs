@@ -22,6 +22,11 @@ namespace TurnBased.Battle {
             CastUlt
         }
 
+        public enum MeshLayer {
+            Default,
+            SkillTimeine
+        }
+
         public Action<Character> OnTurnStart;
         public Action<Character> OnTurnEnd;
         public Action<Character, string, string> OnAnimationEvent;
@@ -138,6 +143,16 @@ namespace TurnBased.Battle {
             meshParent?.SetActive(visibility);
             IsVisible = visibility;
             OnVisibilityChange?.Invoke(this, visibility);
+        }
+
+        public virtual void SetMeshLayer(MeshLayer layer) {
+            int layerID = 0;
+            if (layer == MeshLayer.SkillTimeine) {
+                layerID = 6;
+            }
+            foreach (var child in meshParent.GetComponentsInChildren<Transform>(true)) {
+                child.gameObject.layer = layerID;
+            }
         }
     }
 }
