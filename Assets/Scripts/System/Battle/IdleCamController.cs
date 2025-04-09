@@ -25,17 +25,22 @@ namespace TurnBased.Battle {
         private bool _characterTurn;
 
         private IEnumerator AnimateIdleCam() {
+            foreach (var c in CharacterManager.instance.GetAllyCharacters()) {
+                c.SetVisible(false);
+            }
             yield return new WaitWhile(() => !CinemachineCore.IsLive(_turnChangeCam));
+            foreach (var c in CharacterManager.instance.GetAllyCharacters()) {
+                c.SetVisible(true);
+            }
+            foreach (var con in hideOnTurn) {
+                if (con.Initialized) {
+                    con.SetCharacterVisible(false);
+                }
+            }
             _turnChangeCam.Priority = 0;
             while (_characterTurn) {
                 dollySwing.localPosition = new Vector3(0, 0, Mathf.Cos(Time.time * _swingSpeed) * _swingAmount);
                 yield return null;
-            }
-            yield return new WaitWhile(() => CinemachineCore.IsLive(_idleCam));
-            foreach (var con in hideOnTurn) {
-                if (con.Initialized) {
-                    con.SetCharacterVisible(true);
-                }
             }
         }
 
@@ -43,11 +48,6 @@ namespace TurnBased.Battle {
             _idleCam.Priority = 1;
             _turnChangeCam.Priority = 2;
             _characterTurn = true;
-            foreach (var con in hideOnTurn) {
-                if (con.Initialized) {
-                    con.SetCharacterVisible(false);
-                }
-            }
             if (_idleAnimationCoroutine == null) {
                 _idleAnimationCoroutine = StartCoroutine(AnimateIdleCam());
             }
