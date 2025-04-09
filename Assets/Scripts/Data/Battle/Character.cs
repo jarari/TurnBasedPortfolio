@@ -45,6 +45,9 @@ namespace TurnBased.Battle {
             SetVisible(true);
         }
 
+        /// <summary>
+        /// 턴 시작 시 실행
+        /// </summary>
         public virtual void TakeTurn() {
             WantCmd = true;
             if (Data.team == CharacterTeam.Player) {
@@ -58,12 +61,18 @@ namespace TurnBased.Battle {
             OnTurnStart?.Invoke(this);
         }
 
+        /// <summary>
+        /// 턴 종료 시 실행
+        /// </summary>
         public virtual void EndTurn() {
             CurrentState = CharacterState.Idle;
             TurnManager.instance.EndTurn();
             OnTurnEnd?.Invoke(this);
         }
 
+        /// <summary>
+        /// 애니메이션 이벤트 처리. 이벤트는 이벤트명.추가정보로 구분 (예: SkillCast.1)
+        /// </summary>
         public virtual void ProcessAnimationEvent(string animEvent) {
             string[] args = animEvent.Split(".");
             string argument = args[0];
@@ -74,33 +83,57 @@ namespace TurnBased.Battle {
             OnAnimationEvent?.Invoke(this, argument, payload);
         }
 
+        /// <summary>
+        /// 일반 공격 준비자세
+        /// </summary>
         public virtual void PrepareAttack() {
             CurrentState = CharacterState.PrepareAttack;
         }
+        /// <summary>
+        /// 일반 공격 발동
+        /// </summary>
         public virtual void DoAttack() {
             CurrentState = CharacterState.DoAttack;
             WantState = CharacterState.PrepareAttack;
             WantCmd = false;
         }
+        /// <summary>
+        /// 추가 공격 발동
+        /// </summary>
         public virtual void DoExtraAttack() {
             CurrentState = CharacterState.DoExtraAttack;
         }
+        /// <summary>
+        /// 스킬 공격 준비자세
+        /// </summary>
         public virtual void PrepareSkill() {
             CurrentState = CharacterState.PrepareSkill;
         }
+        /// <summary>
+        /// 스킬 공격 발동
+        /// </summary>
         public virtual void CastSkill() {
             CurrentState = CharacterState.CastSkill;
             WantState = CharacterState.PrepareSkill;
             WantCmd = false;
         }
+        /// <summary>
+        /// 궁극기 준비자세
+        /// </summary>
         public virtual void PrepareUlt() {
             CurrentState = CharacterState.PrepareUlt;
         }
+        /// <summary>
+        /// 궁극기 발동
+        /// </summary>
         public virtual void CastUlt() {
             CurrentState = CharacterState.CastUlt;
             WantCmd = false;
         }
-
+        /// <summary>
+        /// 캐릭터 모델 활성화/비활성화
+        /// </summary>
+        /// <param name="visibility"></param>
         public virtual void SetVisible(bool visibility) {
             meshParent?.SetActive(visibility);
             IsVisible = visibility;

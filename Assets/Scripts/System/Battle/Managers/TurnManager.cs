@@ -5,15 +5,25 @@ using System.Linq;
 using UnityEngine;
 
 namespace TurnBased.Battle.Managers {
+    /// <summary>
+    /// 행동력 기반 턴 관리자
+    /// </summary>
     public class TurnManager : MonoBehaviour {
         public static TurnManager instance;
         public const float Round1Time = 150f;
         public const float RoundRestTime = 100f;
-
+        /// <summary>
+        /// 라운드 시스템 사용 여부
+        /// </summary>
         public bool HasRound;
         public int CurrentRound { get; private set; } = 1;
+        /// <summary>
+        /// 현재 행동중인 캐릭터
+        /// </summary>
         public Character CurrentCharacter { get; private set; }
-
+        /// <summary>
+        /// 라운드 변경 시 이벤트
+        /// </summary>
         public Action OnRoundChanged;
 
         private float _roundRemaining;
@@ -28,14 +38,26 @@ namespace TurnBased.Battle.Managers {
             instance = this;
         }
 
+        /// <summary>
+        /// 일반 공격 캐릭터 추가 (호출 할 일 없음)
+        /// </summary>
+        /// <param name="character"></param>
         public void AddCharacter(Character character) {
             _turnQueue.Add(new TurnData(character, TurnType.Normal));
         }
 
+        /// <summary>
+        /// 궁극기 턴 추가 (궁극기 발동시 호출)
+        /// </summary>
+        /// <param name="character"></param>
         public void AddUltTurn(Character character) {
             _turnQueue.Insert(0, new TurnData(character, TurnType.Ult));
         }
 
+        /// <summary>
+        /// 추가 공격 턴 추가 (추가 공격 발동시 호출)
+        /// </summary>
+        /// <param name="character"></param>
         public void AddExtraAtackTurn(Character character) {
             _turnQueue.Insert(0, new TurnData(character, TurnType.ExtraAttack));
         }
@@ -46,6 +68,9 @@ namespace TurnBased.Battle.Managers {
             StartNextTurn();
         }
 
+        /// <summary>
+        /// 행동력 순으로 맨 앞에 있는 캐릭터 행동
+        /// </summary>
         public void StartNextTurn() {
             var first = _turnQueue.First();
             _turnQueue.Remove(first);
@@ -84,6 +109,9 @@ namespace TurnBased.Battle.Managers {
             StartNextTurn();
         }
 
+        /// <summary>
+        /// 현재 턴 종료 및 다음 턴 시작
+        /// </summary>
         public void EndTurn() {
             if (_roundRemaining <= 0) {
                 _roundRemaining += RoundRestTime;
@@ -95,6 +123,10 @@ namespace TurnBased.Battle.Managers {
             StartCoroutine(StartNextTurnDelayed());
         }
 
+        /// <summary>
+        /// 행동 후 예측 턴 리스트
+        /// </summary>
+        /// <returns></returns>
         public List<TurnData> GetPredictedTurnQueue() {
             List<TurnData> predictedQueue = new List<TurnData>();
             foreach (var data in _turnQueue) {

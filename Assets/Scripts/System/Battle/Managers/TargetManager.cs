@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace TurnBased.Battle.Managers {
+    /// <summary>
+    /// 조준된 타겟 관리
+    /// </summary>
     public class TargetManager : MonoBehaviour {
         public static TargetManager instance;
 
@@ -13,9 +16,17 @@ namespace TurnBased.Battle.Managers {
         public Action<Character> OnTargetChanged;
         public Action<float> OnCamTargetUpdate;
 
+        /// <summary>
+        /// 타게팅 된 캐릭터
+        /// </summary>
         public Character Target { get; private set; }
+        /// <summary>
+        /// 캐릭터의 칸 번호
+        /// </summary>
         public int TargetIndex { get; private set; }
-
+        /// <summary>
+        /// 선형보간된 칸 포지션
+        /// </summary>
         public float InterpolatedTargetPos { get; private set; }
 
         private const float _targetTrackTime = 0.1f;

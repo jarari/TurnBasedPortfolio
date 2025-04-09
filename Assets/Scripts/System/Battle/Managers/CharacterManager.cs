@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace TurnBased.Battle.Managers {
+    /// <summary>
+    /// 등록된 캐릭터 관리
+    /// </summary>
     public class CharacterManager : MonoBehaviour {
         public static CharacterManager instance;
 
@@ -81,18 +84,38 @@ namespace TurnBased.Battle.Managers {
             return list;
         }
 
+        /// <summary>
+        /// 아군 캐릭터의 칸 확인
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public int GetAllyIndex(Character c) {
             return _allyIdxDict[c];
         }
 
+        /// <summary>
+        /// 아군 캐릭터 칸에 있는 캐릭터 확인
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
         public Character GetAllyAtIndex(int idx) {
             return _idxAllyDict.TryGetValue(idx, out var character) ? character : null;
         }
 
+        /// <summary>
+        /// 적 캐릭터의 칸 확인
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public int GetEnemyIndex(Character c) {
             return _enemyIdxDict[c];
         }
 
+        /// <summary>
+        /// 적 캐릭터 칸에 있는 캐릭터 확인
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
         public Character GetEnemyAtIndex(int idx) {
             return _idxEnemyDict.TryGetValue(idx, out var character) ? character : null;
         }

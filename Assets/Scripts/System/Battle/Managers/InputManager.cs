@@ -12,14 +12,24 @@ namespace TurnBased.Battle.Managers {
             instance = this;
         }
 
+        /// <summary>
+        /// Å¸°Ù ÀüÈ¯ - ÁÂ
+        /// </summary>
         private void OnLeft(InputValue inputValue) {
             TargetManager.instance.SelectLeftTarget();
         }
 
+        /// <summary>
+        /// Å¸°Ù ÀüÈ¯ - ¿ì
+        /// </summary>
         private void OnRight(InputValue inputValue) {
             TargetManager.instance.SelectRightTarget();
         }
 
+        /// <summary>
+        /// ÀÏ¹İ °ø°İ
+        /// </summary>
+        /// <param name="inputValue"></param>
         private void OnAttack(InputValue inputValue) {
             var currentCharacter = TurnManager.instance.CurrentCharacter;
             if (currentCharacter.WantCmd && currentCharacter.Data.team == Data.CharacterTeam.Player) {
