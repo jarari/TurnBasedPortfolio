@@ -94,7 +94,6 @@ namespace TurnBased.Battle.Managers {
                     _turnQueue.Add(first);
                 }
                 _turnQueue = _turnQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
-                PrintTurnQueue();
             }
             else if (first.Type == TurnType.Ult) {
                 first.Character.PrepareUlt();

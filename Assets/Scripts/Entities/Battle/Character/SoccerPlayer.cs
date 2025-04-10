@@ -10,16 +10,37 @@ namespace TurnBased.Entities.Battle {
     public class SoccerPlayer : Character {
         [Header("Timelines")]
         public PlayableDirector normalAttack;
+        public PlayableDirector skillAttack;
+        [Header("Skill Objects")]
+        public GameObject skillBallLeft;
+        public GameObject skillBallRight;
+        [Header("Components")]
+        public Animator animator;
 
-        private Character _storedTarget;
-
+        private CharacterState _lastAttack;
         private IEnumerator DelayedReturnFromAttack() {
             yield return null;
-            _storedTarget.SetMeshLayer(MeshLayer.Default);
-            SetMeshLayer(MeshLayer.Default);
+            if (_lastAttack == CharacterState.DoAttack) {
+                normalAttack.time = normalAttack.duration;
+                normalAttack.Evaluate();
+            }
+            else if (_lastAttack == CharacterState.CastSkill) {
+                skillAttack.time = skillAttack.duration;
+                skillAttack.Evaluate();
+            }
+            animator.SetInteger("State", 0);
             meshParent.transform.localPosition = Vector3.zero;
-            normalAttack.time = normalAttack.duration;
-            normalAttack.Evaluate();
+            foreach (var c in CharacterManager.instance.GetEnemyCharacters()) {
+                c.SetMeshLayer(MeshLayer.Default);
+            }
+            SetMeshLayer(MeshLayer.Default);
+        }
+
+        private void OnAnimationEvent_Impl(Character c, string animEvent, string payload) {
+            if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd") {
+                StartCoroutine(DelayedReturnFromAttack());
+                EndTurn();
+            }
         }
 
         protected override void Awake() {
@@ -27,9 +48,39 @@ namespace TurnBased.Entities.Battle {
             OnAnimationEvent += OnAnimationEvent_Impl;
         }
 
+        public void SetSkillBallVisibility(bool visible) {
+            if (visible) {
+                var targets = TargetManager.instance.GetTargets();
+                if (targets.Count == 3) {
+                    skillBallLeft.SetActive(true);
+                    skillBallRight.SetActive(true);
+                }
+                else if (targets.Count == 2) {
+                    if (targets[0] == TargetManager.instance.Target) {
+                        skillBallRight.SetActive(true);
+                    }
+                    else {
+                        skillBallLeft.SetActive(true);
+                    }
+                }
+            }
+            else {
+                skillBallLeft.SetActive(false);
+                skillBallRight.SetActive(false);
+            }
+        }
+
         public override void CastSkill() {
             base.CastSkill();
-            EndTurn();
+            var enemy = TargetManager.instance.Target;
+            meshParent.transform.position = enemy.transform.position + new Vector3(11.207f, 0f);
+            var targets = TargetManager.instance.GetTargets();
+            foreach (var t in targets) {
+                t.SetMeshLayer(MeshLayer.SkillTimeine);
+            }
+            SetMeshLayer(MeshLayer.SkillTimeine);
+            skillAttack.Play();
+            _lastAttack = CharacterState.CastSkill;
         }
 
         public override void CastUlt() {
@@ -41,9 +92,11 @@ namespace TurnBased.Entities.Battle {
             var enemy = TargetManager.instance.Target;
             meshParent.transform.position = enemy.transform.position + new Vector3(11.207f, 0f);
             normalAttack.Play();
-            _storedTarget = enemy;
-            _storedTarget.SetMeshLayer(MeshLayer.SkillTimeine);
+            foreach (var c in CharacterManager.instance.GetEnemyCharacters()) {
+                c.SetMeshLayer(MeshLayer.SkillTimeine);
+            }
             SetMeshLayer(MeshLayer.SkillTimeine);
+            _lastAttack = CharacterState.DoAttack;
         }
 
         public override void DoExtraAttack() {
@@ -52,23 +105,18 @@ namespace TurnBased.Entities.Battle {
 
         public override void PrepareAttack() {
             base.PrepareAttack();
+            animator.SetInteger("State", 0);
             TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
         }
 
         public override void PrepareSkill() {
             base.PrepareSkill();
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
+            animator.SetInteger("State", 1);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Triple, CharacterTeam.Enemy);
         }
 
         public override void PrepareUlt() {
             base.PrepareUlt();
-        }
-
-        public void OnAnimationEvent_Impl(Character c, string animEvent, string payload) {
-            if (animEvent == "NormalAttackEnd") {
-                StartCoroutine(DelayedReturnFromAttack());
-                EndTurn();
-            }
         }
     }
 }

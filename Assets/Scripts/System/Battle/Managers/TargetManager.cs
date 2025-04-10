@@ -182,6 +182,28 @@ namespace TurnBased.Battle.Managers {
             }
         }
 
+        public List<Character> GetTargets() {
+            if (Mode == TargetMode.All) {
+                return CharacterManager.instance.GetEnemyCharacters();
+            }
+            else if (Mode == TargetMode.Self || Mode == TargetMode.Single) {
+                return new List<Character>() { Target };
+            }
+            else {
+                List<Character> targets = new List<Character>();
+                var onLeft = GetCharacterOnLeft(Target);
+                var onRight = GetCharacterOnRight(Target);
+                if (onLeft.Character != null) {
+                    targets.Add(onLeft.Character);
+                }
+                targets.Add(Target);
+                if (onRight.Character != null) {
+                    targets.Add(onRight.Character);
+                }
+                return targets;
+            }
+        }
+
         private SearchResult GetCharacterOn_Internal(Character c, SearchDirection dir) {
             if (c.Data.team == CharacterTeam.Enemy) {
                 int d = dir == SearchDirection.Left ? -1 : 1;
