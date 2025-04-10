@@ -190,12 +190,13 @@ namespace TurnBased.Battle.Managers {
                 return new List<Character>() { Target };
             }
             else {
-                List<Character> targets = new List<Character>() { Target };
+                List<Character> targets = new List<Character>();
                 var onLeft = GetCharacterOnLeft(Target);
                 var onRight = GetCharacterOnRight(Target);
                 if (onLeft.Character != null) {
                     targets.Add(onLeft.Character);
                 }
+                targets.Add(Target);
                 if (onRight.Character != null) {
                     targets.Add(onRight.Character);
                 }
