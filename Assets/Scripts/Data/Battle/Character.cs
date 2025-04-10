@@ -24,7 +24,8 @@ namespace TurnBased.Battle {
 
         public enum MeshLayer {
             Default,
-            SkillTimeine
+            SkillTimeine,
+            Hidden
         }
 
         public Action<Character> OnTurnStart;
@@ -38,6 +39,9 @@ namespace TurnBased.Battle {
         public bool WantCmd { get; set; }
         public CharacterState WantState { get; protected set; } = CharacterState.PrepareAttack;
         public bool IsVisible { get; set; }
+        public MeshLayer CurrentMeshLayer { get; protected set; }
+
+        protected MeshLayer _previousLayer;
 
 
         protected virtual void Awake() {
@@ -140,15 +144,25 @@ namespace TurnBased.Battle {
         /// </summary>
         /// <param name="visibility"></param>
         public virtual void SetVisible(bool visibility) {
-            meshParent?.SetActive(visibility);
+            if (visibility && CurrentMeshLayer == MeshLayer.Hidden) {
+                SetMeshLayer(MeshLayer.Default);
+            }
+            else if (!visibility) {
+                _previousLayer = CurrentMeshLayer;
+                SetMeshLayer(MeshLayer.Hidden);
+            }
             IsVisible = visibility;
             OnVisibilityChange?.Invoke(this, visibility);
         }
 
         public virtual void SetMeshLayer(MeshLayer layer) {
             int layerID = 0;
+            CurrentMeshLayer = layer;
             if (layer == MeshLayer.SkillTimeine) {
                 layerID = 6;
+            }
+            else if (layer == MeshLayer.Hidden) {
+                layerID = 7;
             }
             foreach (var child in meshParent.GetComponentsInChildren<Transform>(true)) {
                 child.gameObject.layer = layerID;
