@@ -18,6 +18,8 @@ namespace TurnBased.Entities.Battle {
             _storedTarget.SetMeshLayer(MeshLayer.Default);
             SetMeshLayer(MeshLayer.Default);
             meshParent.transform.localPosition = Vector3.zero;
+            normalAttack.time = normalAttack.duration;
+            normalAttack.Evaluate();
         }
 
         protected override void Awake() {
