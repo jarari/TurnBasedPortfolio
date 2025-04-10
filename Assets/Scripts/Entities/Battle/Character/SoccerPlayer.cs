@@ -27,6 +27,10 @@ namespace TurnBased.Entities.Battle {
             else if (_lastAttack == CharacterState.CastSkill) {
                 skillAttack.time = skillAttack.duration;
                 skillAttack.Evaluate();
+                var targets = TargetManager.instance.GetTargets();
+                foreach (var t in targets) {
+                    t.meshParent.transform.localPosition = Vector3.zero;
+                }
             }
             animator.SetInteger("State", 0);
             meshParent.transform.localPosition = Vector3.zero;
@@ -72,11 +76,17 @@ namespace TurnBased.Entities.Battle {
 
         public override void CastSkill() {
             base.CastSkill();
-            var enemy = TargetManager.instance.Target;
-            meshParent.transform.position = enemy.transform.position + new Vector3(11.207f, 0f);
+            var enemyCenter = TargetManager.instance.Target;
+            meshParent.transform.position = enemyCenter.transform.position + new Vector3(11.207f, 0f);
             var targets = TargetManager.instance.GetTargets();
-            foreach (var t in targets) {
-                t.SetMeshLayer(MeshLayer.SkillTimeine);
+            for (int i = 0; i < targets.Count; ++i) {
+                targets[i].SetMeshLayer(MeshLayer.SkillTimeine);
+                if (i == 0 && targets[i] != enemyCenter) {
+                    targets[i].meshParent.transform.position = enemyCenter.meshParent.transform.position - new Vector3(0, 0, 4f);
+                }
+                else if (i == 1 && targets[i] != enemyCenter || i == 2) {
+                    targets[i].meshParent.transform.position = enemyCenter.meshParent.transform.position + new Vector3(0, 0, 4f);
+                }
             }
             SetMeshLayer(MeshLayer.SkillTimeine);
             skillAttack.Play();
