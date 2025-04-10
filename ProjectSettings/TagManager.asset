@@ -13,7 +13,7 @@ TagManager:
   - UI
   - SkillTimeline
   - Hidden
-  - 
+  - UltTimeline
   - 
   - 
   - 
@@ -43,7 +43,7 @@ TagManager:
     locked: 0
   m_RenderingLayers:
   - Default
-  - Light Layer 1
+  - Ult Light Layer
   - Light Layer 2
   - Light Layer 3
   - Light Layer 4
