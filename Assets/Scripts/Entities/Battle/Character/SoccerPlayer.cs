@@ -11,11 +11,11 @@ namespace TurnBased.Entities.Battle {
         [Header("Timelines")]
         public PlayableDirector normalAttack;
 
-        private Character _storedTarget;
-
         private IEnumerator DelayedReturnFromAttack() {
             yield return null;
-            _storedTarget.SetMeshLayer(MeshLayer.Default);
+            foreach (var c in CharacterManager.instance.GetEnemyCharacters()) {
+                c.SetMeshLayer(MeshLayer.Default);
+            }
             SetMeshLayer(MeshLayer.Default);
             meshParent.transform.localPosition = Vector3.zero;
             normalAttack.time = normalAttack.duration;
@@ -41,8 +41,9 @@ namespace TurnBased.Entities.Battle {
             var enemy = TargetManager.instance.Target;
             meshParent.transform.position = enemy.transform.position + new Vector3(11.207f, 0f);
             normalAttack.Play();
-            _storedTarget = enemy;
-            _storedTarget.SetMeshLayer(MeshLayer.SkillTimeine);
+            foreach (var c in CharacterManager.instance.GetEnemyCharacters()) {
+                c.SetMeshLayer(MeshLayer.SkillTimeine);
+            }
             SetMeshLayer(MeshLayer.SkillTimeine);
         }
 
