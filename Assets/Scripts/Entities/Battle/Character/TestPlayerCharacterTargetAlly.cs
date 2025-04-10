@@ -24,12 +24,12 @@ namespace TurnBased.Entities.Battle {
 
         public override void PrepareAttack() {
             base.PrepareAttack();
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Self);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Triple, TurnBased.Data.CharacterTeam.Enemy);
         }
 
         public override void PrepareSkill() {
             base.PrepareSkill();
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Triple);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Self);
         }
 
         public override void PrepareUlt() {
