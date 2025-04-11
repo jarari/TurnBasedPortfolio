@@ -1,10 +1,11 @@
 using UnityEngine;
 using TurnBased.Battle;
+using TurnBased.Battle.Managers;
 using System.Collections;
 
 namespace TurnBased.Entities.Battle {
     public class TestEnemyCharacter : Character {
-
+        
         // 에너미의 종류 ( 일반 몹, 보스)
         public enum EnemyType { Minion,Boss }
         // ↑로 만든 변수
@@ -40,12 +41,27 @@ namespace TurnBased.Entities.Battle {
             // 강인도가 0이하가 되었을때
             if (Data.stats.CurrentToughness <= 0)
             {
+                // 현재의 강인도를 최대치로 만든다
+                Data.stats.CurrentToughness = Data.stats.MaxToughness;
                 // 턴을 끝낸다
                 EndTurn();
             }
             // 강인도가 0이하가 아닐때
             else
-            { 
+            {
+                // 만약 에너미 종류가 보스일때
+                if (e_Type == EnemyType.Boss)
+                {
+                    // 에너미의 현제 채력이 전채 채력의 절반 이하가 되고 광폭화 불값이 false일때
+                    if (Data.stats.CurrentHP <= (Data.stats.MaxHP / 2) && ram == false)
+                    {
+                        // 캐릭터의 상태를 광폭화 로 갱신한다
+                        e_State = EnemyState.Rampage;
+                        // 불값을 변경한다
+                        ram = true;
+                    }
+                }
+
                 // 공격하는 함수
                 DoAttack();
             }
@@ -76,11 +92,15 @@ namespace TurnBased.Entities.Battle {
         public override void DoAttack() {
             base.DoAttack();
             Debug.Log("Enemy Attack");
-
             // 에너미의 상태에 따라 공격을 나누기
             switch (e_State)
             {
                 case EnemyState.Nomal:
+                    // 캐릭터 메니저의 캐릭터의 칸을 가져온다
+                    int ran = Random.Range(0, 2);
+                    var player = CharacterManager.instance.GetAllyAtIndex(ran);
+
+
                     break;
                 case EnemyState.Rampage:
                     break;
@@ -118,41 +138,59 @@ namespace TurnBased.Entities.Battle {
         // 플레이어의 공격력을 넣을 damage를 임시로 넣음 추후 변경예정
         public void Damaged(float damage)
         {
-            // 현재 채력에서 공격받은 캐릭터의 공격력만큼 채력을 뺀다
-            Data.stats.CurrentHP -= damage;
+            // 현재 강인도가 0보다 클경우
+            if (Data.stats.CurrentToughness > 0)
+            {
+                // 현재 채력에서 공격받은 캐릭터의 공격력의 반만큼 채력을 뺀다
+                Data.stats.CurrentHP -= (damage / 2);   // (-- 후에 입는 데미지를 방어력만큼 내릴지 생각해보자 --)
+            }
+            // 현제 강인도가 0이하 일경우
+            else
+            { 
+                // 현재 채력에서 공격받은 캐릭터의 공격력만큼 채력을 뺀다
+                Data.stats.CurrentHP -= damage;
+            }
             
+            // 일단 강인도를 공격력만큼 까도록하였음
+            Data.stats.CurrentToughness -= damage;
+
             // 현재 채력이 0보다 클때
             if (Data.stats.CurrentHP > 0)
-            { 
+            {
+                // 현재 강인도가 공격으로 인해 0이하가 되었을때
+                if (Data.stats.CurrentToughness <= 0)
+                {
+                    // 그로기 코루틴을 실행한다
+                    StartCoroutine(GroggyProcess());
+                    
+                }
             }
             // 현재 채력이 0이하가 되었을때
             else
             {
-                // 죽음을 다룰 함수
-                Dead();
+                // 죽음을 다룰 코루틴
+                StartCoroutine(DeadProcess());
             }
             
-            // 만약 에너미 종류가 보스일때
-            if (e_Type == EnemyType.Boss)
-            { 
-                // 에너미의 현제 채력이 전채 채력의 절반 이하가 되고 광폭화 불값이 false일때
-                if (Data.stats.CurrentHP <= (Data.stats.MaxHP) / 2 && ram == false)
-                {
-                    // 캐릭터의 상태를 광폭화 로 갱신한다
-                    e_State = EnemyState.Rampage;
-                    // 불값을 변경한다
-                    ram = true;
-                }
-            }
+            
 
         }
 
-        // 죽음을 다룰함수
-        public void Dead()
+        // 죽음을 다룰 코루틴        
+        IEnumerator DeadProcess()
         {
+            yield return null;
             // 캐릭터 모델을 비활성화
-            SetVisible(false);
+            SetVisible(false);            
         }
 
+        // 그로기 코루틴
+        IEnumerator GroggyProcess()
+        {
+            yield return null;
+            // 현재 스피드와 방어력을 절반으로 한다
+            Data.stats.Speed = (Data.stats.Speed) / 2;
+            Data.stats.Defense = (Data.stats.Defense) / 2;
+        }
     }
 }
