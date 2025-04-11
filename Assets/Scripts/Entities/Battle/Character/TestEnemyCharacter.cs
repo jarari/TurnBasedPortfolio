@@ -17,10 +17,11 @@ namespace TurnBased.Entities.Battle {
         public EnemyState e_State;
 
         // 광폭화 상태를 제어할 불값
-        public bool ram = false;
+        bool ram = false;
 
         // 타겟팅할 플레이어를 담을 변수
         public Character ch_player;
+        public Character[] ch_players;
 
         // 본인의 위치와 회전값을 담을 변수
         public Vector3 EnPosition;
@@ -35,6 +36,7 @@ namespace TurnBased.Entities.Battle {
             EnPosition = transform.position;            
             EnRotate = transform.eulerAngles;
         }
+                
 
         // 공격이 종료 되었을때
         private IEnumerator WaitAttackEnd() {
@@ -49,18 +51,20 @@ namespace TurnBased.Entities.Battle {
         public override void TakeTurn() {
             // 부모 클래스에서 TakeTurn 실행 후 실행
             base.TakeTurn();
-
-            EndTurn();
- 
+             
             
             // 만약 에너미 종류가 보스일때
             if (e_Type == EnemyType.Boss)
             {
+                // 불값을 이용해 한번만 호출 되도록한다
                 // 에너미의 현제 채력이 전채 채력의 절반 이하가 되고 광폭화 불값이 false일때
                 if (Data.stats.CurrentHP <= (Data.stats.MaxHP / 2) && ram == false)
                 {
                     // 캐릭터의 상태를 광폭화 로 갱신한다
                     e_State = EnemyState.Rampage;
+                    // 광폭화시 공격력을 1.5배한다
+                    Data.stats.Attack += (Data.stats.Attack / 2);
+
                     // 불값을 변경한다
                     ram = true;
                 }
@@ -69,6 +73,8 @@ namespace TurnBased.Entities.Battle {
             // 공격하는 함수
             DoAttack();
             
+            // 턴을 끝낸다
+            EndTurn();
  
         }
 
@@ -90,13 +96,15 @@ namespace TurnBased.Entities.Battle {
             Debug.Log("Enemy Attack");
             
             // 타겟으로 삼을 플레이어 캐릭터를 랜덤하게 고른다
-            ChPlayer();
+            ChPlayer_S();
             // 에너미가 플레이어를 바라보게한다
-            transform.forward = ch_player.transform.position;
-            
+            transform.forward = ch_player.gameObject.transform.position;
+
+            // 현제 공격을 진행하는 오브젝트의 이름 (테스트용)
+            Debug.Log(gameObject.name + " 의 공격! ");
+
             // ( 나중에 데미지 관련 클래스등이 만들어지면 호출하자) //
-            
-            /////(  나중에 코루틴이나 함수로 에너미 상태에 따라 애니메이션을 나누는것을 생각해보자   )/////
+                       
 
             // 공격을 끝낼 코루틴을 실행한다
             StartCoroutine(WaitAttackEnd());
@@ -127,6 +135,8 @@ namespace TurnBased.Entities.Battle {
 
         #endregion
 
+        // 최종적으로 계산 된 데미지를 받을 함수
+
 
         // 죽음을 다룰 코루틴        
         IEnumerator DeadProcess()
@@ -145,8 +155,8 @@ namespace TurnBased.Entities.Battle {
             Data.stats.Defense = (Data.stats.Defense) / 2;
         }
 
-        // 아군 캐릭터칸에 있는 플레이어 캐릭터를 랜덤하게 가져온다
-        public void ChPlayer()
+        // 아군 캐릭터칸에 있는 플레이어 캐릭터를 랜덤하게 하나를 가져온다
+        public void ChPlayer_S()
         {
             // 랜덤한 숫자를 뽑아
             int ran = Random.Range(0, 2);
@@ -155,5 +165,15 @@ namespace TurnBased.Entities.Battle {
             // 랜덤한 아군 캐릭터를 리스트에서 가져온다
             ch_player = player[ran];
         }
+        // 아군 캐릭터칸에 있는 플레이어 캐릭터를 랜덤하게 지정한 만큼 가져온다
+        public void ChPlayer_M(int x)
+        {
+            // 랜덤한 숫자를 뽑아
+            int ran = Random.Range(0, 2);
+            // 캐릭터 메니저의 등록된 모든 아군 캐릭터 리스트를 가져온다 (후에 생존한 캐릭터만 가져올 예정)
+            var player = CharacterManager.instance.GetAllyCharacters();
+            
+        }
+
     }
 }
