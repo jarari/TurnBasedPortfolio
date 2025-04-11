@@ -18,18 +18,30 @@ namespace TurnBased.Entities.Battle {
 
         // 광폭화 상태를 제어할 불값
         public bool ram = false;
+
+        // 타겟팅할 플레이어를 담을 변수
+        public Character ch_player;
+
+        // 본인의 위치와 회전값을 담을 변수
+        public Vector3 EnPosition;
+        public Vector3 EnRotate;
                 
         protected override void Start()
         {
             base.Start();
             // 시작시 에너미의 상태를 Nomal로 한다
-            e_State = EnemyState.Nomal;            
-            
+            e_State = EnemyState.Nomal;
+            // 시작시 에너미의 현재 위치와 회전값을 저장한다
+            EnPosition = transform.position;            
+            EnRotate = transform.eulerAngles;
         }
 
         // 공격이 종료 되었을때
         private IEnumerator WaitAttackEnd() {
             yield return null;
+            // 공격하기 위해 틀었던 회전값을 원래대로 가져온다
+            transform.eulerAngles = EnRotate;
+            // 턴을 끝낸다
             EndTurn();
         }
 
@@ -38,33 +50,26 @@ namespace TurnBased.Entities.Battle {
             // 부모 클래스에서 TakeTurn 실행 후 실행
             base.TakeTurn();
 
-            // 강인도가 0이하가 되었을때
-            if (Data.stats.CurrentToughness <= 0)
+            EndTurn();
+ 
+            
+            // 만약 에너미 종류가 보스일때
+            if (e_Type == EnemyType.Boss)
             {
-                // 현재의 강인도를 최대치로 만든다
-                Data.stats.CurrentToughness = Data.stats.MaxToughness;
-                // 턴을 끝낸다
-                EndTurn();
-            }
-            // 강인도가 0이하가 아닐때
-            else
-            {
-                // 만약 에너미 종류가 보스일때
-                if (e_Type == EnemyType.Boss)
+                // 에너미의 현제 채력이 전채 채력의 절반 이하가 되고 광폭화 불값이 false일때
+                if (Data.stats.CurrentHP <= (Data.stats.MaxHP / 2) && ram == false)
                 {
-                    // 에너미의 현제 채력이 전채 채력의 절반 이하가 되고 광폭화 불값이 false일때
-                    if (Data.stats.CurrentHP <= (Data.stats.MaxHP / 2) && ram == false)
-                    {
-                        // 캐릭터의 상태를 광폭화 로 갱신한다
-                        e_State = EnemyState.Rampage;
-                        // 불값을 변경한다
-                        ram = true;
-                    }
+                    // 캐릭터의 상태를 광폭화 로 갱신한다
+                    e_State = EnemyState.Rampage;
+                    // 불값을 변경한다
+                    ram = true;
                 }
-
-                // 공격하는 함수
-                DoAttack();
             }
+
+            // 공격하는 함수
+            DoAttack();
+            
+ 
         }
 
         #region 행동하는 함수 (스킬, 공격, 궁극기, 엑스트라 어택)
@@ -73,15 +78,6 @@ namespace TurnBased.Entities.Battle {
         public override void CastSkill() {
             // 부모 클래스에서 CastSkill 실행후 실행
             base.CastSkill();
-
-            // 에너미의 상태에 따라 공격을 나누기
-            switch (e_State)
-            {
-                case EnemyState.Nomal:
-                    break;
-                case EnemyState.Rampage:
-                    break;
-            }
 
         }
         // 궁극기
@@ -92,22 +88,20 @@ namespace TurnBased.Entities.Battle {
         public override void DoAttack() {
             base.DoAttack();
             Debug.Log("Enemy Attack");
-            // 에너미의 상태에 따라 공격을 나누기
-            switch (e_State)
-            {
-                case EnemyState.Nomal:
-                    // 캐릭터 메니저의 캐릭터의 칸을 가져온다
-                    int ran = Random.Range(0, 2);
-                    var player = CharacterManager.instance.GetAllyAtIndex(ran);
+            
+            // 타겟으로 삼을 플레이어 캐릭터를 랜덤하게 고른다
+            ChPlayer();
+            // 에너미가 플레이어를 바라보게한다
+            transform.forward = ch_player.transform.position;
+            
+            // ( 나중에 데미지 관련 클래스등이 만들어지면 호출하자) //
+            
+            /////(  나중에 코루틴이나 함수로 에너미 상태에 따라 애니메이션을 나누는것을 생각해보자   )/////
 
-
-                    break;
-                case EnemyState.Rampage:
-                    break;
-            }
             // 공격을 끝낼 코루틴을 실행한다
             StartCoroutine(WaitAttackEnd());
         }
+
         // 엑스트라 어텍을 할때
         public override void DoExtraAttack() {
             base.DoExtraAttack();
@@ -134,48 +128,6 @@ namespace TurnBased.Entities.Battle {
         #endregion
 
 
-        // 데미지를 받았을때
-        // 플레이어의 공격력을 넣을 damage를 임시로 넣음 추후 변경예정
-        public void Damaged(float damage)
-        {
-            // 현재 강인도가 0보다 클경우
-            if (Data.stats.CurrentToughness > 0)
-            {
-                // 현재 채력에서 공격받은 캐릭터의 공격력의 반만큼 채력을 뺀다
-                Data.stats.CurrentHP -= (damage / 2);   // (-- 후에 입는 데미지를 방어력만큼 내릴지 생각해보자 --)
-            }
-            // 현제 강인도가 0이하 일경우
-            else
-            { 
-                // 현재 채력에서 공격받은 캐릭터의 공격력만큼 채력을 뺀다
-                Data.stats.CurrentHP -= damage;
-            }
-            
-            // 일단 강인도를 공격력만큼 까도록하였음
-            Data.stats.CurrentToughness -= damage;
-
-            // 현재 채력이 0보다 클때
-            if (Data.stats.CurrentHP > 0)
-            {
-                // 현재 강인도가 공격으로 인해 0이하가 되었을때
-                if (Data.stats.CurrentToughness <= 0)
-                {
-                    // 그로기 코루틴을 실행한다
-                    StartCoroutine(GroggyProcess());
-                    
-                }
-            }
-            // 현재 채력이 0이하가 되었을때
-            else
-            {
-                // 죽음을 다룰 코루틴
-                StartCoroutine(DeadProcess());
-            }
-            
-            
-
-        }
-
         // 죽음을 다룰 코루틴        
         IEnumerator DeadProcess()
         {
@@ -191,6 +143,17 @@ namespace TurnBased.Entities.Battle {
             // 현재 스피드와 방어력을 절반으로 한다
             Data.stats.Speed = (Data.stats.Speed) / 2;
             Data.stats.Defense = (Data.stats.Defense) / 2;
+        }
+
+        // 아군 캐릭터칸에 있는 플레이어 캐릭터를 랜덤하게 가져온다
+        public void ChPlayer()
+        {
+            // 랜덤한 숫자를 뽑아
+            int ran = Random.Range(0, 2);
+            // 캐릭터 메니저의 등록된 모든 아군 캐릭터 리스트를 가져온다 (후에 생존한 캐릭터만 가져올 예정)
+            var player = CharacterManager.instance.GetAllyCharacters();
+            // 랜덤한 아군 캐릭터를 리스트에서 가져온다
+            ch_player = player[ran];
         }
     }
 }
