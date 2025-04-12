@@ -194,7 +194,14 @@ namespace TurnBased.Entities.Battle {
             // 현제 공격을 진행하는 오브젝트의 이름 (테스트용)
             Debug.Log(gameObject.name + " 의 공격! ");
 
-            // ( 나중에 데미지 관련 클래스등이 만들어지면 호출하자) //
+
+            // 자기자신의 캐릭터를 가져온다
+            Character ch = GetComponent<Character>();
+            // 데미지를 계산하는 함수를 호출하고
+            DamageResult result = CombatManager.DoDamage( ch, ch_player);
+
+            
+            // ( 플레이어의 데미지함수를 호출 또는 여기서 계산)
 
             // 일반공격 애니메이션이 실행
             //normalAttack.Play();
@@ -228,7 +235,12 @@ namespace TurnBased.Entities.Battle {
         }
 
         #endregion
-                
+
+        // 혹시 몰라서 만든 데미지 코루틴
+        IEnumerator Damaged()
+        {
+            yield return null;
+        }
 
         // 죽음을 다룰 코루틴        
         IEnumerator DeadProcess()
