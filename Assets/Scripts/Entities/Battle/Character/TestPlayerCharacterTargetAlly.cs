@@ -35,5 +35,12 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareUlt() {
             base.PrepareUlt();
         }
+
+        // 구동 확인 태스트용
+        public override void Damage(Character pl)
+        {
+            base.Damage(pl);
+            Debug.Log("때린놈 : " + pl.name);
+        }
     }
 }

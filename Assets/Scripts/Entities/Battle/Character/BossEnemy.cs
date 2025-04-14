@@ -11,13 +11,14 @@ using static TurnBased.Entities.Battle.TestEnemyCharacter;
 namespace TurnBased.Entities.Battle { 
     
     // 보스 몬스터
-    public class BossEnemy : Character, IDamageApply
+    public class BossEnemy : Character
     {
         [Header("Timelines")]
         public PlayableDirector normalAttack;    // 일반 공격 애니메이션
         public PlayableDirector skillAttack;        // 스킬 공격 애니메이션
         public PlayableDirector UltAttack;          // 필살기 공격 애니메이션
-        public PlayableDirector Groggy;             // 그로기 애니메이션
+        public PlayableDirector Dead_anim;             // 사망 애니메이션
+        public PlayableDirector Groggy_anim;             // 그로기 애니메이션
 
         // ==( 광폭화는 조금더 경과를 보고 생각... )==
 
@@ -48,7 +49,7 @@ namespace TurnBased.Entities.Battle {
 
         // 캐릭터의 마지막 공격 상태를 담을 변수
         private CharacterState _lastAttack;
-
+                
         // 공격후에 애니메이션이 끝날 때의 반환을 처리하는 코루틴
         private IEnumerator DelayReturnFromAttack()
         {
@@ -145,8 +146,8 @@ namespace TurnBased.Entities.Battle {
             // 부모 클래스에서 CastSkill 실행후 실행
             base.CastSkill();
             Debug.Log(gameObject.name + " 의 스킬 발동!");
-            // 플레이어 전체를 고른다
-            ChPlayer_M();
+
+            
 
             // 다수의 플레이어중 가운데 플레이어를 가져온다
             Character target_M = ch_players[ch_players.Length / 2];
@@ -238,8 +239,10 @@ namespace TurnBased.Entities.Battle {
 
 
         // 혹시 몰라서 만든 데미지 함수
-        public void DamageApply(Character pl)
+        public override void Damage(Character pl)
         {
+            base.Damage(pl);
+            
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();
             // 데미지를 계산하는 함수를 호출 (때린놈 , 맞은놈)
@@ -254,8 +257,8 @@ namespace TurnBased.Entities.Battle {
                 // 채력이 만약 0이하가 되었다면
                 if (ch.Data.stats.CurrentHP <= 0)
                 {
-                    // 죽음을 다룰 코루틴을 실행한다
-                    StartCoroutine(DeadProcess());
+                    // 죽음을 다룰 함수를 실행한다
+                    Dead();
                 }
 
                 // 플레이어가 약점 속성으로 때린다면
@@ -268,7 +271,7 @@ namespace TurnBased.Entities.Battle {
                     if (ch.Data.stats.CurrentToughness <= 0)
                     {
                         // 그로기를 다룰 코루틴을 실행한다
-                        StartCoroutine(GroggyProcess());
+                        Groggy();
                     }
 
                 }
@@ -283,31 +286,34 @@ namespace TurnBased.Entities.Battle {
                 // 채력이 만약 0이하가 되었다면
                 if (ch.Data.stats.CurrentHP <= 0)
                 {
-                    // 죽음을 다룰 코루틴을 실행한다
-                    StartCoroutine(DeadProcess());
+                    // 죽음을 다룰 함수를 실행한다
+                    Dead();
                 }
 
             }
 
         }
 
-        // 죽음을 다룰 코루틴
-        IEnumerator DeadProcess()
+        // 사망시 함수
+        public override void Dead()
         {
-            yield return null;
+            base.Dead();
             // 캐릭터 모델을 비활성화
             SetVisible(false);
+
         }
 
-        // 그로기 코루틴
-        IEnumerator GroggyProcess()
+
+        // 그로기 함수
+        public override void Groggy()
         {
-            yield return null;
+            base.Groggy();
             // 현재 스피드와 방어력을 절반으로 한다
             Data.stats.Speed = (Data.stats.Speed) / 2;
             Data.stats.Defense = (Data.stats.Defense) / 2;
         }
 
+        // ( 공사 예정  -- 타겟팅 메니저 이용을 생각중)
         // 아군 캐릭터칸에 있는 플레이어 캐릭터를 랜덤하게 하나를 가져온다
         public void ChPlayer_S()
         {
@@ -330,24 +336,7 @@ namespace TurnBased.Entities.Battle {
             }
 
         }
-
-        // 플레이어의 속성이 에너미의 약점 속성과 일치하는지 확인할 함수
-        public bool Element_Check(Character player, Character enemy)
-        {
-            // 에너미의 약점 갯수만큼 for문을 돌린다
-            for (int i = 0; i < enemy.Data.stats.Weakness.Count; i++)
-            {
-                // 플레이어의 공격 타입이 에너미의 약점 타입과 같다면
-                if (player.Data.stats.ElementType == enemy.Data.stats.Weakness[i])
-                {
-                    // 있다면 true 를 반환한다
-                    return true;
-                }
-            }
-            // 없다면 false 를 반환한다
-            return false;
-        }
-
+        
     }
 
 }

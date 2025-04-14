@@ -19,7 +19,12 @@ namespace TurnBased.Battle {
             PrepareSkill,
             CastSkill,
             PrepareUlt,
-            CastUlt
+            CastUlt,
+            PrepareDead,
+            Dead,
+            PrepareGroggy,
+            Groggy,
+            Damage
         }
 
         public enum MeshLayer {
@@ -59,13 +64,33 @@ namespace TurnBased.Battle {
         /// </summary>
         public virtual void TakeTurn() {
             WantCmd = true;
-            if (Data.team == CharacterTeam.Player) {
-                if (WantState == CharacterState.PrepareAttack) {
+            if (Data.team == CharacterTeam.Player)
+            {
+                if (WantState == CharacterState.PrepareAttack)
+                {
                     PrepareAttack();
                 }
-                else if (WantState == CharacterState.PrepareSkill) {
+                else if (WantState == CharacterState.PrepareSkill)
+                {
                     PrepareSkill();
                 }
+            }
+            // 만약 에너미일때
+            else
+            {
+                // 다음 본인 턴이왔을 때 취할 상태가 공격 준비라면
+                if (WantState == CharacterState.PrepareAttack)
+                {
+                    // 공격 준비 함수를 호출
+                    PrepareAttack();
+                }
+                // 다음 본인 턴이 왔을 때 취할 상태가 스킬 준비라면
+                else if (WantState == CharacterState.PrepareSkill)
+                {
+                    // 스킬 준비 함수를 호출
+                    PrepareSkill();
+                }
+
             }
             OnTurnStart?.Invoke(this);
         }
@@ -154,6 +179,37 @@ namespace TurnBased.Battle {
             IsVisible = visibility;
             OnVisibilityChange?.Invoke(this, visibility);
         }
+        // 사망 준비함수
+        public virtual void PrepareDead() {
+            // 캐릭터의 현재 상태를 사망준비상태로 처리
+            CurrentState = CharacterState.PrepareDead;
+        }
+        // 캐릭터 사망
+        public virtual void Dead() {
+            // 캐릭터의 현재 상태를 사망으로 처리
+            CurrentState = CharacterState.Dead;
+            // 취할 상태를 사망준비로
+            WantState = CharacterState.PrepareDead;
+            // 명령대기를 하지 않음을 반환
+            WantCmd = false;
+        }
+        // 그로기 준비함수
+        public virtual void PrepareGroggy()
+        {
+            // 현재 상태를 그로기 준비상태로 처리
+            CurrentState = CharacterState.PrepareGroggy;
+        }
+
+        // 에너미 그로기
+        public virtual void Groggy() {
+            // 캐릭터의 현재 상태를 그로기로 처리
+            CurrentState = CharacterState.Groggy;
+            // 취할 상태를 그로기 준비상태로
+            WantState = CharacterState.PrepareGroggy;
+            // 명령대기를 하지 않음을 반환
+            WantCmd = false;
+        }
+
 
         public virtual void SetMeshLayer(MeshLayer layer) {
             int layerID = 0;
@@ -167,6 +223,31 @@ namespace TurnBased.Battle {
             foreach (var child in meshParent.GetComponentsInChildren<Transform>(true)) {
                 child.gameObject.layer = layerID;
             }
+        }
+
+        // 데미지 함수 (때린놈의 정보를 가져온다)
+        public virtual void Damage(Character pl) {
+            // 캐릭터의 현재 상태를 데미지로 처리
+            CurrentState = CharacterState.Damage;
+
+        }
+
+        // 플레이어의 속성이 에너미의 약점 속성과 일치하는지 확인할 함수
+        // --- 이건 맞을때 에너미 쪽에서 계산 ---
+        public virtual bool Element_Check(Character player, Character enemy)
+        {
+            // 에너미의 약점 갯수만큼 for문을 돌린다
+            for (int i = 0; i < enemy.Data.stats.Weakness.Count; i++)
+            {
+                // 플레이어의 공격 타입이 에너미의 약점 타입과 같다면
+                if (player.Data.stats.ElementType == enemy.Data.stats.Weakness[i])
+                {
+                    // 있다면 true 를 반환한다
+                    return true;
+                }
+            }
+            // 없다면 false 를 반환한다
+            return false;
         }
     }
 }

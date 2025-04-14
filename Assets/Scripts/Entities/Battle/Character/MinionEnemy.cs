@@ -10,7 +10,7 @@ using Unity.Cinemachine;
 namespace TurnBased.Entities.Battle { 
     
     // 일반 몬스터
-    public class MinionEnemy : Character, IDamageApply
+    public class MinionEnemy : Character
     {
         [Header("Timelines")]
         public PlayableDirector normalAttack;    // 일반 공격 애니메이션
@@ -157,7 +157,9 @@ namespace TurnBased.Entities.Battle {
             DamageResult result = CombatManager.DoDamage(ch, ch_player);
 
             Debug.Log(ch_player.name + " 에게 " + result.FinalDamage + " 데미지");
-            // ( 플레이어의 데미지함수를 호출 또는 여기서 계산)
+
+            // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
+            ch_player.Damage(this);
 
             // 일반공격 애니메이션이 실행
             //normalAttack.Play();
@@ -182,6 +184,8 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareAttack()
         {
             base.PrepareAttack();
+            // 생각중...
+            //TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
         }
         // 스킬을 준비하는 함수
         public override void PrepareSkill()
@@ -197,24 +201,29 @@ namespace TurnBased.Entities.Battle {
         #endregion
 
         // 혹시 몰라서 만든 데미지 함수 (때린 놈의 정보를 가져온다)
-        public void DamageApply(Character pl)
+        // IDamageApply를 상속시켜 가져왔다
+        public override void Damage(Character pl)
         {
+            // 부모 클래스의 DagageApply를 실행후 실행
+            base.Damage(pl);
+
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();
-            // 데미지를 계산하는 함수를 호출 (때린놈 , 맞은놈)
+            // 데미지를 계산하는 함수를 호출 (때린놈, 맞은놈)
             DamageResult result = CombatManager.DoDamage(pl, ch);
 
             // 만약 강인도가 있다면
             if (ch.Data.stats.CurrentToughness > 0)
-            {
+            {               
+
                 // 채력을 최종적으로 받는 데미지의 반으로 받고
                 this.Data.stats.CurrentHP -= (result.FinalDamage / 2);
 
                 // 채력이 만약 0이하가 되었다면
                 if (ch.Data.stats.CurrentHP <= 0)
                 {
-                    // 죽음을 다룰 코루틴을 실행한다
-                    StartCoroutine(DeadProcess());
+                    // 죽음을 다룰 함수를 실행한다
+                    Dead();
                 }
 
                 // 플레이어가 약점 속성으로 때린다면
@@ -228,8 +237,8 @@ namespace TurnBased.Entities.Battle {
                     {
                         // 현재 강인도를 0으로 만든다
                         ch.Data.stats.CurrentToughness = 0;
-                        // 그로기를 다룰 코루틴을 실행한다
-                        StartCoroutine(GroggyProcess());
+                        // 그로기를 다룰 함수를 실행한다
+                        Groggy();
                     }
 
                 }
@@ -244,33 +253,32 @@ namespace TurnBased.Entities.Battle {
                 // 채력이 만약 0이하가 되었다면
                 if (ch.Data.stats.CurrentHP <= 0)
                 {
-                    // 죽음을 다룰 코루틴을 실행한다
-                    StartCoroutine(DeadProcess());
+                    // 죽음을 다룰 함수를 실행한다
+                    Dead();
                 }
 
             }
-
         }
-
-        // 죽음을 다룰 코루틴
-        IEnumerator DeadProcess()
+        // 사망시 함수
+        public override void Dead()
         {
-            // 일시 정지 없이 다음 프레임에서 실행함
-            yield return null;
-            
+            base.Dead();
             // 캐릭터 모델을 비활성화
             SetVisible(false);
+            
         }
 
-        // 그로기 코루틴
-        IEnumerator GroggyProcess()
+
+        // 그로기 함수
+        public override void Groggy()
         {
-            yield return null;
+            base.Groggy();        
             // 현재 스피드와 방어력을 절반으로 한다
             Data.stats.Speed = (Data.stats.Speed) / 2;
             Data.stats.Defense = (Data.stats.Defense) / 2;
         }
 
+        // ( 공사 예정  -- 타겟팅 메니저 이용을 생각중)
         // 아군 캐릭터칸에 있는 플레이어 캐릭터를 랜덤하게 하나를 가져온다
         public void ChPlayer_S()
         {
@@ -294,22 +302,7 @@ namespace TurnBased.Entities.Battle {
 
         }
 
-        // 플레이어의 속성이 에너미의 약점 속성과 일치하는지 확인할 함수
-        public bool Element_Check(Character player, Character enemy)
-        {
-            // 에너미의 약점 갯수만큼 for문을 돌린다
-            for (int i = 0; i < enemy.Data.stats.Weakness.Count; i++)
-            {
-                // 플레이어의 공격 타입이 에너미의 약점 타입과 같다면
-                if (player.Data.stats.ElementType == enemy.Data.stats.Weakness[i])
-                {
-                    // 있다면 true 를 반환한다
-                    return true;
-                }
-            }
-            // 없다면 false 를 반환한다
-            return false;
-        }
+        
 
 
     }
