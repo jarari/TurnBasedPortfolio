@@ -1153,6 +1153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camTarget: {fileID: 622584115}
+  camTargetAlly: {fileID: 1666936371}
   camPos:
   - {fileID: 518529432}
   - {fileID: 1804064797}
@@ -1514,12 +1515,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshParent: {fileID: 1577491708}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
-  e_Type: 0
-  e_State: 0
-  ram: 0
-  ch_player: {fileID: 0}
-  EnPosition: {x: 0, y: 0, z: 0}
-  EnRotate: {x: 0, y: 0, z: 0}
 --- !u!1 &321690138
 GameObject:
   m_ObjectHideFlags: 0
@@ -1587,7 +1582,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 622584116}
+    TrackingTarget: {fileID: 1666936372}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -1618,7 +1613,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 321690138}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.00037694728, y: 0.9210532, z: -0.0008915168, w: -0.38943577}
+  m_LocalRotation: {x: 0.0033017178, y: 0.61841834, z: -0.0025983006, w: 0.7858379}
   m_LocalPosition: {x: 3.7273006, y: 1.3535709, z: -0.035751343}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1712,7 +1707,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.01889392, y: 0.9248345, z: -0.046844393, w: -0.377001}
+  m_LocalRotation: {x: 0.018893864, y: 0.9248345, z: -0.04684428, w: -0.377001}
   m_LocalPosition: {x: 10.363999, y: 2.4359999, z: 6.899}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9184,12 +9179,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshParent: {fileID: 369827856}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
-  e_Type: 0
-  e_State: 0
-  ram: 0
-  ch_player: {fileID: 0}
-  EnPosition: {x: 0, y: 0, z: 0}
-  EnRotate: {x: 0, y: 0, z: 0}
 --- !u!1 &1602780431
 GameObject:
   m_ObjectHideFlags: 0
@@ -9644,6 +9633,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f5d7a592e443140931ff854a2f7205, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1666936371
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1666936372}
+  m_Layer: 0
+  m_Name: CamTargetAlly
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1666936372
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666936371}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.95, y: 1.343, z: 0.26}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1748544351
 GameObject:
   m_ObjectHideFlags: 0
@@ -10227,12 +10247,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshParent: {fileID: 1642703455}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
-  e_Type: 0
-  e_State: 0
-  ram: 0
-  ch_player: {fileID: 0}
-  EnPosition: {x: 0, y: 0, z: 0}
-  EnRotate: {x: 0, y: 0, z: 0}
 --- !u!1 &1824003726
 GameObject:
   m_ObjectHideFlags: 0
@@ -10392,12 +10406,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshParent: {fileID: 63867761}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
-  e_Type: 0
-  e_State: 0
-  ram: 0
-  ch_player: {fileID: 0}
-  EnPosition: {x: 0, y: 0, z: 0}
-  EnRotate: {x: 0, y: 0, z: 0}
 --- !u!1 &1844921017
 GameObject:
   m_ObjectHideFlags: 0
@@ -10446,12 +10454,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshParent: {fileID: 1591767674}
   _baseData: {fileID: 11400000, guid: d090315208bc6e042a7dfc44e4ce9f4b, type: 2}
-  e_Type: 0
-  e_State: 0
-  ram: 0
-  ch_player: {fileID: 0}
-  EnPosition: {x: 0, y: 0, z: 0}
-  EnRotate: {x: 0, y: 0, z: 0}
 --- !u!1 &1851433157
 GameObject:
   m_ObjectHideFlags: 0
@@ -26857,15 +26859,16 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 147480283}
   - {fileID: 330585546}
+  - {fileID: 622584116}
   - {fileID: 518529432}
   - {fileID: 1804064797}
   - {fileID: 1572303618}
   - {fileID: 884858322}
   - {fileID: 1341239683}
+  - {fileID: 1666936372}
   - {fileID: 2073931566}
   - {fileID: 1590068261}
   - {fileID: 18156532}
-  - {fileID: 622584116}
   - {fileID: 321690141}
   - {fileID: 277452554}
   - {fileID: 1343516129}
