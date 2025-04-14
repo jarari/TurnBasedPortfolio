@@ -7,11 +7,17 @@ namespace TurnBased.Entities.Roam
 {
     public class CharacterMove : MonoBehaviour
     {
-        public GameObject image;
+        
         public Animator animator;
+        public GameObject image;
         private Rigidbody rb;
 
-        private bool Attack; //공격 가능한가?
+        public Transform[] enemise; // 감지할 적들의 trnasform 배열.
+        private Transform currentTarget; // 현재 감지된 가장 가까운 적의 transform을 저장.
+
+        public float Range = 7.5f; // 감지 & 공격 거리.
+
+        
 
         private bool isAttack; // 공격 했는가?
 
@@ -22,12 +28,39 @@ namespace TurnBased.Entities.Roam
         {
             rb = GetComponent<Rigidbody>(); // 리지드바디 초기화
             animator = GetComponent<Animator>(); //애니메이터 초기화
-            if (image != null ) { image.SetActive(false); } //처음에는 비활성화
+
+            if (image != null)
+                image.SetActive(false); // 시작 시 UI 비활성화
+
         }
 
         private void Update()
         {
-            if ( Attack && Input.GetMouseButtonDown(0) && !isAttack) //
+            currentTarget = null; // 현재 타겟을 초기화
+            float minDistance = Mathf.Infinity; //가까운 적을 찾기위해 비교할 최소거리를 무한대로.
+
+            //enemy 순회
+            foreach ( var enemy in enemise )
+            {
+                //플레이어와 해당 적 사이의 거리를 계산합니다.
+                float dist = Vector3.Distance (transform.position, enemy.position);
+              
+                if (dist <= Range && dist < minDistance)
+                {
+                    minDistance = dist; //최소 거리 와 현재 타겟을 업데이트.
+                    currentTarget = enemy;
+                    Debug.Log(" 적을 감지 했습니다");
+                }
+
+            }
+
+            // UI 활성화: 가장 가까운 적이 범위 내에 있으면 UI를 활성화
+            if (image != null)
+                image.SetActive(currentTarget != null);
+
+
+            // 공격 가능한 상태에서 공격을 하지 않았고 마우스 왼클릭 했다면.
+            if ( currentTarget != null && Input.GetMouseButtonDown(0) && !isAttack) 
             {
                 isAttack = true;
               
@@ -62,26 +95,6 @@ namespace TurnBased.Entities.Roam
             rb.linearVelocity = move;
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Enemy")) //에너미 개체가 DetectionZone 에 들어오면
-            {
-                Debug.Log("Enemy in"); // 표적 ui 활성화
-                if (image != null)
-                    image.SetActive(true);
-            }
-        }
-
-        private void OnTriggerExit(Collider other) 
-        {
-            if (other.CompareTag("Enemy")) //DetectionZone 나가면
-            {
-                if (image != null)
-                    image.SetActive(false); //ui 비활성화
-            }
-        }
-
-
-        
+     
     }
 }
