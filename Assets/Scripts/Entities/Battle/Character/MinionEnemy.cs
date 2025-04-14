@@ -197,7 +197,7 @@ namespace TurnBased.Entities.Battle {
         #endregion
 
         // 혹시 몰라서 만든 데미지 함수 (때린 놈의 정보를 가져온다)
-        public void Apply(Character pl)
+        public void DamageApply(Character pl)
         {
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();

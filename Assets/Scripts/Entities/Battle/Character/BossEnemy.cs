@@ -238,7 +238,7 @@ namespace TurnBased.Entities.Battle {
 
 
         // 혹시 몰라서 만든 데미지 함수
-        public void Apply(Character pl)
+        public void DamageApply(Character pl)
         {
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();
