@@ -42,11 +42,22 @@ namespace TurnBased.Battle.Managers {
         private void OnAttack(InputValue inputValue) {
             var currentCharacter = TurnManager.instance.CurrentCharacter;
             if (CanCharacterTakeInput()) {
-                if (currentCharacter.CurrentState == Character.CharacterState.PrepareAttack) {
-                    currentCharacter.DoAttack();
+                if (currentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                    currentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                    if (currentCharacter.CurrentState == Character.CharacterState.PrepareAttack) {
+                        currentCharacter.DoAttack();
+                    }
+                    else {
+                        currentCharacter.PrepareAttack();
+                    }
                 }
                 else {
-                    currentCharacter.PrepareAttack();
+                    if (currentCharacter.CurrentState == Character.CharacterState.PrepareUltAttack) {
+                        currentCharacter.CastUltAttack();
+                    }
+                    else {
+                        currentCharacter.PrepareUltAttack();
+                    }
                 }
             }
         }
@@ -58,11 +69,22 @@ namespace TurnBased.Battle.Managers {
         private void OnSkill(InputValue inputValue) {
             var currentCharacter = TurnManager.instance.CurrentCharacter;
             if (CanCharacterTakeInput()) {
-                if (currentCharacter.CurrentState == Character.CharacterState.PrepareSkill) {
-                    currentCharacter.CastSkill();
+                if (currentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                    currentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                    if (currentCharacter.CurrentState == Character.CharacterState.PrepareSkill) {
+                        currentCharacter.CastSkill();
+                    }
+                    else {
+                        currentCharacter.PrepareSkill();
+                    }
                 }
                 else {
-                    currentCharacter.PrepareSkill();
+                    if (currentCharacter.CurrentState == Character.CharacterState.PrepareUltSkill) {
+                        currentCharacter.CastUltSkill();
+                    }
+                    else {
+                        currentCharacter.PrepareUltSkill();
+                    }
                 }
             }
         }
