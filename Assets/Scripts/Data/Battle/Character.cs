@@ -142,13 +142,13 @@ namespace TurnBased.Battle {
             WantCmd = false;
         }
         /// <summary>
-        /// ±√±ÿ±‚ Q ¡ÿ∫Ò¿⁄ºº
+        /// ±√±ÿ±‚ E ¡ÿ∫Ò¿⁄ºº
         /// </summary>
         public virtual void PrepareUltSkill() {
             CurrentState = CharacterState.PrepareUltSkill;
         }
         /// <summary>
-        /// ±√±ÿ±‚ Q πﬂµø
+        /// ±√±ÿ±‚ E πﬂµø
         /// </summary>
         public virtual void CastUltSkill() {
             CurrentState = CharacterState.CastUltSkill;
