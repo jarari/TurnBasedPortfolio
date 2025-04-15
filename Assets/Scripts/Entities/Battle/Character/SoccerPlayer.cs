@@ -97,6 +97,10 @@ namespace TurnBased.Entities.Battle {
             base.CastUltAttack();
         }
 
+        public override void CastUltSkill() {
+            base.CastUltSkill();
+        }
+
         public override void DoAttack() {
             base.DoAttack();
             var enemy = TargetManager.instance.Target;
@@ -127,6 +131,11 @@ namespace TurnBased.Entities.Battle {
 
         public override void PrepareUltAttack() {
             base.PrepareUltAttack();
+            Debug.Log("Prepare Ult Attack");
+        }
+
+        public override void PrepareUltSkill() {
+            base.PrepareUltSkill();
         }
     }
 }
