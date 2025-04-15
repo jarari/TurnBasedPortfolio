@@ -126,29 +126,40 @@ namespace TurnBased.Battle.Managers {
         }
 
         public void ChangeTargetSetting(TargetMode mode, CharacterTeam team = CharacterTeam.Player) {
+            // 이건 타겟팅이 셀프일경우 또는 팀이 타겟팀과 다르면 참 같으면 거짓을 반환
             bool shouldInit = mode == TargetMode.Self || team != TargetTeam ? true : false;
+            // 옮겨서
             Mode = mode;
+            // 셀프로 타겟팅할경우
             if (mode == TargetMode.Self) {
                 TargetTeam = CharacterTeam.Player;
             }
+            // 셀프가 아니면
             else {
+                // 타겟팀을 옮긴다
                 TargetTeam = team;
             }
             OnTargetSettingChanged?.Invoke();
+            // 초기화를 나타내는 불값이 참이면
             if (shouldInit) {
                 InitializeTarget();
             }
+            // 거짓을 반환한다면
             else {
                 UpdateTarget(Target, TargetIndex);
             }
         }
 
+        // 타겟을 초기화
         public void InitializeTarget() {
+            // 타겟모드가 직접하는 경우
             if (Mode == TargetMode.Self) {
                 var c = TurnManager.instance.CurrentCharacter;
                 UpdateTarget(c, CharacterManager.instance.GetAllyIndex(c), false);
             }
+            // 그게 아닐경우
             else {
+                // 타겟인 팀이 에너미일 경우
                 if (TargetTeam == CharacterTeam.Enemy) {
                     int[] idxToTry = { 2, 1, 3, 0, 4 };
                     Character enemy;
@@ -164,6 +175,7 @@ namespace TurnBased.Battle.Managers {
                     }
                     UpdateTarget(enemy, idxToTry[tryIdx], false);
                 }
+                // 타겟인 팀이 플레이어일 경우
                 else {
                     int[] idxToTry = { 1, 0, 2 };
                     Character ally;

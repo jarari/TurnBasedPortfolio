@@ -39,10 +39,6 @@ namespace TurnBased.Entities.Battle {
 
         #endregion
 
-        // 타겟팅할 플레이어를 담을 변수
-        public Character ch_player;
-        public Character[] ch_players;
-
         // 본인의 위치와 회전값을 담을 변수
         public Vector3 EnPosition;
         public Vector3 EnRotate;
@@ -147,12 +143,12 @@ namespace TurnBased.Entities.Battle {
             base.CastSkill();
             Debug.Log(gameObject.name + " 의 스킬 발동!");
 
-            
-
-            // 다수의 플레이어중 가운데 플레이어를 가져온다
-            Character target_M = ch_players[ch_players.Length / 2];
-            // 에너미를 가운데 플레이어를 향하게 한다
-            transform.forward = target_M.gameObject.transform.position;
+            // 타겟팅을 갱신한다 (플레이어로)
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+            // 플레이어 타겟을 가져온다 (1인)
+            var player = TargetManager.instance.Target;
+            // 에너미가 플레이어를 바라보게한다
+            meshParent.transform.forward = player.gameObject.transform.position;
 
             // 스킬 공격 애니메이션 재생
             //skillAttack.Play();
@@ -166,11 +162,12 @@ namespace TurnBased.Entities.Battle {
             base.CastUlt();
             Debug.Log(gameObject.name + " 의 필살기 발동!");
 
-            // 다수의 플레이어중 가운데 플레이어를 가져온다
-            Character target_M = ch_players[ch_players.Length / 2];
-            // 에너미를 가운데 플레이어를 향하게 한다
-            transform.forward = target_M.gameObject.transform.position;
-
+            // 타겟팅을 갱신한다 (플레이어로)
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+            // 플레이어 타겟을 가져온다 (1인)
+            var player = TargetManager.instance.Target;
+            // 에너미가 플레이어를 바라보게한다
+            meshParent.transform.forward = player.gameObject.transform.position;
 
             // 필살기 공격 애니메이션 재생
             //UltAttack.Play();
@@ -184,28 +181,35 @@ namespace TurnBased.Entities.Battle {
             base.DoAttack();
             Debug.Log("Enemy Attack");
 
-            // 타겟으로 삼을 플레이어 캐릭터를 랜덤하게 고른다
-            ChPlayer_S();
+            // 타겟팅을 갱신한다 (플레이어로)
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+            // 플레이어 타겟을 가져온다
+            var player = TargetManager.instance.Target;
             // 에너미가 플레이어를 바라보게한다
-            transform.forward = ch_player.gameObject.transform.position;
+            meshParent.transform.forward = player.gameObject.transform.position;
 
             // 현제 공격을 진행하는 오브젝트의 이름 (테스트용)
             Debug.Log(gameObject.name + " 의 공격! ");
 
+            // 일반공격 애니메이션이 실행
+            //normalAttack.Play();
+            
+            // 마지막 공격이 일반공격임을 보낸다
+            _lastAttack = CharacterState.DoAttack;
 
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();
             // 데미지를 계산하는 함수를 호출하고
-            DamageResult result = CombatManager.DoDamage(ch, ch_player);
+            DamageResult result = CombatManager.DoDamage(ch, player);
 
-            Debug.Log(ch_player.name + " 에게 " + result.FinalDamage + " 데미지");
+            Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
             // ( 플레이어의 데미지함수를 호출 또는 여기서 계산)
 
-            // 일반공격 애니메이션이 실행
-            //normalAttack.Play();
+            // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
+            player.Damage(this);
 
-            // 마지막 공격이 일반공격임을 보낸다
-            _lastAttack = CharacterState.DoAttack;
+            // 에너미가 원래 방향을 향해 바라보게한다
+            meshParent.transform.forward = EnPosition;
 
         }
 
@@ -313,29 +317,6 @@ namespace TurnBased.Entities.Battle {
             Data.stats.Defense = (Data.stats.Defense) / 2;
         }
 
-        // ( 공사 예정  -- 타겟팅 메니저 이용을 생각중)
-        // 아군 캐릭터칸에 있는 플레이어 캐릭터를 랜덤하게 하나를 가져온다
-        public void ChPlayer_S()
-        {
-            // 랜덤한 숫자를 뽑아
-            int ran = Random.Range(0, 2);
-            // 캐릭터 메니저의 등록된 모든 아군 캐릭터 리스트를 가져온다 (후에 생존한 캐릭터만 가져올 예정)
-            var player = CharacterManager.instance.GetAllyCharacters();
-            // 랜덤한 아군 캐릭터를 리스트에서 가져온다
-            ch_player = player[ran];
-        }
-        // 아군 캐릭터칸에 있는 플레이어 캐릭터를 모두 가져온다
-        public void ChPlayer_M()
-        {
-            // 캐릭터 메니저의 등록된 모든 아군 캐릭터 리스트를 가져온다 (후에 생존한 캐릭터만 가져올 예정)
-            var player = CharacterManager.instance.GetAllyCharacters();
-            // 받아온 리스트의 길이 만큼 for문을 돌린다
-            for (int i = 0; i < player.Count; i++)
-            {
-                ch_players[i] = player[i];
-            }
-
-        }
         
     }
 

@@ -249,5 +249,6 @@ namespace TurnBased.Battle {
             // 없다면 false 를 반환한다
             return false;
         }
+
     }
 }
