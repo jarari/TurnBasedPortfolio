@@ -70,7 +70,7 @@ namespace TurnBased.Entities.Battle {
                 // 타임라인을 현재 시간에 맞게 상태를 업데이트
                 skillAttack.Evaluate();
             }
-            else if (_lastAttack == CharacterState.CastUlt)
+            else if (_lastAttack == CharacterState.CastUltAttack)
             {
                 // 필살기 공격 애니메이션을 끝까지 진행시킨다
                 UltAttack.time = UltAttack.duration;
@@ -160,9 +160,9 @@ namespace TurnBased.Entities.Battle {
             _lastAttack = CharacterState.CastSkill;
         }
         // 궁극기
-        public override void CastUlt()
+        public override void CastUltAttack()
         {
-            base.CastUlt();
+            base.CastUltAttack();
             Debug.Log(gameObject.name + " 의 필살기 발동!");
 
             // 다수의 플레이어중 가운데 플레이어를 가져온다
@@ -175,7 +175,7 @@ namespace TurnBased.Entities.Battle {
             //UltAttack.Play();
 
             // 마지막 공격이 필살기임을 보낸다
-            _lastAttack = CharacterState.CastUlt;
+            _lastAttack = CharacterState.CastUltAttack;
         }
         // 공격을 시작할때
         public override void DoAttack()
@@ -229,9 +229,9 @@ namespace TurnBased.Entities.Battle {
             base.PrepareSkill();
         }
         // 궁극기를 준비하는 함수
-        public override void PrepareUlt()
+        public override void PrepareUltAttack()
         {
-            base.PrepareUlt();
+            base.PrepareUltAttack();
         }
 
         #endregion

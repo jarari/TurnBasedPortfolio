@@ -10,8 +10,8 @@ namespace TurnBased.Entities.Battle {
             EndTurn();
         }
 
-        public override void CastUlt() {
-            base.CastUlt();
+        public override void CastUltAttack() {
+            base.CastUltAttack();
         }
 
         public override void DoAttack() {
@@ -33,8 +33,8 @@ namespace TurnBased.Entities.Battle {
             TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
         }
 
-        public override void PrepareUlt() {
-            base.PrepareUlt();
+        public override void PrepareUltAttack() {
+            base.PrepareUltAttack();
         }
     }
 }

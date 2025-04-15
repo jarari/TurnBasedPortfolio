@@ -189,9 +189,9 @@ namespace TurnBased.Entities.Battle {
             base.PrepareSkill();
         }
         // 궁극기를 준비하는 함수
-        public override void PrepareUlt()
+        public override void PrepareUltAttack()
         {
-            base.PrepareUlt();
+            base.PrepareUltAttack();
         }
 
         #endregion
