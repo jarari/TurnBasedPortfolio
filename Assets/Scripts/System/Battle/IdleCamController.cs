@@ -70,8 +70,8 @@ namespace TurnBased.Battle {
 
         private void OnCharacterTurnStart(Character c) {
             //턴 시작 시 유휴상태 카메라와 턴 전환 카메라 활성화
-            _idleCam.Priority = 1;
-            _turnChangeCam.Priority = 2;
+            _idleCam.Priority = 3;
+            _turnChangeCam.Priority = 5;
             _characterTurn = true;
             if (_idleAnimationCoroutine == null) {
                 _idleAnimationCoroutine = StartCoroutine(AnimateIdleCam());
@@ -99,13 +99,13 @@ namespace TurnBased.Battle {
             if (TurnManager.instance.CurrentCharacter == _character) {
                 var tm = TargetManager.instance;
                 if (tm.Mode == TargetManager.TargetMode.Self) {
-                    cmSelfCam.Priority = 3;
+                    cmSelfCam.Priority = 7;
                     cmAllCam.Priority = 0;
                     ShowAllyCharacters();
                 }
                 else if (tm.TargetTeam == CharacterTeam.Player) {
                     cmSelfCam.Priority = 0;
-                    cmAllCam.Priority = 3;
+                    cmAllCam.Priority = 7;
                     ShowAllyCharacters();
                 }
                 else {
