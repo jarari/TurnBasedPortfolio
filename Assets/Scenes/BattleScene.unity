@@ -204,6 +204,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1326740}
   - component: {fileID: 1326741}
+  - component: {fileID: 1326742}
   m_Layer: 0
   m_Name: CM Cam Self
   m_TagString: Untagged
@@ -269,6 +270,23 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1326742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NoiseProfile: {fileID: 11400000, guid: 661357ef3d060064d92f55bd8375bb8e, type: 2}
+  PivotOffset: {x: 0, y: 0, z: 0}
+  AmplitudeGain: 1
+  FrequencyGain: 1
+  m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &18156531
 GameObject:
   m_ObjectHideFlags: 0
@@ -1653,6 +1671,7 @@ GameObject:
   - component: {fileID: 321690141}
   - component: {fileID: 321690140}
   - component: {fileID: 321690139}
+  - component: {fileID: 321690142}
   m_Layer: 0
   m_Name: CM Cam All
   m_TagString: Untagged
@@ -1747,6 +1766,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &321690142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321690138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NoiseProfile: {fileID: 11400000, guid: 661357ef3d060064d92f55bd8375bb8e, type: 2}
+  PivotOffset: {x: 0, y: 0, z: 0}
+  AmplitudeGain: 1
+  FrequencyGain: 1
+  m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -2787,6 +2823,7 @@ GameObject:
   m_Component:
   - component: {fileID: 489939066}
   - component: {fileID: 489939067}
+  - component: {fileID: 489939068}
   m_Layer: 0
   m_Name: CM Cam Self
   m_TagString: Untagged
@@ -2852,6 +2889,23 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &489939068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489939065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NoiseProfile: {fileID: 11400000, guid: 661357ef3d060064d92f55bd8375bb8e, type: 2}
+  PivotOffset: {x: 0, y: 0, z: 0}
+  AmplitudeGain: 1
+  FrequencyGain: 1
+  m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &492902726
 GameObject:
   m_ObjectHideFlags: 0
@@ -4911,6 +4965,7 @@ GameObject:
   m_Component:
   - component: {fileID: 690216470}
   - component: {fileID: 690216471}
+  - component: {fileID: 690216472}
   m_Layer: 0
   m_Name: CM Cam Self
   m_TagString: Untagged
@@ -4976,6 +5031,23 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &690216472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 690216469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NoiseProfile: {fileID: 11400000, guid: 661357ef3d060064d92f55bd8375bb8e, type: 2}
+  PivotOffset: {x: 0, y: 0, z: 0}
+  AmplitudeGain: 1
+  FrequencyGain: 1
+  m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &699633457
 GameObject:
   m_ObjectHideFlags: 0
@@ -17861,11 +17933,8 @@ Animator:
   m_AnimatePhysics: 0
   m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
     are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:LeftHandRing1'\n\tand more ...\n\tFrom
-    animation clip 'stall ball'"
+    by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tFrom animation clip
+    'stall ball'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
