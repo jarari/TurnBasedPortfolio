@@ -88,5 +88,32 @@ namespace TurnBased.Battle.Managers {
                 }
             }
         }
+
+        private void OnUlt1(InputValue inputValue) {
+            var character = CharacterManager.instance.GetAllyCharacters()[0];
+            if (character != null && 
+                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                TurnManager.instance.AddUltTurn(character);
+            }
+        }
+
+        private void OnUlt2(InputValue inputValue) {
+            var character = CharacterManager.instance.GetAllyCharacters()[1];
+            if (character != null &&
+                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                TurnManager.instance.AddUltTurn(character);
+            }
+        }
+
+        private void OnUlt3(InputValue inputValue) {
+            var character = CharacterManager.instance.GetAllyCharacters()[2];
+            if (character != null &&
+                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                TurnManager.instance.AddUltTurn(character);
+            }
+        }
     }
 }
