@@ -1,10 +1,11 @@
+using System.Collections.Generic;
+using TurnBased.Battle.Managers;
 using UnityEngine;
 
 public class CombatUIManager : MonoBehaviour
 {
-    // 인스턴스
-    public static CombatUIManager Instance;
-    
+    public static CombatUIManager Instance; // CombatUIManager 인스턴스
+
     public GameObject CombatUI;           // 전투 UI 오브젝트
     public GameObject PauseWindow;        // 일시 정지 창 오브젝트
     public GameObject CharacterWindow;    // 캐릭터 창 오브젝트
