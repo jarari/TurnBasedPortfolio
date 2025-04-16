@@ -9,8 +9,8 @@ namespace TurnBased.Entities.Battle {
             EndTurn();
         }
 
-        public override void CastUlt() {
-            base.CastUlt();
+        public override void CastUltAttack() {
+            base.CastUltAttack();
         }
 
         public override void DoAttack() {
@@ -24,7 +24,7 @@ namespace TurnBased.Entities.Battle {
 
         public override void PrepareAttack() {
             base.PrepareAttack();
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Triple, TurnBased.Data.CharacterTeam.Enemy);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Triple, TurnBased.Data.CharacterTeam.Player);
         }
 
         public override void PrepareSkill() {
@@ -32,8 +32,8 @@ namespace TurnBased.Entities.Battle {
             TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Self);
         }
 
-        public override void PrepareUlt() {
-            base.PrepareUlt();
+        public override void PrepareUltAttack() {
+            base.PrepareUltAttack();
         }
     }
 }

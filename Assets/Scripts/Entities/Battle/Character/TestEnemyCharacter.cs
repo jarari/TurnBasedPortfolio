@@ -17,8 +17,8 @@ namespace TurnBased.Entities.Battle {
         public override void CastSkill() {
             base.CastSkill();         
         }
-        public override void CastUlt() {
-            base.CastUlt();          
+        public override void CastUltAttack() {
+            base.CastUltAttack();          
         }
         public override void DoAttack() {
             base.DoAttack();      
@@ -32,8 +32,8 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareSkill() {
             base.PrepareSkill();
         }
-        public override void PrepareUlt() {
-            base.PrepareUlt();
+        public override void PrepareUltAttack() {
+            base.PrepareUltAttack();
         }
     }
 }
