@@ -26,6 +26,15 @@ namespace TurnBased.Entities.Battle {
             }
         }
 
+        private void CastUlt() {
+            SetMeshLayer(MeshLayer.UltTimeline);
+            ultAttack.Play();
+            _lastAttack = CharacterState.CastUltAttack;
+            foreach (var c in CharacterManager.instance.GetEnemyCharacters()) {
+                c.SetMeshLayer(MeshLayer.UltTimeline);
+            }
+        }
+
         protected override void Awake() {
             base.Awake();
             OnAnimationEvent += OnAnimationEvent_Impl;
@@ -74,10 +83,12 @@ namespace TurnBased.Entities.Battle {
 
         public override void CastUltAttack() {
             base.CastUltAttack();
+            CastUlt();
         }
 
         public override void CastUltSkill() {
             base.CastUltSkill();
+            CastUlt();
         }
 
         public override void DoAttack() {
@@ -111,11 +122,15 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareUltAttack() {
             base.PrepareUltAttack();
             Debug.Log("Prepare Ult Attack");
+            animator.SetInteger("State", 2);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
         }
 
         public override void PrepareUltSkill() {
             base.PrepareUltSkill();
             Debug.Log("Prepare Ult Skill");
+            animator.SetInteger("State", 2);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
         }
 
         public override void ProcessCamChanged() {
