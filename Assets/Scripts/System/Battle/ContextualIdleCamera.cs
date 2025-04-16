@@ -118,6 +118,7 @@ namespace TurnBased.Battle {
 
         private void OnCharacterUltTurn(Character c) {
             Priority = 4;
+            ResetAllCharacterLayers();
             _currentContext = Context.Ult;
         }
 

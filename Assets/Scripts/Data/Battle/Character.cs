@@ -27,7 +27,8 @@ namespace TurnBased.Battle {
         public enum MeshLayer {
             Default,
             SkillTimeine,
-            Hidden
+            Hidden,
+            UltTimeline
         }
 
         public Action<Character> OnTurnStart;
@@ -69,6 +70,12 @@ namespace TurnBased.Battle {
                 }
             }
             OnTurnStart?.Invoke(this);
+        }
+
+        public virtual void TakeUltTurn() {
+            WantCmd = true;
+            PrepareUltAttack();
+            OnUltTurn?.Invoke(this);
         }
 
         /// <summary>
@@ -177,6 +184,9 @@ namespace TurnBased.Battle {
             }
             else if (layer == MeshLayer.Hidden) {
                 layerID = 7;
+            }
+            else if (layer == MeshLayer.UltTimeline) {
+                layerID = 8;
             }
             foreach (var child in meshParent.GetComponentsInChildren<Transform>(true)) {
                 child.gameObject.layer = layerID;
