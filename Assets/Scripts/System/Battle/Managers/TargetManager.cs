@@ -28,6 +28,7 @@ namespace TurnBased.Battle.Managers {
         }
 
         public GameObject camTarget;
+        public GameObject camTargetAlly;
         public List<Transform> camPos;
         public List<Transform> camPosAlly;
 
@@ -78,14 +79,16 @@ namespace TurnBased.Battle.Managers {
                 int posInt = Mathf.FloorToInt(InterpolatedTargetPos);
                 float posFloat = InterpolatedTargetPos - posInt;
                 var posList = camPos;
+                var camObj = camTarget;
                 if (TargetTeam == CharacterTeam.Player) {
                     posList = camPosAlly;
+                    camObj = camTargetAlly;
                 }
                 if (posInt < posList.Count - 1) {
-                    camTarget.transform.position = Vector3.Lerp(posList[posInt].position, posList[posInt + 1].position, posFloat);
+                    camObj.transform.position = Vector3.Lerp(posList[posInt].position, posList[posInt + 1].position, posFloat);
                 }
                 else {
-                    camTarget.transform.position = posList[posList.Count - 1].position;
+                    camObj.transform.position = posList[posList.Count - 1].position;
                 }
                 OnCamTargetUpdate?.Invoke(InterpolatedTargetPos);
                 yield return null;
@@ -118,7 +121,7 @@ namespace TurnBased.Battle.Managers {
                     camTarget.transform.position = camPos[idx].position;
                 }
                 else {
-                    camTarget.transform.position = camPosAlly[idx].position;
+                    camTargetAlly.transform.position = camPosAlly[idx].position;
                 }
                 OnCamTargetUpdate?.Invoke(InterpolatedTargetPos);
             }
@@ -126,7 +129,7 @@ namespace TurnBased.Battle.Managers {
         }
 
         public void ChangeTargetSetting(TargetMode mode, CharacterTeam team = CharacterTeam.Player) {
-            bool shouldInit = mode == TargetMode.Self || team != TargetTeam ? true : false;
+            bool shouldInit = Target == null || mode == TargetMode.Self || team != TargetTeam ? true : false;
             Mode = mode;
             if (mode == TargetMode.Self) {
                 TargetTeam = CharacterTeam.Player;
