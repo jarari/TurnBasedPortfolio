@@ -11790,7 +11790,7 @@ Camera:
   m_Depth: 2
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 319
+    m_Bits: 318
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -14371,7 +14371,7 @@ MonoBehaviour:
   _baseData: {fileID: 11400000, guid: cfa15eedc5b865945aec08c04536bc26, type: 2}
   normalAttack: {fileID: 151517280}
   skillAttack: {fileID: 35101551}
-  ultAttack: {fileID: 0}
+  ultAttack: {fileID: 231281791}
   skillBallLeft: {fileID: 652064819}
   skillBallRight: {fileID: 1602780431}
   animator: {fileID: 3369514542243842526}
@@ -27145,7 +27145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 0
+  m_Weight: 1
   m_Effectors:
   - m_Transform: {fileID: 1362959477}
     m_Style:
@@ -30656,7 +30656,7 @@ GameObject:
   - component: {fileID: 1906277515358808882}
   - component: {fileID: 8221749066914891142}
   - component: {fileID: 7714244166202466288}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Suspended Goalpost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
