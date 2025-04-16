@@ -10,6 +10,7 @@ public class TargetUITest : MonoBehaviour {
 
     private void Start() {
         TargetManager.instance.OnTargetChanged += OnTargetChanged;
+        character = TargetManager.instance.Target;
     }
 
     private void Update() {
