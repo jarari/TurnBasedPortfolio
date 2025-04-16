@@ -126,6 +126,7 @@ namespace TurnBased.Entities.Battle {
             TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
             // 플레이어 타겟을 가져온다
             var player = TargetManager.instance.Target;
+           
             // 에너미가 플레이어를 바라보게한다
             meshParent.transform.forward = player.gameObject.transform.position;
 
@@ -146,6 +147,12 @@ namespace TurnBased.Entities.Battle {
             TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
             // 플레이어 타겟을 가져온다 (1인)
             var player = TargetManager.instance.Target;
+
+            Debug.Log(player);
+
+            // 에너미가 플레이어 앞에 오도록 한다 (변경후 Mesh는 x : 2, y : 0, z:8 에 오게 된다)
+            meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f,0f);
+
             // 에너미가 플레이어를 바라보게한다
             meshParent.transform.forward = player.gameObject.transform.position;
 
