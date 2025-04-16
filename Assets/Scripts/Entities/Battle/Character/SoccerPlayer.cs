@@ -11,6 +11,7 @@ namespace TurnBased.Entities.Battle {
         [Header("Timelines")]
         public PlayableDirector normalAttack;
         public PlayableDirector skillAttack;
+        public PlayableDirector ultAttack;
         [Header("Skill Objects")]
         public GameObject skillBallLeft;
         public GameObject skillBallRight;
@@ -18,31 +19,9 @@ namespace TurnBased.Entities.Battle {
         public Animator animator;
 
         private CharacterState _lastAttack;
-        private IEnumerator DelayedReturnFromAttack() {
-            yield return null;
-            if (_lastAttack == CharacterState.DoAttack) {
-                normalAttack.time = normalAttack.duration;
-                normalAttack.Evaluate();
-            }
-            else if (_lastAttack == CharacterState.CastSkill) {
-                skillAttack.time = skillAttack.duration;
-                skillAttack.Evaluate();
-                var targets = TargetManager.instance.GetTargets();
-                foreach (var t in targets) {
-                    t.meshParent.transform.localPosition = Vector3.zero;
-                }
-            }
-            animator.SetInteger("State", 0);
-            meshParent.transform.localPosition = Vector3.zero;
-            foreach (var c in CharacterManager.instance.GetEnemyCharacters()) {
-                c.SetMeshLayer(MeshLayer.Default);
-            }
-            SetMeshLayer(MeshLayer.Default);
-        }
 
         private void OnAnimationEvent_Impl(Character c, string animEvent, string payload) {
             if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd") {
-                StartCoroutine(DelayedReturnFromAttack());
                 EndTurn();
             }
         }
@@ -136,6 +115,24 @@ namespace TurnBased.Entities.Battle {
 
         public override void PrepareUltSkill() {
             base.PrepareUltSkill();
+            Debug.Log("Prepare Ult Skill");
+        }
+
+        public override void ProcessCamChanged() {
+            if (_lastAttack == CharacterState.DoAttack) {
+                normalAttack.time = normalAttack.duration;
+                normalAttack.Evaluate();
+            }
+            else if (_lastAttack == CharacterState.CastSkill) {
+                skillAttack.time = skillAttack.duration;
+                skillAttack.Evaluate();
+                var targets = TargetManager.instance.GetTargets();
+                foreach (var t in targets) {
+                    t.meshParent.transform.localPosition = Vector3.zero;
+                }
+            }
+            animator.SetInteger("State", 0);
+            meshParent.transform.localPosition = Vector3.zero;
         }
     }
 }
