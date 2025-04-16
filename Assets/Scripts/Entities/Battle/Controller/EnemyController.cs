@@ -9,8 +9,9 @@ namespace TurnBased.Entities.Roam
 {
     public class EnemyController : MonoBehaviour
     {
-        public Animator animator;
+        
         public Transform player; //플레이어 참조
+        public GameObject image;
 
         private Vector3 startposition; //처음 위치
         private Vector3 patrolDir = Vector3.forward; // 기본 이동 방향
@@ -31,6 +32,7 @@ namespace TurnBased.Entities.Roam
         private void Start()
         {
             startposition = transform.position; // 위치 초기화
+
         }
 
         private void Update()
@@ -58,16 +60,19 @@ namespace TurnBased.Entities.Roam
                         targetRotation,
                         rotateSpeed * Time.deltaTime);
                 }
-                    
 
-                    if (detectTimer >= tryAttack) // 경계 상태가 지속됐을 때
-                    {
+               
+
+                if (detectTimer >= tryAttack) // 경계 상태가 지속됐을 때
+                {
                         EnemyAttack();
                         detectTimer = 0f;
-                    }
-
-                    return;
                 }
+
+               return;
+            }
+
+           
 
                 detectTimer = 0f;
                 isPatrol = true;
@@ -110,7 +115,7 @@ namespace TurnBased.Entities.Roam
 
         }
         //임시로 애니메이터에서 피격 애니메이션 가져와야함.
-          private IEnumerator Attacking() 
+        /*  private IEnumerator Attacking() 
             {
                  if (animator != null)
                  {
@@ -123,7 +128,7 @@ namespace TurnBased.Entities.Roam
                     yield return new WaitForSeconds(1.2f);
                     //씬 전환
                     SceneManager.LoadScene("BattleScene");
-            }
+            }*/
         
     }
 }
