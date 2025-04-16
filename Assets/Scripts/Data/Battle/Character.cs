@@ -32,6 +32,7 @@ namespace TurnBased.Battle {
 
         public Action<Character> OnTurnStart;
         public Action<Character> OnTurnEnd;
+        public Action<Character> OnUltTurn;
         public Action<Character, string, string> OnAnimationEvent;
         public Action<Character, bool> OnVisibilityChange;
 
@@ -42,8 +43,6 @@ namespace TurnBased.Battle {
         public CharacterState WantState { get; protected set; } = CharacterState.PrepareAttack;
         public bool IsVisible { get; set; }
         public MeshLayer CurrentMeshLayer { get; protected set; }
-
-        protected MeshLayer _previousLayer;
 
 
         protected virtual void Awake() {
@@ -161,13 +160,13 @@ namespace TurnBased.Battle {
         public virtual void SetVisible(bool visibility) {
             if (visibility && CurrentMeshLayer == MeshLayer.Hidden) {
                 SetMeshLayer(MeshLayer.Default);
+                OnVisibilityChange?.Invoke(this, visibility);
             }
-            else if (!visibility) {
-                _previousLayer = CurrentMeshLayer;
+            else if (!visibility && CurrentMeshLayer != MeshLayer.Hidden) {
                 SetMeshLayer(MeshLayer.Hidden);
+                OnVisibilityChange?.Invoke(this, visibility);
             }
             IsVisible = visibility;
-            OnVisibilityChange?.Invoke(this, visibility);
         }
 
         public virtual void SetMeshLayer(MeshLayer layer) {
@@ -183,5 +182,7 @@ namespace TurnBased.Battle {
                 child.gameObject.layer = layerID;
             }
         }
+
+        public virtual void ProcessCamChanged() { }
     }
 }
