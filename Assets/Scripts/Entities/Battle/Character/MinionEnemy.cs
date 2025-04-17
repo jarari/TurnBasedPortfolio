@@ -15,19 +15,13 @@ namespace TurnBased.Entities.Battle {
         [Header("Timelines")]
         public PlayableDirector normalAttack;    // 일반 공격 애니메이션
         public PlayableDirector skillAttack;        // 스킬 공격 애니메이션        
-        public PlayableDirector Groggy_anim;             // 그로기 애니메이션
-        public PlayableDirector Dead_anim;             // 사망애니메이션
-
+        
         [Header("Components")]
         public Animator animator;   // 캐릭터의 애니메이터
 
-        // 타겟팅할 플레이어를 담을 변수 (이건 타겟팅 되는지 확인할 목적으로 public을 사용)
-        public Character ch_player;
-        public Character[] ch_players;
-
         // 본인의 위치와 회전값을 담을 변수
-        public Vector3 EnPosition;
-        public Vector3 EnRotate;
+        private Vector3 EnPosition;
+        private Vector3 EnRotate;
 
         // 캐릭터의 마지막 공격 상태를 담을 변수
         private CharacterState _lastAttack;
@@ -43,7 +37,7 @@ namespace TurnBased.Entities.Battle {
                 // 일반 공격 애니메이션을 끝까지 진행시킨다
                 normalAttack.time = normalAttack.duration;
                 // 타임라인을 현재 시간에 맞게 상태를 업데이트
-                normalAttack.Evaluate();
+                normalAttack.Evaluate();                
             }
             // 마지막 공격 상태가 CastSkill 일 경우
             else if (_lastAttack == CharacterState.CastSkill)
@@ -58,29 +52,33 @@ namespace TurnBased.Entities.Battle {
         // 애니메이션 이벤트가 발생했을경우 처리하는 함수
         private void OnAnimationEvent_Impl(Character c, string animEvent, string payload)
         {
-            if (animEvent == "NomalAttackEnd" || animEvent == "SkillAttackEnd")
+            if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd")
             {
                 // 공격후 애니메이션 처리 코루틴을 호출후
                 StartCoroutine(DelayReturnFromAttack());
+
+                Debug.Log("턴 종료");
+                // 에너미의 위치를 원래 위치로 맞춘다
+                meshParent.transform.position = EnPosition;
                 // 공격하기 위해 틀었던 회전값을 원래대로 가져온다
-                transform.eulerAngles = EnRotate;
+                meshParent.transform.eulerAngles = EnRotate;
+
                 // 턴을 종료한다
                 EndTurn();
             }
         }
         protected override void Awake()
         {
-            base.Awake();
-            // 이벤트가 발생했을 경우 실행될 함수를 추가한다
-            OnAnimationEvent += OnAnimationEvent_Impl;
+            base.Awake();            
+            
+            // 시작시 에너미의 현재 위치와 회전값을 저장한다
+            EnPosition = meshParent.transform.position;
+            EnRotate = meshParent.transform.eulerAngles;
         }
         protected override void Start()
         {
             base.Start();
           
-            // 시작시 에너미의 현재 위치와 회전값을 저장한다
-            EnPosition = transform.position;
-            EnRotate = transform.eulerAngles;
         }
 
         // 턴을 받았을때
@@ -93,10 +91,8 @@ namespace TurnBased.Entities.Battle {
             if (this.Data.stats.CurrentToughness > 0)
             {
                 // 공격하는 함수
-                DoAttack();                
+                PrepareAttack();                
 
-                // 턴을 끝낸다
-                EndTurn();
             }
             // 강인도가 0이하 라면
             else
@@ -105,10 +101,8 @@ namespace TurnBased.Entities.Battle {
                 this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;
 
                 // 공격하는 함수
-                DoAttack();                
+                PrepareAttack();                
                 
-                // 턴을 끝낸다
-                EndTurn();
             }
 
         }
@@ -121,50 +115,26 @@ namespace TurnBased.Entities.Battle {
             // 부모 클래스에서 CastSkill 실행후 실행
             base.CastSkill();
             Debug.Log(gameObject.name + " 의 스킬 발동!");
-
-            // 타겟팅을 갱신한다 (플레이어로)
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+                        
             // 플레이어 타겟을 가져온다
             var player = TargetManager.instance.Target;
-           
+
+            // 에너미가 플레이어 앞에 오도록 한다
+            meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f, 0f);
+
             // 에너미가 플레이어를 바라보게한다
             meshParent.transform.forward = player.gameObject.transform.position;
 
+            
             // 스킬 공격 애니메이션 재생
-            //skillAttack.Play();
+            skillAttack.Play();
 
             // 마지막 공격이 스킬공격임을 알린다
             _lastAttack = CharacterState.CastSkill;
-        }
-      
-        // 공격을 시작할때
-        public override void DoAttack()
-        {
-            base.DoAttack();
-            Debug.Log("Enemy Attack");
 
-            // 타겟팅을 갱신한다 (플레이어로)
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
-            // 플레이어 타겟을 가져온다 (1인)
-            var player = TargetManager.instance.Target;
+            // 이벤트가 발생했을 경우 실행될 함수를 추가한다
+            OnAnimationEvent += OnAnimationEvent_Impl;
 
-            Debug.Log(player);
-
-            // 에너미가 플레이어 앞에 오도록 한다 (변경후 Mesh는 x : 2, y : 0, z:8 에 오게 된다)
-            meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f,0f);
-
-            // 에너미가 플레이어를 바라보게한다
-            meshParent.transform.forward = player.gameObject.transform.position;
-
-            // 현제 공격을 진행하는 자신의 이름 (테스트용)
-            Debug.Log(gameObject.name + " 의 공격! ");
-
-            // 일반공격 애니메이션이 실행
-            //normalAttack.Play();
-            
-            // 마지막 공격이 일반공격임을 보낸다
-            _lastAttack = CharacterState.DoAttack;
-            
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();
             // 데미지를 계산하는 함수를 호출하고
@@ -175,8 +145,46 @@ namespace TurnBased.Entities.Battle {
             // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
             player.Damage(this);
 
-            // 에너미가 원래 방향을 향해 바라보게한다
-            meshParent.transform.forward = EnPosition;
+        }
+      
+        // 공격을 시작할때
+        public override void DoAttack()
+        {
+            base.DoAttack();
+            Debug.Log("Enemy Attack");
+
+            // 플레이어 타겟을 가져온다 (1인)
+            var player = TargetManager.instance.Target;
+
+            Debug.Log(player);
+
+            // 에너미가 플레이어 앞에 오도록 한다
+            meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f,0f);
+
+            // 에너미가 플레이어를 바라보게한다
+            meshParent.transform.forward = player.gameObject.transform.position;
+
+            // 현제 공격을 진행하는 자신의 이름 (테스트용)
+            Debug.Log(gameObject.name + " 의 공격! ");
+            
+            // 일반공격 애니메이션이 실행
+            normalAttack.Play();
+            
+            // 마지막 공격이 일반공격임을 보낸다
+            _lastAttack = CharacterState.DoAttack;
+
+            // 이벤트가 발생했을 경우 실행될 함수를 추가한다
+            OnAnimationEvent += OnAnimationEvent_Impl;
+
+            // 자기자신의 캐릭터를 가져온다
+            Character ch = GetComponent<Character>();
+            // 데미지를 계산하는 함수를 호출하고
+            DamageResult result = CombatManager.DoDamage(ch, player);
+
+            Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
+
+            // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
+            player.Damage(this);
 
         }
 
@@ -195,13 +203,19 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareAttack()
         {
             base.PrepareAttack();
-            // 생각중...
+            // 타겟을 세팅한다
             TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+            // 공격하는 함수
+            DoAttack();
         }
         // 스킬을 준비하는 함수
         public override void PrepareSkill()
         {
             base.PrepareSkill();
+            // 타겟을 세팅한다 (일단 대상을 단일로)
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+            // 스킬을 사용하는 함수
+            CastSkill();
         }
         // 궁극기를 준비하는 함수
         public override void PrepareUlt()
@@ -222,6 +236,9 @@ namespace TurnBased.Entities.Battle {
             Character ch = GetComponent<Character>();
             // 데미지를 계산하는 함수를 호출 (때린놈, 맞은놈)
             DamageResult result = CombatManager.DoDamage(pl, ch);
+
+            // 데미지 애니메이션의 트리거를 켠다
+            animator.SetTrigger("Damage");
 
             // 만약 강인도가 있다면
             if (ch.Data.stats.CurrentToughness > 0)
@@ -274,6 +291,9 @@ namespace TurnBased.Entities.Battle {
         public override void Dead()
         {
             base.Dead();
+
+            // 사망 에니메이션의 트리거를 켠다
+            animator.SetTrigger("Dead");
             // 캐릭터 모델을 비활성화
             SetVisible(false);
             
@@ -283,7 +303,10 @@ namespace TurnBased.Entities.Battle {
         // 그로기 함수
         public override void Groggy()
         {
-            base.Groggy();        
+            base.Groggy();
+            // 그로기 애니메이션 트리거를 켠다
+            animator.SetTrigger("Groggy");
+
             // 현재 스피드와 방어력을 절반으로 한다
             Data.stats.Speed = (Data.stats.Speed) / 2;
             Data.stats.Defense = (Data.stats.Defense) / 2;
