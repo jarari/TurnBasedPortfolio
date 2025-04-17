@@ -32,23 +32,26 @@ namespace TurnBased.Battle {
         private Context _delayedContext;
 
         protected override CinemachineVirtualCameraBase ChooseCurrentCamera(Vector3 worldUp, float deltaTime) {
-            switch (_currentContext) {
-                case Context.WaitingTurn:
-                default:
-                    return (CinemachineVirtualCameraBase)LiveChild;
-                case Context.TurnStart:
-                    _currentContext = _delayedContext;
-                    CheckVisibleCharacters();
-                    return cmTurnChangeCam;
-                case Context.TargetEnemy:
-                    return cmIdleCam;
-                case Context.TargetAlly:
-                    return cmAllCam;
-                case Context.TargetSelf:
-                    return cmSelfCam;
-                case Context.Ult:
-                    return cmUltIdleCam;
+            if (Initialized && _character.Data.team == CharacterTeam.Player) {
+                switch (_currentContext) {
+                    case Context.WaitingTurn:
+                    default:
+                        return (CinemachineVirtualCameraBase)LiveChild;
+                    case Context.TurnStart:
+                        _currentContext = _delayedContext;
+                        CheckVisibleCharacters();
+                        return cmTurnChangeCam;
+                    case Context.TargetEnemy:
+                        return cmIdleCam;
+                    case Context.TargetAlly:
+                        return cmAllCam;
+                    case Context.TargetSelf:
+                        return cmSelfCam;
+                    case Context.Ult:
+                        return cmUltIdleCam;
+                }
             }
+            return cmIdleCam;
         }
 
         protected override void Start() {
@@ -155,6 +158,13 @@ namespace TurnBased.Battle {
             _character.OnUltTurn += OnCharacterUltTurn;
             TargetManager.instance.OnCamTargetUpdate += OnCamTargetUpdate;
             TargetManager.instance.OnTargetSettingChanged += OnTargetSettingChanged;
+            Initialized = true;
+        }
+
+        public void InitializeEnemyCamera() {
+            _character = GetComponentInChildren<Character>();
+            _character.OnTurnStart += OnCharacterTurnStart;
+            _character.OnTurnEnd += OnCharacterTurnEnd;
             Initialized = true;
         }
 

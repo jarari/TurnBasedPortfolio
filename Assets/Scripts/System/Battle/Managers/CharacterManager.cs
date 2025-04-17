@@ -43,6 +43,10 @@ namespace TurnBased.Battle.Managers {
                 var c = enemySpawnPoints[i].GetComponentInChildren<Character>();
                 if (c != null) {
                     TurnManager.instance.AddCharacter(c);
+                    var contextCam = c.GetComponentInParent<ContextualIdleCamera>();
+                    if (contextCam != null) {
+                        contextCam.InitializeEnemyCamera();
+                    }
                     _characters.Add(c);
                     _enemyIdxDict.Add(c, i);
                     _idxEnemyDict.Add(i, c);
