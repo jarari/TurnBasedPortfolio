@@ -19,8 +19,7 @@ namespace TurnBased.Entities.Battle {
         [Header("Components")]
         public Animator animator;   // 캐릭터의 애니메이터
 
-        // 본인의 위치와 회전값을 담을 변수
-        private Vector3 EnPosition;
+        // 본인의 위치와 회전값을 담을 변수        
         private Vector3 EnRotate;
 
         // 캐릭터의 마지막 공격 상태를 담을 변수
@@ -199,7 +198,7 @@ namespace TurnBased.Entities.Battle {
         {
             base.PrepareAttack();
 
-            // 턴을 받았을때 에너미의 현재 위치와 회전값을 저장한다            
+            // 턴을 받았을때 에너미의 회전값을 저장한다            
             EnRotate = meshParent.transform.eulerAngles;
 
             // 타겟을 세팅한다
