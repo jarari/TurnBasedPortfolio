@@ -15,13 +15,14 @@ namespace TurnBased.Entities.Battle {
         [Header("Skill Objects")]
         public GameObject skillBallLeft;
         public GameObject skillBallRight;
+        public GameObject ultGoalPost;
         [Header("Components")]
         public Animator animator;
 
         private CharacterState _lastAttack;
 
         private void OnAnimationEvent_Impl(Character c, string animEvent, string payload) {
-            if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd") {
+            if (animEvent == "AttackEnd") {
                 EndTurn();
             }
         }
@@ -29,6 +30,9 @@ namespace TurnBased.Entities.Battle {
         private void CastUlt() {
             SetMeshLayer(MeshLayer.UltTimeline);
             ultAttack.Play();
+            var enemyCenter = TargetManager.instance.Target;
+            meshParent.transform.position = enemyCenter.transform.position + new Vector3(10.65f, 0f);
+            ultGoalPost.transform.position = Vector3.zero;
             _lastAttack = CharacterState.CastUltAttack;
             foreach (var c in CharacterManager.instance.GetEnemyCharacters()) {
                 c.SetMeshLayer(MeshLayer.UltTimeline);
@@ -145,6 +149,10 @@ namespace TurnBased.Entities.Battle {
                 foreach (var t in targets) {
                     t.meshParent.transform.localPosition = Vector3.zero;
                 }
+            }
+            else if (_lastAttack == CharacterState.CastUltAttack) {
+                ultAttack.time = ultAttack.duration;
+                ultAttack.Evaluate();
             }
             animator.SetInteger("State", 0);
             meshParent.transform.localPosition = Vector3.zero;
