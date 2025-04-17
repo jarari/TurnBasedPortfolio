@@ -42,11 +42,22 @@ namespace TurnBased.Battle.Managers {
         private void OnAttack(InputValue inputValue) {
             var currentCharacter = TurnManager.instance.CurrentCharacter;
             if (CanCharacterTakeInput()) {
-                if (currentCharacter.CurrentState == Character.CharacterState.PrepareAttack) {
-                    currentCharacter.DoAttack();
+                if (currentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                    currentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                    if (currentCharacter.CurrentState == Character.CharacterState.PrepareAttack) {
+                        currentCharacter.DoAttack();
+                    }
+                    else {
+                        currentCharacter.PrepareAttack();
+                    }
                 }
                 else {
-                    currentCharacter.PrepareAttack();
+                    if (currentCharacter.CurrentState == Character.CharacterState.PrepareUltAttack) {
+                        currentCharacter.CastUltAttack();
+                    }
+                    else {
+                        currentCharacter.PrepareUltAttack();
+                    }
                 }
             }
         }
@@ -58,12 +69,50 @@ namespace TurnBased.Battle.Managers {
         private void OnSkill(InputValue inputValue) {
             var currentCharacter = TurnManager.instance.CurrentCharacter;
             if (CanCharacterTakeInput()) {
-                if (currentCharacter.CurrentState == Character.CharacterState.PrepareSkill) {
-                    currentCharacter.CastSkill();
+                if (currentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                    currentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                    if (currentCharacter.CurrentState == Character.CharacterState.PrepareSkill) {
+                        currentCharacter.CastSkill();
+                    }
+                    else {
+                        currentCharacter.PrepareSkill();
+                    }
                 }
                 else {
-                    currentCharacter.PrepareSkill();
+                    if (currentCharacter.CurrentState == Character.CharacterState.PrepareUltSkill) {
+                        currentCharacter.CastUltSkill();
+                    }
+                    else {
+                        currentCharacter.PrepareUltSkill();
+                    }
                 }
+            }
+        }
+
+        private void OnUlt1(InputValue inputValue) {
+            var character = CharacterManager.instance.GetAllyCharacters()[0];
+            if (character != null && 
+                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                TurnManager.instance.AddUltTurn(character);
+            }
+        }
+
+        private void OnUlt2(InputValue inputValue) {
+            var character = CharacterManager.instance.GetAllyCharacters()[1];
+            if (character != null &&
+                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                TurnManager.instance.AddUltTurn(character);
+            }
+        }
+
+        private void OnUlt3(InputValue inputValue) {
+            var character = CharacterManager.instance.GetAllyCharacters()[2];
+            if (character != null &&
+                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                TurnManager.instance.AddUltTurn(character);
             }
         }
     }

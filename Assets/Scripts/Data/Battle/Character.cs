@@ -18,8 +18,10 @@ namespace TurnBased.Battle {
             DoExtraAttack,
             PrepareSkill,
             CastSkill,
-            PrepareUlt,
-            CastUlt,
+            PrepareUltAttack,
+            PrepareUltSkill,
+            CastUltAttack,
+            CastUltSkill,
             PrepareDead,
             Dead,
             PrepareGroggy,
@@ -152,16 +154,29 @@ namespace TurnBased.Battle {
             WantCmd = false;
         }
         /// <summary>
-        /// ±√±ÿ±‚ ¡ÿ∫Ò¿⁄ºº
+        /// ±√±ÿ±‚ Q ¡ÿ∫Ò¿⁄ºº
         /// </summary>
-        public virtual void PrepareUlt() {
-            CurrentState = CharacterState.PrepareUlt;
+        public virtual void PrepareUltAttack() {
+            CurrentState = CharacterState.PrepareUltAttack;
         }
         /// <summary>
-        /// ±√±ÿ±‚ πﬂµø
+        /// ±√±ÿ±‚ Q πﬂµø
         /// </summary>
-        public virtual void CastUlt() {
-            CurrentState = CharacterState.CastUlt;
+        public virtual void CastUltAttack() {
+            CurrentState = CharacterState.CastUltAttack;
+            WantCmd = false;
+        }
+        /// <summary>
+        /// ±√±ÿ±‚ E ¡ÿ∫Ò¿⁄ºº
+        /// </summary>
+        public virtual void PrepareUltSkill() {
+            CurrentState = CharacterState.PrepareUltSkill;
+        }
+        /// <summary>
+        /// ±√±ÿ±‚ E πﬂµø
+        /// </summary>
+        public virtual void CastUltSkill() {
+            CurrentState = CharacterState.CastUltSkill;
             WantCmd = false;
         }
         /// <summary>
