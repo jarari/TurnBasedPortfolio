@@ -30,9 +30,9 @@ namespace TurnBased.Battle.Managers {
                 var c = allySpawnPoints[i].GetComponentInChildren<Character>();
                 if (c != null) {
                     TurnManager.instance.AddCharacter(c);
-                    var camCon = c.GetComponentInParent<IdleCamController>();
-                    if (camCon != null) {
-                        camCon.InitializeController();
+                    var contextCam = c.GetComponentInParent<ContextualIdleCamera>();
+                    if (contextCam != null) {
+                        contextCam.InitializeCamera();
                     }
                     _characters.Add(c);
                     _allyIdxDict.Add(c, i);
@@ -43,9 +43,9 @@ namespace TurnBased.Battle.Managers {
                 var c = enemySpawnPoints[i].GetComponentInChildren<Character>();
                 if (c != null) {
                     TurnManager.instance.AddCharacter(c);
-                    var camCon = c.GetComponentInParent<IdleCamController>();
-                    if (camCon != null) {
-                        camCon.InitializeController();
+                    var contextCam = c.GetComponentInParent<ContextualIdleCamera>();
+                    if (contextCam != null) {
+                        contextCam.InitializeEnemyCamera();
                     }
                     _characters.Add(c);
                     _enemyIdxDict.Add(c, i);

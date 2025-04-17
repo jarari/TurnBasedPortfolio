@@ -27,11 +27,13 @@ namespace TurnBased.Battle {
         public enum MeshLayer {
             Default,
             SkillTimeine,
-            Hidden
+            Hidden,
+            UltTimeline
         }
 
         public Action<Character> OnTurnStart;
         public Action<Character> OnTurnEnd;
+        public Action<Character> OnUltTurn;
         public Action<Character, string, string> OnAnimationEvent;
         public Action<Character, bool> OnVisibilityChange;
 
@@ -42,8 +44,6 @@ namespace TurnBased.Battle {
         public CharacterState WantState { get; protected set; } = CharacterState.PrepareAttack;
         public bool IsVisible { get; set; }
         public MeshLayer CurrentMeshLayer { get; protected set; }
-
-        protected MeshLayer _previousLayer;
 
 
         protected virtual void Awake() {
@@ -70,6 +70,12 @@ namespace TurnBased.Battle {
                 }
             }
             OnTurnStart?.Invoke(this);
+        }
+
+        public virtual void TakeUltTurn() {
+            WantCmd = true;
+            PrepareUltAttack();
+            OnUltTurn?.Invoke(this);
         }
 
         /// <summary>
@@ -161,13 +167,13 @@ namespace TurnBased.Battle {
         public virtual void SetVisible(bool visibility) {
             if (visibility && CurrentMeshLayer == MeshLayer.Hidden) {
                 SetMeshLayer(MeshLayer.Default);
+                OnVisibilityChange?.Invoke(this, visibility);
             }
-            else if (!visibility) {
-                _previousLayer = CurrentMeshLayer;
+            else if (!visibility && CurrentMeshLayer != MeshLayer.Hidden) {
                 SetMeshLayer(MeshLayer.Hidden);
+                OnVisibilityChange?.Invoke(this, visibility);
             }
             IsVisible = visibility;
-            OnVisibilityChange?.Invoke(this, visibility);
         }
 
         public virtual void SetMeshLayer(MeshLayer layer) {
@@ -179,9 +185,14 @@ namespace TurnBased.Battle {
             else if (layer == MeshLayer.Hidden) {
                 layerID = 7;
             }
+            else if (layer == MeshLayer.UltTimeline) {
+                layerID = 8;
+            }
             foreach (var child in meshParent.GetComponentsInChildren<Transform>(true)) {
                 child.gameObject.layer = layerID;
             }
         }
+
+        public virtual void ProcessCamChanged() { }
     }
 }

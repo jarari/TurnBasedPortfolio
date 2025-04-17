@@ -46,6 +46,14 @@ namespace TurnBased.Battle.Managers {
             _turnQueue.Add(new TurnData(character, TurnType.Normal));
         }
 
+        public void RemoveCharacter(Character character) {
+            _turnQueue.RemoveAll((data) => data.Character == character);
+        }
+
+        public void RemoveCharacterUltExtraAttackOnly(Character character) {
+            _turnQueue.RemoveAll((data) => data.Character == character && (data.Type == TurnType.Ult || data.Type == TurnType.ExtraAttack));
+        }
+
         /// <summary>
         /// ±√±ÿ±‚ ≈œ √ﬂ∞° (±√±ÿ±‚ πﬂµøΩ√ »£√‚)
         /// </summary>
@@ -103,7 +111,7 @@ namespace TurnBased.Battle.Managers {
                 _turnQueue = _turnQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
             }
             else if (first.Type == TurnType.Ult) {
-                first.Character.PrepareUltAttack();
+                first.Character.TakeUltTurn();
             }
             else if (first.Type == TurnType.ExtraAttack) {
                 first.Character.DoExtraAttack();
