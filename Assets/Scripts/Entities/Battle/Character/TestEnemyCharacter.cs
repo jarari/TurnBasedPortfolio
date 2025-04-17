@@ -2,16 +2,20 @@ using UnityEngine;
 using TurnBased.Battle;
 using TurnBased.Battle.Managers;
 using TurnBased.Data;
+using System.Collections;
 
 namespace TurnBased.Entities.Battle {
     public class TestEnemyCharacter : Character {
+
+        private IEnumerator TestCoroutine() {
+            yield return new WaitForSeconds(2f);
+            EndTurn();
+        }
 
         public override void TakeTurn() {           
             base.TakeTurn();          
 
             DoAttack();
-            
-            EndTurn(); 
         }
 
         public override void CastSkill() {
@@ -21,7 +25,9 @@ namespace TurnBased.Entities.Battle {
             base.CastUltAttack();          
         }
         public override void DoAttack() {
-            base.DoAttack();      
+            base.DoAttack();
+            StartCoroutine(TestCoroutine());
+            Debug.Log("Enemy Attack");
         }
         public override void DoExtraAttack() {
             base.DoExtraAttack();
