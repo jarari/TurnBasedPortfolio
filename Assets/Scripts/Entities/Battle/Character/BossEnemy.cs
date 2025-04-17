@@ -11,13 +11,14 @@ using static TurnBased.Entities.Battle.TestEnemyCharacter;
 namespace TurnBased.Entities.Battle { 
     
     // 보스 몬스터
-    public class BossEnemy : Character, IDamageApply
+    public class BossEnemy : Character
     {
         [Header("Timelines")]
         public PlayableDirector normalAttack;    // 일반 공격 애니메이션
         public PlayableDirector skillAttack;        // 스킬 공격 애니메이션
         public PlayableDirector UltAttack;          // 필살기 공격 애니메이션
-        public PlayableDirector Groggy;             // 그로기 애니메이션
+        public PlayableDirector Dead_anim;             // 사망 애니메이션
+        public PlayableDirector Groggy_anim;             // 그로기 애니메이션
 
         // ==( 광폭화는 조금더 경과를 보고 생각... )==
 
@@ -38,17 +39,13 @@ namespace TurnBased.Entities.Battle {
 
         #endregion
 
-        // 타겟팅할 플레이어를 담을 변수
-        public Character ch_player;
-        public Character[] ch_players;
-
         // 본인의 위치와 회전값을 담을 변수
         public Vector3 EnPosition;
         public Vector3 EnRotate;
 
         // 캐릭터의 마지막 공격 상태를 담을 변수
         private CharacterState _lastAttack;
-
+                
         // 공격후에 애니메이션이 끝날 때의 반환을 처리하는 코루틴
         private IEnumerator DelayReturnFromAttack()
         {
@@ -145,13 +142,13 @@ namespace TurnBased.Entities.Battle {
             // 부모 클래스에서 CastSkill 실행후 실행
             base.CastSkill();
             Debug.Log(gameObject.name + " 의 스킬 발동!");
-            // 플레이어 전체를 고른다
-            ChPlayer_M();
 
-            // 다수의 플레이어중 가운데 플레이어를 가져온다
-            Character target_M = ch_players[ch_players.Length / 2];
-            // 에너미를 가운데 플레이어를 향하게 한다
-            transform.forward = target_M.gameObject.transform.position;
+            // 타겟팅을 갱신한다 (플레이어로)
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+            // 플레이어 타겟을 가져온다 (1인)
+            var player = TargetManager.instance.Target;
+            // 에너미가 플레이어를 바라보게한다
+            meshParent.transform.forward = player.gameObject.transform.position;
 
             // 스킬 공격 애니메이션 재생
             //skillAttack.Play();
@@ -165,11 +162,12 @@ namespace TurnBased.Entities.Battle {
             base.CastUltAttack();
             Debug.Log(gameObject.name + " 의 필살기 발동!");
 
-            // 다수의 플레이어중 가운데 플레이어를 가져온다
-            Character target_M = ch_players[ch_players.Length / 2];
-            // 에너미를 가운데 플레이어를 향하게 한다
-            transform.forward = target_M.gameObject.transform.position;
-
+            // 타겟팅을 갱신한다 (플레이어로)
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+            // 플레이어 타겟을 가져온다 (1인)
+            var player = TargetManager.instance.Target;
+            // 에너미가 플레이어를 바라보게한다
+            meshParent.transform.forward = player.gameObject.transform.position;
 
             // 필살기 공격 애니메이션 재생
             //UltAttack.Play();
@@ -183,28 +181,35 @@ namespace TurnBased.Entities.Battle {
             base.DoAttack();
             Debug.Log("Enemy Attack");
 
-            // 타겟으로 삼을 플레이어 캐릭터를 랜덤하게 고른다
-            ChPlayer_S();
+            // 타겟팅을 갱신한다 (플레이어로)
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+            // 플레이어 타겟을 가져온다
+            var player = TargetManager.instance.Target;
             // 에너미가 플레이어를 바라보게한다
-            transform.forward = ch_player.gameObject.transform.position;
+            meshParent.transform.forward = player.gameObject.transform.position;
 
             // 현제 공격을 진행하는 오브젝트의 이름 (테스트용)
             Debug.Log(gameObject.name + " 의 공격! ");
 
+            // 일반공격 애니메이션이 실행
+            //normalAttack.Play();
+            
+            // 마지막 공격이 일반공격임을 보낸다
+            _lastAttack = CharacterState.DoAttack;
 
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();
             // 데미지를 계산하는 함수를 호출하고
-            DamageResult result = CombatManager.DoDamage(ch, ch_player);
+            DamageResult result = CombatManager.DoDamage(ch, player);
 
-            Debug.Log(ch_player.name + " 에게 " + result.FinalDamage + " 데미지");
+            Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
             // ( 플레이어의 데미지함수를 호출 또는 여기서 계산)
 
-            // 일반공격 애니메이션이 실행
-            //normalAttack.Play();
+            // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
+            player.Damage(this);
 
-            // 마지막 공격이 일반공격임을 보낸다
-            _lastAttack = CharacterState.DoAttack;
+            // 에너미가 원래 방향을 향해 바라보게한다
+            meshParent.transform.forward = EnPosition;
 
         }
 
@@ -238,8 +243,10 @@ namespace TurnBased.Entities.Battle {
 
 
         // 혹시 몰라서 만든 데미지 함수
-        public void DamageApply(Character pl)
+        public override void Damage(Character pl)
         {
+            base.Damage(pl);
+            
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();
             // 데미지를 계산하는 함수를 호출 (때린놈 , 맞은놈)
@@ -254,8 +261,8 @@ namespace TurnBased.Entities.Battle {
                 // 채력이 만약 0이하가 되었다면
                 if (ch.Data.stats.CurrentHP <= 0)
                 {
-                    // 죽음을 다룰 코루틴을 실행한다
-                    StartCoroutine(DeadProcess());
+                    // 죽음을 다룰 함수를 실행한다
+                    Dead();
                 }
 
                 // 플레이어가 약점 속성으로 때린다면
@@ -268,7 +275,7 @@ namespace TurnBased.Entities.Battle {
                     if (ch.Data.stats.CurrentToughness <= 0)
                     {
                         // 그로기를 다룰 코루틴을 실행한다
-                        StartCoroutine(GroggyProcess());
+                        Groggy();
                     }
 
                 }
@@ -283,71 +290,34 @@ namespace TurnBased.Entities.Battle {
                 // 채력이 만약 0이하가 되었다면
                 if (ch.Data.stats.CurrentHP <= 0)
                 {
-                    // 죽음을 다룰 코루틴을 실행한다
-                    StartCoroutine(DeadProcess());
+                    // 죽음을 다룰 함수를 실행한다
+                    Dead();
                 }
 
             }
 
         }
 
-        // 죽음을 다룰 코루틴
-        IEnumerator DeadProcess()
+        // 사망시 함수
+        public override void Dead()
         {
-            yield return null;
+            base.Dead();
             // 캐릭터 모델을 비활성화
             SetVisible(false);
+
         }
 
-        // 그로기 코루틴
-        IEnumerator GroggyProcess()
+
+        // 그로기 함수
+        public override void Groggy()
         {
-            yield return null;
+            base.Groggy();
             // 현재 스피드와 방어력을 절반으로 한다
             Data.stats.Speed = (Data.stats.Speed) / 2;
             Data.stats.Defense = (Data.stats.Defense) / 2;
         }
 
-        // 아군 캐릭터칸에 있는 플레이어 캐릭터를 랜덤하게 하나를 가져온다
-        public void ChPlayer_S()
-        {
-            // 랜덤한 숫자를 뽑아
-            int ran = Random.Range(0, 2);
-            // 캐릭터 메니저의 등록된 모든 아군 캐릭터 리스트를 가져온다 (후에 생존한 캐릭터만 가져올 예정)
-            var player = CharacterManager.instance.GetAllyCharacters();
-            // 랜덤한 아군 캐릭터를 리스트에서 가져온다
-            ch_player = player[ran];
-        }
-        // 아군 캐릭터칸에 있는 플레이어 캐릭터를 모두 가져온다
-        public void ChPlayer_M()
-        {
-            // 캐릭터 메니저의 등록된 모든 아군 캐릭터 리스트를 가져온다 (후에 생존한 캐릭터만 가져올 예정)
-            var player = CharacterManager.instance.GetAllyCharacters();
-            // 받아온 리스트의 길이 만큼 for문을 돌린다
-            for (int i = 0; i < player.Count; i++)
-            {
-                ch_players[i] = player[i];
-            }
-
-        }
-
-        // 플레이어의 속성이 에너미의 약점 속성과 일치하는지 확인할 함수
-        public bool Element_Check(Character player, Character enemy)
-        {
-            // 에너미의 약점 갯수만큼 for문을 돌린다
-            for (int i = 0; i < enemy.Data.stats.Weakness.Count; i++)
-            {
-                // 플레이어의 공격 타입이 에너미의 약점 타입과 같다면
-                if (player.Data.stats.ElementType == enemy.Data.stats.Weakness[i])
-                {
-                    // 있다면 true 를 반환한다
-                    return true;
-                }
-            }
-            // 없다면 false 를 반환한다
-            return false;
-        }
-
+        
     }
 
 }
