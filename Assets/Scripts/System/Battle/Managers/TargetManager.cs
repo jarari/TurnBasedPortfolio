@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TurnBased.Data;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace TurnBased.Battle.Managers {
     /// <summary>
@@ -15,6 +16,12 @@ namespace TurnBased.Battle.Managers {
             Self,
             Single,
             Triple,
+            All
+        }
+
+        public enum TargetFilter {
+            AliveOnly,
+            DeadOnly,
             All
         }
 
@@ -46,6 +53,7 @@ namespace TurnBased.Battle.Managers {
         public int TargetIndex { get; private set; }
         public CharacterTeam TargetTeam { get; private set; }
         public TargetMode Mode { get; private set; }
+        public TargetFilter Filter { get; private set; }
         /// <summary>
         /// 선형보간된 칸 포지션
         /// </summary>
@@ -58,6 +66,8 @@ namespace TurnBased.Battle.Managers {
         private float _targetAllDollyClampMin = 1.5f;
         private float _targetAllDollyClampMax = 2.5f;
         private Coroutine _targetCoroutine;
+
+        private Func<Character, bool> _targetFilter;
 
         private enum SearchDirection {
             Left,
@@ -128,8 +138,8 @@ namespace TurnBased.Battle.Managers {
             OnTargetChanged?.Invoke(Target);
         }
 
-        public void ChangeTargetSetting(TargetMode mode, CharacterTeam team = CharacterTeam.Player) {
-            bool shouldInit = Target == null || mode == TargetMode.Self || team != TargetTeam ? true : false;
+        public void ChangeTargetSetting(TargetMode mode, CharacterTeam team = CharacterTeam.Player, TargetFilter filter = TargetFilter.AliveOnly) {
+            bool shouldInit = Target == null || Target.IsDead || mode == TargetMode.Self || team != TargetTeam || Filter != filter ? true : false;
             Mode = mode;
             if (mode == TargetMode.Self) {
                 TargetTeam = CharacterTeam.Player;
@@ -137,7 +147,17 @@ namespace TurnBased.Battle.Managers {
             else {
                 TargetTeam = team;
             }
-            OnTargetSettingChanged?.Invoke();
+            Filter = filter;
+            if (filter == TargetFilter.AliveOnly) {
+                _targetFilter = c => !c.IsDead;
+            }
+            else if (filter == TargetFilter.DeadOnly) {
+                _targetFilter = c => c.IsDead;
+            }
+            else {
+                _targetFilter = null;
+            }
+                OnTargetSettingChanged?.Invoke();
             if (shouldInit) {
                 InitializeTarget();
             }
@@ -158,7 +178,8 @@ namespace TurnBased.Battle.Managers {
                     int tryIdx = 0;
                     do {
                         enemy = CharacterManager.instance.GetEnemyAtIndex(idxToTry[tryIdx]);
-                        if (enemy == null) {
+                        if (enemy == null || (_targetFilter != null && !_targetFilter(enemy))) {
+                            enemy = null;
                             tryIdx++;
                         }
                     } while (enemy == null && tryIdx < idxToTry.Length);
@@ -173,7 +194,8 @@ namespace TurnBased.Battle.Managers {
                     int tryIdx = 0;
                     do {
                         ally = CharacterManager.instance.GetAllyAtIndex(idxToTry[tryIdx]);
-                        if (ally == null) {
+                        if (ally == null || (_targetFilter != null && !_targetFilter(ally))) {
+                            ally = null;
                             tryIdx++;
                         }
                     } while (ally == null && tryIdx < idxToTry.Length);
@@ -211,11 +233,12 @@ namespace TurnBased.Battle.Managers {
             if (c.Data.team == CharacterTeam.Enemy) {
                 int d = dir == SearchDirection.Left ? -1 : 1;
                 int idxToTry = CharacterManager.instance.GetEnemyIndex(c) + d;
-                int enemyCount = CharacterManager.instance.GetEnemyCharacters().Count;
+                int enemyCount = CharacterManager.instance.GetMaxEnemyCount();
                 Character enemy = null;
                 while (enemy == null && idxToTry >= 0 && idxToTry < enemyCount) {
                     enemy = CharacterManager.instance.GetEnemyAtIndex(idxToTry);
-                    if (enemy == null) {
+                    if (enemy == null || (_targetFilter != null && !_targetFilter(enemy))) {
+                        enemy = null;
                         idxToTry += d;
                     }
                 }
@@ -224,11 +247,12 @@ namespace TurnBased.Battle.Managers {
             else {
                 int d = dir == SearchDirection.Left ? 1 : -1;
                 int idxToTry = CharacterManager.instance.GetAllyIndex(c) + d;
-                int allyCount = CharacterManager.instance.GetAllyCharacters().Count;
+                int allyCount = CharacterManager.instance.GetMaxAllyCount();
                 Character ally = null;
                 while (ally == null && idxToTry >= 0 && idxToTry < allyCount) {
                     ally = CharacterManager.instance.GetAllyAtIndex(idxToTry);
-                    if (ally == null) {
+                    if (ally == null || (_targetFilter != null && !_targetFilter(ally))) {
+                        ally = null;
                         idxToTry += d;
                     }
                 }
