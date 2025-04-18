@@ -246,56 +246,6 @@ namespace TurnBased.Entities.Battle {
         public override void Damage(Character pl)
         {
             base.Damage(pl);
-            
-            // 자기자신의 캐릭터를 가져온다
-            Character ch = GetComponent<Character>();
-            // 데미지를 계산하는 함수를 호출 (때린놈 , 맞은놈)
-            DamageResult result = CombatManager.DoDamage(pl, ch);
-
-            // 만약 강인도가 있다면
-            if (ch.Data.stats.CurrentToughness > 0)
-            {
-                // 채력을 최종적으로 받는 데미지의 반으로 받고
-                this.Data.stats.CurrentHP -= (result.FinalDamage / 2);
-
-                // 채력이 만약 0이하가 되었다면
-                if (ch.Data.stats.CurrentHP <= 0)
-                {
-                    // 죽음을 다룰 함수를 실행한다
-                    Dead();
-                }
-
-                // 플레이어가 약점 속성으로 때린다면
-                if (Element_Check(pl, ch) == true)
-                {
-                    // 에너미의 강인도는 플레이어의 공격력만큼 깎인다
-                    this.Data.stats.CurrentToughness -= result.NormalAttack;
-
-                    // 강인도가 만약 0이하가 되었다면
-                    if (ch.Data.stats.CurrentToughness <= 0)
-                    {
-                        // 그로기를 다룰 코루틴을 실행한다
-                        Groggy();
-                    }
-
-                }
-
-            }
-            // 만약 강인도가 없다면
-            else
-            {
-                // 에너미는 최종적으로 받는 데미지를 모두 받는다.
-                this.Data.stats.CurrentHP -= result.FinalDamage;
-
-                // 채력이 만약 0이하가 되었다면
-                if (ch.Data.stats.CurrentHP <= 0)
-                {
-                    // 죽음을 다룰 함수를 실행한다
-                    Dead();
-                }
-
-            }
-
         }
 
         // 사망시 함수

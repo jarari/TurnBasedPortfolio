@@ -188,7 +188,7 @@ namespace TurnBased.Battle {
         /// <summary>
         /// 캐릭터 모델 활성화/비활성화
         /// </summary>
-        /// <param name="visibility"></param>
+        /// <param name="visibility">보일지 안보일지</param>
         public virtual void SetVisible(bool visibility) {
             if (visibility && CurrentMeshLayer == MeshLayer.Hidden) {
                 SetMeshLayer(MeshLayer.Default);
@@ -200,12 +200,16 @@ namespace TurnBased.Battle {
             }
             IsVisible = visibility;
         }
-        // 사망 준비함수
+        /// <summary>
+        /// 사망 준비함수
+        /// </summary>
         public virtual void PrepareDead() {
             // 캐릭터의 현재 상태를 사망준비상태로 처리
             CurrentState = CharacterState.PrepareDead;
         }
-        // 캐릭터 사망
+        /// <summary>
+        /// 캐릭터 사망
+        /// </summary>
         public virtual void Dead() {
             // 캐릭터의 현재 상태를 사망으로 처리
             CurrentState = CharacterState.Dead;
@@ -214,14 +218,18 @@ namespace TurnBased.Battle {
             // 명령대기를 하지 않음을 반환
             WantCmd = false;
         }
-        // 그로기 준비함수
+        /// <summary>
+        /// 그로기 준비함수
+        /// </summary>
         public virtual void PrepareGroggy()
         {
             // 현재 상태를 그로기 준비상태로 처리
             CurrentState = CharacterState.PrepareGroggy;
         }
 
-        // 에너미 그로기
+        /// <summary>
+        /// 그로기 상태 진입
+        /// </summary>
         public virtual void Groggy() {
             // 캐릭터의 현재 상태를 그로기로 처리
             CurrentState = CharacterState.Groggy;
@@ -231,7 +239,10 @@ namespace TurnBased.Battle {
             WantCmd = false;
         }
 
-
+        /// <summary>
+        /// 메쉬 레이어 변경
+        /// </summary>
+        /// <param name="layer"></param>
         public virtual void SetMeshLayer(MeshLayer layer) {
             int layerID = 0;
             CurrentMeshLayer = layer;
@@ -249,30 +260,56 @@ namespace TurnBased.Battle {
             }
         }
 
-
-        // 데미지 함수 (때린놈의 정보를 가져온다)
-        public virtual void Damage(Character pl) {
+        /// <summary>
+        /// 데미지 함수 (때린놈의 정보를 가져온다)
+        /// </summary>
+        /// <param name="attacker"></param>
+        public virtual void Damage(Character attacker) {
             // 캐릭터의 현재 상태를 데미지로 처리
             CurrentState = CharacterState.Damage;
 
-        }
+            // 데미지를 계산하는 함수를 호출 (때린놈, 맞은놈)
+            DamageResult result = CombatManager.DoDamage(attacker, this);
 
-        // 플레이어의 속성이 에너미의 약점 속성과 일치하는지 확인할 함수
-        // --- 이건 맞을때 에너미 쪽에서 계산 ---
-        public virtual bool Element_Check(Character player, Character enemy)
-        {
-            // 에너미의 약점 갯수만큼 for문을 돌린다
-            for (int i = 0; i < enemy.Data.stats.Weakness.Count; i++)
-            {
-                // 플레이어의 공격 타입이 에너미의 약점 타입과 같다면
-                if (player.Data.stats.ElementType == enemy.Data.stats.Weakness[i])
-                {
-                    // 있다면 true 를 반환한다
-                    return true;
+            if (Data.stats.MaxToughness > 0) {
+                // 만약 강인도가 있다면
+                if (Data.stats.CurrentToughness > 0) {
+
+                    // 채력을 최종적으로 받는 데미지의 반으로 받고
+                    Data.stats.CurrentHP -= (result.FinalDamage / 2);
+
+                    // 채력이 만약 0이하가 되었다면
+                    if (Data.stats.CurrentHP <= 0) {
+                        // 죽음을 다룰 함수를 실행한다
+                        Dead();
+                    }
+
+                    // 플레이어가 약점 속성으로 때린다면
+                    if (CombatManager.CheckElementMatch(attacker.Data.stats.ElementType, Data.stats.Weakness)) {
+                        // 에너미의 강인도는 플레이어의 공격력만큼 깎인다
+                        Data.stats.CurrentToughness -= result.NormalAttack;
+
+                        // 강인도가 만약 0이하가 되었다면
+                        if (Data.stats.CurrentToughness <= 0) {
+                            // 현재 강인도를 0으로 만든다
+                            Data.stats.CurrentToughness = 0;
+                            // 그로기를 다룰 함수를 실행한다
+                            Groggy();
+                        }
+                    }
+                }
+                // 만약 강인도가 없다면
+                else {
+                    // 에너미는 최종적으로 받는 데미지를 모두 받는다.
+                    Data.stats.CurrentHP -= result.FinalDamage;
+
+                    // 채력이 만약 0이하가 되었다면
+                    if (Data.stats.CurrentHP <= 0) {
+                        // 죽음을 다룰 함수를 실행한다
+                        Dead();
+                    }
                 }
             }
-            // 없다면 false 를 반환한다
-            return false;
         }
 
 
