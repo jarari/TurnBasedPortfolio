@@ -9,7 +9,9 @@ using Unity.Cinemachine;
 
 namespace TurnBased.Entities.Battle { 
     
-    // 일반 몬스터
+    /// <summary> 
+    /// 일반 몬스터
+    /// </summary>
     public class MinionEnemy : Character
     {
         [Header("Timelines")]
@@ -28,7 +30,10 @@ namespace TurnBased.Entities.Battle {
 
         
 
-        // 공격후에 애니메이션이 끝날 때의 반환을 처리하는 코루틴
+        /// <summary> 
+        /// 공격후에 애니메이션이 끝날 때의 반환을 처리하는 코루틴
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator DelayReturnFromAttack()
         {            
             // 일시 정지 없이 다음 프레임에서 실행함
@@ -51,7 +56,12 @@ namespace TurnBased.Entities.Battle {
             }          
         }
 
-        // 애니메이션 이벤트가 발생했을경우 처리하는 함수
+        /// <summary>
+        /// 애니메이션 이벤트가 발생했을경우 처리하는 함수
+        /// </summary>
+        /// <param name="c"></param>
+        /// <param name="animEvent"></param>
+        /// <param name="payload"></param>
         private void OnAnimationEvent_Impl(Character c, string animEvent, string payload)
         {
             // 타임라인에서 데미지 시그널을 받게 된다면 실행
@@ -82,10 +92,7 @@ namespace TurnBased.Entities.Battle {
                     meshParent.transform.localPosition = Vector3.zero;
                     // 공격하기 위해 틀었던 회전값을 원래대로 가져온다
                     meshParent.transform.eulerAngles = EnRotate;
-
-                    Debug.Log("상대적인 위치"+ meshParent.transform.localPosition);
-                    Debug.Log("절대적인 위치"+ meshParent.transform.position);
-
+                                        
                     // 턴을 종료한다
                     EndTurn();
                 }
@@ -99,7 +106,9 @@ namespace TurnBased.Entities.Battle {
             OnAnimationEvent += OnAnimationEvent_Impl;
         }
         
-        // 턴을 받았을때
+        /// <summary>
+        /// 턴을 받았을때
+        /// </summary>
         public override void TakeTurn()
         {
             // 부모 클래스에서 TakeTurn 실행 후 실행
@@ -115,11 +124,16 @@ namespace TurnBased.Entities.Battle {
                 // 현재 강인도를 최대로 한다
                 this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;                
             }
+
+            // 공격을 준비하는 함수를 실행한다
+            PrepareAttack();
         }
 
         #region 행동하는 함수 (스킬, 공격, 궁극기, 엑스트라 어택)
 
-        // 스킬을 사용할때
+        /// <summary>
+        /// 스킬을 사용할때
+        /// </summary>
         public override void CastSkill()
         {
             // 부모 클래스에서 CastSkill 실행후 실행
@@ -155,7 +169,9 @@ namespace TurnBased.Entities.Battle {
 
         }
       
-        // 공격을 시작할때
+        /// <summary>
+        /// 공격을 시작할때
+        /// </summary>
         public override void DoAttack()
         {
             base.DoAttack();
@@ -181,7 +197,9 @@ namespace TurnBased.Entities.Battle {
             
         }
 
-        // 엑스트라 어텍을 할때
+        /// <summary>
+        /// 엑스트라 어텍을 할때
+        /// </summary>
         public override void DoExtraAttack()
         {
             base.DoExtraAttack();
@@ -192,7 +210,9 @@ namespace TurnBased.Entities.Battle {
 
         #region 준비하는 함수 (공격, 스킬, 궁극기)
 
-        // 공격을 준비하는 함수
+        /// <summary>
+        /// 공격을 준비하는 함수
+        /// </summary>
         public override void PrepareAttack()
         {
             base.PrepareAttack();
@@ -205,7 +225,9 @@ namespace TurnBased.Entities.Battle {
             // 공격하는 함수
             DoAttack();
         }
-        // 스킬을 준비하는 함수
+        /// <summary>
+        /// 스킬을 준비하는 함수
+        /// </summary>
         public override void PrepareSkill()
         {
             base.PrepareSkill();
@@ -214,7 +236,9 @@ namespace TurnBased.Entities.Battle {
             // 스킬을 사용하는 함수
             CastSkill();
         }
-        // 궁극기를 준비하는 함수
+        /// <summary>
+        /// 궁극기를 준비하는 함수
+        /// </summary>
         public override void PrepareUltAttack()
         {
             base.PrepareUltAttack();
@@ -222,8 +246,11 @@ namespace TurnBased.Entities.Battle {
 
         #endregion
 
-        // 혹시 몰라서 만든 데미지 함수 (때린 놈의 정보를 가져온다)
-        // IDamageApply를 상속시켜 가져왔다
+        /// <summary>
+        /// 혹시 몰라서 만든 데미지 함수 (때린 놈의 정보를 가져온다)
+        /// </summary>
+        /// <param name="attacker">때린놈</param>
+        /// <param name="result"></param>
         public override void Damage(Character attacker, DamageResult result) 
         {
             // 부모 클래스의 DagageApply를 실행후 실행
@@ -232,7 +259,9 @@ namespace TurnBased.Entities.Battle {
             // 데미지 애니메이션의 트리거를 켠다
             animator.SetTrigger("Damage");
         }
-        // 사망시 함수
+        /// <summary>
+        /// 사망시 함수
+        /// </summary>
         public override void Dead()
         {
             base.Dead();
@@ -245,7 +274,9 @@ namespace TurnBased.Entities.Battle {
         }
 
 
-        // 그로기 함수
+        /// <summary>
+        /// 그로기 함수
+        /// </summary>
         public override void Groggy()
         {
             base.Groggy();
