@@ -23,6 +23,7 @@ namespace TurnBased.Entities.Battle {
 
         private void OnAnimationEvent_Impl(Character c, string animEvent, string payload) {
             if (animEvent == "AttackEnd") {
+                animator.SetInteger("State", 0);
                 EndTurn();
             }
             else if (animEvent == "DoDamage") {
@@ -50,6 +51,11 @@ namespace TurnBased.Entities.Battle {
             _lastAttack = CharacterState.CastUltAttack;
             foreach (var c in CharacterManager.instance.GetEnemyCharacters()) {
                 c.SetMeshLayer(MeshLayer.UltTimeline);
+            }
+            foreach (var c in CharacterManager.instance.GetAllAllyCharacters()) {
+                if (c != this) {
+                    c.SetVisible(false);
+                }
             }
         }
 
@@ -168,7 +174,6 @@ namespace TurnBased.Entities.Battle {
                 ultAttack.time = ultAttack.duration;
                 ultAttack.Evaluate();
             }
-            animator.SetInteger("State", 0);
             meshParent.transform.localPosition = Vector3.zero;
         }
     }

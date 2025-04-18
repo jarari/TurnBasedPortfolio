@@ -57,6 +57,17 @@ MonoBehaviour:
         m_PreInfinity: 0
         m_PostInfinity: 0
         m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: CM Cam Ult Idle
+    Blend:
+      Style: 0
+      Time: 0.15
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 4
   - From: CM Cam Self
     To: CM Cam All
     Blend:

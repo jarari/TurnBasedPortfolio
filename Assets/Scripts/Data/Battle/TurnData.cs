@@ -29,8 +29,14 @@ namespace TurnBased.Battle {
 
         public TurnData(Character character, TurnType type) {
             Character = character;
-            ResetAV();
             Type = type;
+            if (type == TurnType.Normal) {
+                ResetAV();
+            }
+            else {
+                CurrentAV = AVCap;
+                RemainingTimeToAct = 0f;
+            }
         }
 
         public TurnData(TurnData clone) {
