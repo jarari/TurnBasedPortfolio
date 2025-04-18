@@ -200,13 +200,13 @@ namespace TurnBased.Entities.Battle {
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();
             // 데미지를 계산하는 함수를 호출하고
-            DamageResult result = CombatManager.DoDamage(ch, player);
+            DamageResult result = CombatManager.CalculateDamage(ch, player);
 
             Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
             // ( 플레이어의 데미지함수를 호출 또는 여기서 계산)
 
             // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
-            player.Damage(this);
+            player.Damage(this, result);
 
             // 에너미가 원래 방향을 향해 바라보게한다
             meshParent.transform.forward = EnPosition;
@@ -243,9 +243,9 @@ namespace TurnBased.Entities.Battle {
 
 
         // 혹시 몰라서 만든 데미지 함수
-        public override void Damage(Character pl)
+        public override void Damage(Character attacker, DamageResult result)
         {
-            base.Damage(pl);
+            base.Damage(attacker, result);
         }
 
         // 사망시 함수

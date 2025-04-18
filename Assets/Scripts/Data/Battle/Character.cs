@@ -261,15 +261,12 @@ namespace TurnBased.Battle {
         }
 
         /// <summary>
-        /// 데미지 함수 (때린놈의 정보를 가져온다)
+        /// 데미지 함수 (계산 후 결과를 이용해서 공격)
         /// </summary>
         /// <param name="attacker"></param>
-        public virtual void Damage(Character attacker) {
+        public virtual void Damage(Character attacker, DamageResult result) {
             // 캐릭터의 현재 상태를 데미지로 처리
             CurrentState = CharacterState.Damage;
-
-            // 데미지를 계산하는 함수를 호출 (때린놈, 맞은놈)
-            DamageResult result = CombatManager.DoDamage(attacker, this);
 
             if (Data.stats.MaxToughness > 0) {
                 // 만약 강인도가 있다면

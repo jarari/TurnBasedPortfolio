@@ -37,10 +37,10 @@ namespace TurnBased.Entities.Battle {
         }
 
         // 구동 확인 태스트용
-        public override void Damage(Character pl)
+        public override void Damage(Character attacker, DamageResult result)
         {
-            base.Damage(pl);
-            Debug.Log("때린놈 : " + pl.name);
+            base.Damage(attacker, result);
+            Debug.Log("때린놈 : " + attacker.name);
         }
     }
 }

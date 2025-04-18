@@ -60,12 +60,12 @@ namespace TurnBased.Entities.Battle {
                 var player = TargetManager.instance.Target;
 
                 // 데미지를 계산하는 함수를 호출하고
-                DamageResult result = CombatManager.DoDamage(this, player);
+                DamageResult result = CombatManager.CalculateDamage(this, player);
 
                 Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
 
                 // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
-                player.Damage(this);                
+                player.Damage(this, result);                
             }
             // 타임라인에서 공격이 끝난 신호를 받게된다면 실행
             if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd")
@@ -146,12 +146,12 @@ namespace TurnBased.Entities.Battle {
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();
             // 데미지를 계산하는 함수를 호출하고
-            DamageResult result = CombatManager.DoDamage(ch, player);
+            DamageResult result = CombatManager.CalculateDamage(ch, player);
 
             Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
 
             // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
-            player.Damage(this);
+            player.Damage(this, result);
 
         }
       
@@ -224,10 +224,10 @@ namespace TurnBased.Entities.Battle {
 
         // 혹시 몰라서 만든 데미지 함수 (때린 놈의 정보를 가져온다)
         // IDamageApply를 상속시켜 가져왔다
-        public override void Damage(Character pl)
+        public override void Damage(Character attacker, DamageResult result) 
         {
             // 부모 클래스의 DagageApply를 실행후 실행
-            base.Damage(pl);
+            base.Damage(attacker, result);
 
             // 데미지 애니메이션의 트리거를 켠다
             animator.SetTrigger("Damage");
