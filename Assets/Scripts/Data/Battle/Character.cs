@@ -49,6 +49,11 @@ namespace TurnBased.Battle {
         public CharacterState WantState { get; protected set; } = CharacterState.PrepareAttack;
         public bool IsVisible { get; set; }
         public MeshLayer CurrentMeshLayer { get; protected set; }
+        public bool IsDead {
+            get {
+                return CurrentState == CharacterState.Dead;
+            }
+        }
 
 
         protected virtual void Awake() {
@@ -217,6 +222,8 @@ namespace TurnBased.Battle {
             WantState = CharacterState.PrepareDead;
             // 명령대기를 하지 않음을 반환
             WantCmd = false;
+            // 턴 큐에서 캐릭터 제거
+            TurnManager.instance.RemoveCharacter(this);
         }
         /// <summary>
         /// 그로기 준비함수
