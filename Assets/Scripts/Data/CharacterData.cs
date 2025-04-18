@@ -49,7 +49,7 @@ namespace TurnBased.Data {
         /// 약점 리스트
         /// </summary>
         [field: SerializeField]
-        public List<ElementType> Weakness { get; set; }
+        public ElementType Weakness { get; set; }
     }
 
     public enum CharacterTeam {

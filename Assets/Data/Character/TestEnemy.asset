@@ -20,5 +20,5 @@ MonoBehaviour:
     <Defense>k__BackingField: 0
     <Speed>k__BackingField: 80
     <ElementType>k__BackingField: 0
-    <Weakness>k__BackingField: 00000000
+    <Weakness>k__BackingField: 3
   team: 1
