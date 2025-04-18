@@ -282,12 +282,6 @@ namespace TurnBased.Battle {
                     // 채력을 최종적으로 받는 데미지의 반으로 받고
                     Data.stats.CurrentHP -= (result.FinalDamage / 2);
 
-                    // 채력이 만약 0이하가 되었다면
-                    if (Data.stats.CurrentHP <= 0) {
-                        // 죽음을 다룰 함수를 실행한다
-                        Dead();
-                    }
-
                     // 플레이어가 약점 속성으로 때린다면
                     if (CombatManager.CheckElementMatch(attacker.Data.stats.ElementType, Data.stats.Weakness)) {
                         // 에너미의 강인도는 플레이어의 공격력만큼 깎인다
@@ -300,6 +294,12 @@ namespace TurnBased.Battle {
                             // 그로기를 다룰 함수를 실행한다
                             Groggy();
                         }
+                    }
+
+                    // 채력이 만약 0이하가 되었다면
+                    if (Data.stats.CurrentHP <= 0) {
+                        // 죽음을 다룰 함수를 실행한다
+                        Dead();
                     }
                 }
                 // 만약 강인도가 없다면
