@@ -21,8 +21,7 @@ namespace TurnBased.Entities.Battle {
         [Header("Components")]
         public Animator animator;   // 캐릭터의 애니메이터
 
-        // 본인의 위치와 회전값을 담을 변수
-        private Vector3 EnPosition;
+        // 본인의 위치와 회전값을 담을 변수        
         private Vector3 EnRotate;
 
         // 캐릭터의 마지막 공격 상태를 담을 변수
@@ -253,7 +252,7 @@ namespace TurnBased.Entities.Battle {
         /// <param name="result"></param>
         public override void Damage(Character attacker, DamageResult result) 
         {
-            // 부모 클래스의 DagageApply를 실행후 실행
+            // 부모 클래스의 Dagage를 실행후 실행
             base.Damage(attacker, result);
 
             // 데미지 애니메이션의 트리거를 켠다
@@ -267,10 +266,7 @@ namespace TurnBased.Entities.Battle {
             base.Dead();
 
             // 사망 에니메이션의 트리거를 켠다
-            animator.SetTrigger("Dead");
-            // 캐릭터 모델을 비활성화
-            SetVisible(false);
-            
+            animator.SetTrigger("Dead");            
         }
 
 
