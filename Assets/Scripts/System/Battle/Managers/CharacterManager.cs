@@ -60,11 +60,57 @@ namespace TurnBased.Battle.Managers {
 
         }
 
+        public void AddCharacter(Character c, int idx) {
+
+        }
+
+        public int GetMaxAllyCount() {
+            return allySpawnPoints.Count;
+        }
+
+        public int GetMaxEnemyCount() {
+            return enemySpawnPoints.Count;
+        }
+
+        public void RemoveCharacter(Character c) {
+            if (c.Data.team == Data.CharacterTeam.Player) {
+                int idx = GetAllyIndex(c);
+                _allyIdxDict.Remove(c);
+                _idxAllyDict.Remove(idx);
+            }
+            else {
+                int idx = GetEnemyIndex(c);
+                _enemyIdxDict.Remove(c);
+                _idxEnemyDict.Remove(idx);
+            }
+            _characters.Remove(c);
+        }
+
         public List<Character> GetCharacters() {
+            List<Character> list = new List<Character>();
+            foreach (Character c in _characters) {
+                if (!c.IsDead) {
+                    list.Add(c);
+                }
+            }
+            return list;
+        }
+
+        public List<Character> GetAllCharacters() {
             return _characters;
         }
 
         public List<Character> GetAllyCharacters() {
+            List<Character> list = new List<Character>();
+            foreach (Character c in _characters) {
+                if (!c.IsDead && c.Data.team == Data.CharacterTeam.Player) {
+                    list.Add(c);
+                }
+            }
+            return list;
+        }
+
+        public List<Character> GetAllAllyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
                 if (c.Data.team == Data.CharacterTeam.Player) {
@@ -75,6 +121,16 @@ namespace TurnBased.Battle.Managers {
         }
 
         public List<Character> GetEnemyCharacters() {
+            List<Character> list = new List<Character>();
+            foreach (Character c in _characters) {
+                if (!c.IsDead && c.Data.team == Data.CharacterTeam.Enemy) {
+                    list.Add(c);
+                }
+            }
+            return list;
+        }
+
+        public List<Character> GetAllEnemyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
                 if (c.Data.team == Data.CharacterTeam.Enemy) {

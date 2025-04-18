@@ -25,6 +25,20 @@ namespace TurnBased.Entities.Battle {
             if (animEvent == "AttackEnd") {
                 EndTurn();
             }
+            else if (animEvent == "DoDamage") {
+                float attackMult = 1.0f;
+                if (payload == "Skill") {
+                    attackMult = 2.2f;
+                }
+                else if (payload == "Ult") {
+                    attackMult = 6.4f;
+                }
+                var targets = TargetManager.instance.GetTargets();
+                foreach (var t in targets) {
+                    DamageResult result = CombatManager.CalculateDamage(c, t, attackMult);
+                    t.Damage(c, result);
+                }
+            }
         }
 
         private void CastUlt() {

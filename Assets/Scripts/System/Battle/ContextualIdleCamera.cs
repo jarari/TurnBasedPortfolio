@@ -86,7 +86,7 @@ namespace TurnBased.Battle {
         }
 
         private void ShowAllyCharacters() {
-            foreach (var c in CharacterManager.instance.GetAllyCharacters()) {
+            foreach (var c in CharacterManager.instance.GetAllAllyCharacters()) {
                 c.SetVisible(true);
             }
         }

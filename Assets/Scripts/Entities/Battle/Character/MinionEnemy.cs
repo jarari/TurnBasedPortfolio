@@ -59,15 +59,13 @@ namespace TurnBased.Entities.Battle {
             {
                 var player = TargetManager.instance.Target;
 
-                // 자기자신의 캐릭터를 가져온다
-                Character ch = GetComponent<Character>();
                 // 데미지를 계산하는 함수를 호출하고
-                DamageResult result = CombatManager.DoDamage(ch, player);
+                DamageResult result = CombatManager.CalculateDamage(this, player);
 
                 Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
 
                 // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
-                player.Damage(this);                
+                player.Damage(this, result);                
             }
             // 타임라인에서 공격이 끝난 신호를 받게된다면 실행
             if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd")
@@ -148,12 +146,12 @@ namespace TurnBased.Entities.Battle {
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();
             // 데미지를 계산하는 함수를 호출하고
-            DamageResult result = CombatManager.DoDamage(ch, player);
+            DamageResult result = CombatManager.CalculateDamage(ch, player);
 
             Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
 
             // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
-            player.Damage(this);
+            player.Damage(this, result);
 
         }
       
@@ -226,65 +224,13 @@ namespace TurnBased.Entities.Battle {
 
         // 혹시 몰라서 만든 데미지 함수 (때린 놈의 정보를 가져온다)
         // IDamageApply를 상속시켜 가져왔다
-        public override void Damage(Character pl)
+        public override void Damage(Character attacker, DamageResult result) 
         {
             // 부모 클래스의 DagageApply를 실행후 실행
-            base.Damage(pl);
-
-            // 자기자신의 캐릭터를 가져온다
-            Character ch = GetComponent<Character>();
-            // 데미지를 계산하는 함수를 호출 (때린놈, 맞은놈)
-            DamageResult result = CombatManager.DoDamage(pl, ch);
+            base.Damage(attacker, result);
 
             // 데미지 애니메이션의 트리거를 켠다
             animator.SetTrigger("Damage");
-
-            // 만약 강인도가 있다면
-            if (ch.Data.stats.CurrentToughness > 0)
-            {               
-
-                // 채력을 최종적으로 받는 데미지의 반으로 받고
-                this.Data.stats.CurrentHP -= (result.FinalDamage / 2);
-
-                // 채력이 만약 0이하가 되었다면
-                if (ch.Data.stats.CurrentHP <= 0)
-                {
-                    // 죽음을 다룰 함수를 실행한다
-                    Dead();
-                }
-
-                // 플레이어가 약점 속성으로 때린다면
-                if (Element_Check(pl, ch) == true)
-                {
-                    // 에너미의 강인도는 플레이어의 공격력만큼 깎인다
-                    this.Data.stats.CurrentToughness -= result.NormalAttack;
-
-                    // 강인도가 만약 0이하가 되었다면
-                    if (ch.Data.stats.CurrentToughness <= 0)
-                    {
-                        // 현재 강인도를 0으로 만든다
-                        ch.Data.stats.CurrentToughness = 0;
-                        // 그로기를 다룰 함수를 실행한다
-                        Groggy();
-                    }
-
-                }
-
-            }
-            // 만약 강인도가 없다면
-            else
-            {
-                // 에너미는 최종적으로 받는 데미지를 모두 받는다.
-                this.Data.stats.CurrentHP -= result.FinalDamage;
-
-                // 채력이 만약 0이하가 되었다면
-                if (ch.Data.stats.CurrentHP <= 0)
-                {
-                    // 죽음을 다룰 함수를 실행한다
-                    Dead();
-                }
-
-            }
         }
         // 사망시 함수
         public override void Dead()
