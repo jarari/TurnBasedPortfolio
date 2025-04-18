@@ -22982,11 +22982,8 @@ Animator:
   m_AnimatePhysics: 0
   m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
     are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:LeftHandRing1'\n\tand more ...\n\tFrom
-    animation clip 'stall ball'"
+    by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tFrom animation clip
+    'stall ball'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -23107,9 +23104,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6113553865432044253}
   - {fileID: 4581898752053460969}
   - {fileID: 7422110850202477232}
+  - {fileID: 6113553865432044253}
   - {fileID: 9151795564009678901}
   - {fileID: 4893235095602544436}
   - {fileID: 2216615963840728497}
