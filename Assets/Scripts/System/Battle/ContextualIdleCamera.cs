@@ -3,7 +3,6 @@ using TurnBased.Battle.Managers;
 using TurnBased.Data;
 using Unity.Cinemachine;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 namespace TurnBased.Battle {
     public class ContextualIdleCamera : CinemachineCameraManagerBase {
