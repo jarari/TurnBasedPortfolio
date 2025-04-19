@@ -220,9 +220,11 @@ namespace TurnBased.Entities.Battle {
             EnRotate = meshParent.transform.eulerAngles;
 
             // 타겟을 세팅한다
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);            
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+
+            Dead_Animation();
             // 공격하는 함수
-            DoAttack();
+            //DoAttack();
         }
         /// <summary>
         /// 스킬을 준비하는 함수
@@ -261,10 +263,8 @@ namespace TurnBased.Entities.Battle {
         /// <summary>
         /// 사망시 함수
         /// </summary>
-        public override void Dead()
-        {
-            base.Dead();
-
+        public void Dead_Animation()
+        {            
             // 사망 에니메이션의 트리거를 켠다
             animator.SetTrigger("Dead");            
         }

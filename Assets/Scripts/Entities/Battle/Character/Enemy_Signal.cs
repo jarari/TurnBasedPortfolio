@@ -12,7 +12,11 @@ namespace TurnBased.Entities.Battle {
         public void SignalDead()
         {
             Debug.Log("수신!");
-            this.gameObject.SetActive(false);
+            // 오브젝트 모델을 비활성화 한다
+            gameObject.SetActive(false);
+            // 캐릭터 스크립트의 Dead 함수를 호출한다
+            Dead();
+            EndTurn();
         }
 
     }
