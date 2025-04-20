@@ -960,8 +960,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1460684064712748033}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.041795995, y: -0.11913236, z: 0.004099089, w: 0.99198985}
-  m_LocalPosition: {x: 1.6665957, y: 1.6647544, z: 0.4227159}
+  m_LocalRotation: {x: 0.041398883, y: -0.10934131, z: 0.003635886, w: 0.99313515}
+  m_LocalPosition: {x: 1.5860436, y: 1.7001208, z: 0.328413}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1529,6 +1529,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 99f7271d7db97074c92e3042fb1a1416, type: 2}
     - {fileID: 11400000, guid: d64175bba4c75d04280a69b98a8580b1, type: 2}
     - {fileID: 11400000, guid: 1db77090c49746f41bc3b73779ceb1b7, type: 2}
+    - {fileID: 11400000, guid: 8f1090510534e8349b1e679f78efbf04, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -1571,6 +1572,20 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 1
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 169077802815142213}
+          m_TargetAssemblyTypeName: TurnBased.Battle.Character, Assembly-CSharp
+          m_MethodName: ProcessAnimationEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: DoDamage.Skill
+            m_BoolArgument: 0
           m_CallState: 2
 --- !u!95 &7621008817084692969
 Animator:
@@ -22967,11 +22982,8 @@ Animator:
   m_AnimatePhysics: 0
   m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
     are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:LeftHandRing1'\n\tand more ...\n\tFrom
-    animation clip 'stall ball'"
+    by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tFrom animation clip
+    'stall ball'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -23092,9 +23104,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6113553865432044253}
   - {fileID: 4581898752053460969}
   - {fileID: 7422110850202477232}
+  - {fileID: 6113553865432044253}
   - {fileID: 9151795564009678901}
   - {fileID: 4893235095602544436}
   - {fileID: 2216615963840728497}
@@ -23183,6 +23195,7 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: d85d0473aa1c1404a967c23d6510017b, type: 2}
+    - {fileID: 11400000, guid: 8f1090510534e8349b1e679f78efbf04, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -23196,6 +23209,20 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: AttackEnd
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 169077802815142213}
+          m_TargetAssemblyTypeName: TurnBased.Battle.Character, Assembly-CSharp
+          m_MethodName: ProcessAnimationEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: DoDamage.Ult
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!1 &6905345944984841276
@@ -33819,8 +33846,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8626691821283560764}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.004167586, y: -0.068659656, z: -0.00045293142, w: 0.9976314}
-  m_LocalPosition: {x: 1.0334507, y: 1.392521, z: 3.0530744}
+  m_LocalRotation: {x: -0.0044577676, y: -0.06822693, z: -0.0003824222, w: 0.9976598}
+  m_LocalPosition: {x: 1.0331348, y: 1.3918407, z: 3.0503283}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -33859,7 +33886,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 60.084206
   orthographic: 0
   orthographic size: 5
   m_Depth: 2
@@ -34205,6 +34232,7 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: c45482fcdf44097428ac870cdce377d3, type: 2}
+    - {fileID: 11400000, guid: 8f1090510534e8349b1e679f78efbf04, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -34218,6 +34246,20 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: AttackEnd
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 169077802815142213}
+          m_TargetAssemblyTypeName: TurnBased.Battle.Character, Assembly-CSharp
+          m_MethodName: ProcessAnimationEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: DoDamage.Normal
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!95 &2615481076944778543

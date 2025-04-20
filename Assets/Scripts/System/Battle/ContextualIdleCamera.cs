@@ -19,6 +19,7 @@ namespace TurnBased.Battle {
 
         private Character _character;
         private CinemachineSplineDolly _idleSplineDolly;
+        private CinemachineSplineDolly _ultIdleSplineDolly;
 
         private enum Context {
             WaitingTurn,
@@ -74,6 +75,7 @@ namespace TurnBased.Battle {
                 }
                 else if (cam.Name == "CM Cam Ult Idle") {
                     cmUltIdleCam = cam;
+                    _ultIdleSplineDolly = cmUltIdleCam.GetComponent<CinemachineSplineDolly>();
                 }
             }
         }
@@ -108,6 +110,9 @@ namespace TurnBased.Battle {
 
         private void OnCharacterTurnStart(Character c) {
             Priority = 4;
+            if (CinemachineCore.IsLive(this)) {
+                _character.ProcessCamChanged();
+            }
             ResetAllCharacterLayers();
             if (_currentContext == Context.TargetEnemy) {
                 _currentContext = Context.TurnStart;
@@ -121,8 +126,12 @@ namespace TurnBased.Battle {
 
         private void OnCharacterUltTurn(Character c) {
             Priority = 4;
+            if (CinemachineCore.IsLive(this)) {
+                _character.ProcessCamChanged();
+            }
             ResetAllCharacterLayers();
             _currentContext = Context.Ult;
+            _ultIdleSplineDolly.CameraPosition = 0;
         }
 
         private void OnCamTargetUpdate(float pos) {
@@ -133,7 +142,9 @@ namespace TurnBased.Battle {
         }
 
         private void OnTargetSettingChanged() {
-            if (TurnManager.instance.CurrentCharacter == _character) {
+            if (TurnManager.instance.CurrentCharacter == _character
+                && _character.CurrentState != Character.CharacterState.PrepareUltAttack
+                && _character.CurrentState != Character.CharacterState.PrepareUltSkill) {
                 var tm = TargetManager.instance;
                 if (tm.Mode == TargetManager.TargetMode.Self) {
                     _currentContext = Context.TargetSelf;
