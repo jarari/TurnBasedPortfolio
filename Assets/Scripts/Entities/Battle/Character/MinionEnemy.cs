@@ -137,34 +137,19 @@ namespace TurnBased.Entities.Battle {
         {
             // 부모 클래스에서 CastSkill 실행후 실행
             base.CastSkill();
-            Debug.Log(gameObject.name + " 의 스킬 발동!");
-                        
+            Debug.Log("Enemy SkillAttack");
+
             // 플레이어 타겟을 가져온다
             var player = TargetManager.instance.Target;
 
             // 에너미가 플레이어 앞에 오도록 한다
             meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f, 0f);
-
-            // 에너미가 플레이어를 바라보게한다
-            meshParent.transform.forward = player.gameObject.transform.position;
-
             
             // 스킬 공격 애니메이션 재생
             skillAttack.Play();
 
             // 마지막 공격이 스킬공격임을 알린다
             _lastAttack = CharacterState.CastSkill;
-                        
-
-            // 자기자신의 캐릭터를 가져온다
-            Character ch = GetComponent<Character>();
-            // 데미지를 계산하는 함수를 호출하고
-            DamageResult result = CombatManager.CalculateDamage(ch, player);
-
-            Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
-
-            // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
-            player.Damage(this, result);
 
         }
       
@@ -181,12 +166,6 @@ namespace TurnBased.Entities.Battle {
 
             // 에너미가 플레이어 앞에 오도록 한다
             meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f,0f);
-
-            // 에너미가 플레이어를 바라보게한다
-            meshParent.transform.forward = player.gameObject.transform.position;
-
-            // 현제 공격을 진행하는 자신의 이름 (테스트용)
-            Debug.Log(gameObject.name + " 의 공격! ");            
             
             // 일반공격 애니메이션이 실행
             normalAttack.Play();
@@ -220,7 +199,7 @@ namespace TurnBased.Entities.Battle {
             EnRotate = meshParent.transform.eulerAngles;
 
             // 타겟을 세팅한다
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+            TargetManager.instance.SetPlayerTarget();
             // 공격하는 함수
             DoAttack();
         }
