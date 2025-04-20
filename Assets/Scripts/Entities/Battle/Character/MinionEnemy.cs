@@ -21,7 +21,7 @@ namespace TurnBased.Entities.Battle {
         [Header("Components")]
         public Animator animator;   // 캐릭터의 애니메이터
 
-        // 본인의 위치와 회전값을 담을 변수        
+        // 본인의 회전값을 담을 변수        
         private Vector3 EnRotate;
 
         // 캐릭터의 마지막 공격 상태를 담을 변수
@@ -221,10 +221,8 @@ namespace TurnBased.Entities.Battle {
 
             // 타겟을 세팅한다
             TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
-
-            Dead_Animation();
             // 공격하는 함수
-            //DoAttack();
+            DoAttack();
         }
         /// <summary>
         /// 스킬을 준비하는 함수
@@ -259,16 +257,14 @@ namespace TurnBased.Entities.Battle {
 
             // 데미지 애니메이션의 트리거를 켠다
             animator.SetTrigger("Damage");
-        }
-        /// <summary>
-        /// 사망시 함수
-        /// </summary>
-        public void Dead_Animation()
-        {            
-            // 사망 에니메이션의 트리거를 켠다
-            animator.SetTrigger("Dead");            
-        }
 
+            // 만약 채력이 0이하가 되었다면
+            if (Data.stats.CurrentHP <= 0)
+            {
+                // 사망 에니메이션의 트리거를 켠다
+                animator.SetTrigger("Dead");
+            }
+        }
 
         /// <summary>
         /// 그로기 함수
