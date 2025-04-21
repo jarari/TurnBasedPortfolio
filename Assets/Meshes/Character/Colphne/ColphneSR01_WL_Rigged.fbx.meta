@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2fa32de8e1c92164ebe2a00a636291c8
+guid: f80f0d77729f27b4db4b1e0e17956add
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,7 +7,7 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: cw_ColphneSR01_WL_lod0_0Mat
+      name: cw_ColphneSR01_WL_uber
     second: {fileID: 2100000, guid: 4c05fa196c224d448819f4bb5e2d234b, type: 2}
   materials:
     materialImportMode: 2
@@ -70,7 +70,7 @@ ModelImporter:
     secondaryUVMinLightmapResolution: 40
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
     strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
