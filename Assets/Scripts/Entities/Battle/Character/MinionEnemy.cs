@@ -26,8 +26,9 @@ namespace TurnBased.Entities.Battle {
 
         // 캐릭터의 마지막 공격 상태를 담을 변수
         private CharacterState _lastAttack;
-
-        
+                
+        // 데미지 피해를 가할시 일반공격과 스킬 데미지 계수를 담을 변수
+        public float Damage_factor = 0f;
 
         /// <summary> 
         /// 공격후에 애니메이션이 끝날 때의 반환을 처리하는 코루틴
@@ -69,7 +70,7 @@ namespace TurnBased.Entities.Battle {
                 var player = TargetManager.instance.Target;
 
                 // 데미지를 계산하는 함수를 호출하고
-                DamageResult result = CombatManager.CalculateDamage(this, player);
+                DamageResult result = CombatManager.CalculateDamage(this, player, 1.5f);
 
                 Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
 
@@ -83,7 +84,7 @@ namespace TurnBased.Entities.Battle {
                 StartCoroutine(DelayReturnFromAttack());
 
                 Debug.Log("턴 종료");
-
+                                
                 // 타임라인의 상태가 Pause일때 (재생이 종료 되었을때)
                 if (normalAttack.state == PlayState.Paused)
                 {
@@ -123,9 +124,10 @@ namespace TurnBased.Entities.Battle {
                 // 현재 강인도를 최대로 한다
                 this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;                
             }
-
+                                    
             // 공격을 준비하는 함수를 실행한다
             PrepareAttack();
+                        
         }
 
         #region 행동하는 함수 (스킬, 공격, 궁극기, 엑스트라 어택)
@@ -144,6 +146,9 @@ namespace TurnBased.Entities.Battle {
 
             // 에너미가 플레이어 앞에 오도록 한다
             meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f, 0f);
+
+            // 스킬 공격 대미지 계수
+            Damage_factor = 1.5f;
             
             // 스킬 공격 애니메이션 재생
             skillAttack.Play();
@@ -166,7 +171,11 @@ namespace TurnBased.Entities.Battle {
 
             // 에너미가 플레이어 앞에 오도록 한다
             meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f,0f);
-            
+
+            // 일반 공격 대미지 계수
+            // (나중에 버프라던가 디버프가 생기면 이곳을 더하거나 빼는 방식도 생각해보자)
+            Damage_factor = 1.0f;
+
             // 일반공격 애니메이션이 실행
             normalAttack.Play();
             
@@ -194,12 +203,13 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareAttack()
         {
             base.PrepareAttack();
-
-            // 턴을 받았을때 에너미의 현재 위치와 회전값을 저장한다            
-            EnRotate = meshParent.transform.eulerAngles;
-
+                        
             // 타겟을 세팅한다
             TargetManager.instance.SetPlayerTarget();
+
+            // 현재의 회전값을 저장한다
+            EnRotate = meshParent.transform.eulerAngles;
+
             // 공격하는 함수
             DoAttack();
         }
@@ -209,8 +219,13 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareSkill()
         {
             base.PrepareSkill();
+
             // 타겟을 세팅한다 (일단 대상을 단일로)
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+            TargetManager.instance.SetPlayerTarget();
+
+            // 현재의 회전값을 저장한다
+            EnRotate = meshParent.transform.eulerAngles;
+
             // 스킬을 사용하는 함수
             CastSkill();
         }
