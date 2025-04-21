@@ -55,9 +55,7 @@ namespace TurnBased.Battle {
             return cmIdleCam;
         }
 
-        protected override void Start() {
-            base.Start();
-
+        private void Awake() {
             for (int i = 0; i < ChildCameras.Count; ++i) {
                 var cam = ChildCameras[i];
                 if (cam.Name == "CM Cam Idle") {
