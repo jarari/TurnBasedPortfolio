@@ -41,6 +41,8 @@ namespace TurnBased.Battle {
         public Action<Character> OnUltTurn;
         public Action<Character, string, string> OnAnimationEvent;
         public Action<Character, bool> OnVisibilityChange;
+        public Action<Character, Character, DamageResult> OnDamage;
+        public Action<Character, Character, float> OnRestoreHealth;
 
         public CharacterData Data { get; private set; }
 
@@ -316,8 +318,13 @@ namespace TurnBased.Battle {
                     }
                 }
             }
+            OnDamage?.Invoke(this, attacker, result);
         }
 
+        public virtual void RestoreHealth(Character healer, float value) {
+            Data.stats.CurrentHP = Mathf.Min(Data.stats.CurrentHP + value, Data.stats.MaxHP);
+            OnRestoreHealth?.Invoke(this, healer, value);
+        }
 
         public virtual void ProcessCamChanged() { }
     }
