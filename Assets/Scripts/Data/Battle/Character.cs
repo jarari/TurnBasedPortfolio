@@ -224,6 +224,8 @@ namespace TurnBased.Battle {
             WantCmd = false;
             // 턴 큐에서 캐릭터 제거
             TurnManager.instance.RemoveCharacter(this);
+
+            Debug.Log("Dead 함수 실행");
         }
         /// <summary>
         /// 그로기 준비함수

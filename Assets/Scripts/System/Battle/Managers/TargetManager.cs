@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TurnBased.Data;
 using static UnityEngine.EventSystems.EventTrigger;
+using NUnit.Framework;
 
 namespace TurnBased.Battle.Managers {
     /// <summary>
@@ -291,5 +292,28 @@ namespace TurnBased.Battle.Managers {
             }
             return false;
         }
+
+        /// <summary>
+        /// 무작위 플레이어 하나를 타겟으로 설정하는 함수
+        /// </summary>
+        public void SetPlayerTarget()
+        { 
+            // 살아 있는 플레이어 리스트를 가져오고
+            List<Character> player_list = CharacterManager.instance.GetAllyCharacters();
+            // 만약 그런 플레이어가 없다면 그냥 반환한다
+            if (player_list == null || player_list.Count == 0)
+            {
+                return;
+            }
+            // 유니티의 랜덤 클래스를 사용해서 0부터 살아있는 플레이어 숫자까지 랜덤한 숫자를 고른다
+            int rand = UnityEngine.Random.Range(0, player_list.Count);
+            // 랜덤하게 선택된 플레이어를 하나 가져오고
+            Character player_target = player_list[rand];
+            // 선택된 캐릭터의 위치(어느 칸)에 있는지 가져옴
+            int player_index = CharacterManager.instance.GetAllyIndex(player_target);
+            // 그리고 타겟을 업데이트 한다
+            UpdateTarget(player_target, player_index, false);
+        }
+
     }
 }
