@@ -26,7 +26,10 @@ namespace TurnBased.Entities.Battle {
 
         // 캐릭터의 마지막 공격 상태를 담을 변수
         private CharacterState _lastAttack;
-                
+
+        // 공격할 플레이어를 담을 변수
+        Character target;
+
         // 데미지 피해를 가할시 일반공격과 스킬 데미지 계수를 담을 변수
         public float Damage_factor = 0f;
 
@@ -68,16 +71,14 @@ namespace TurnBased.Entities.Battle {
         {
             // 타임라인에서 데미지 시그널을 받게 된다면 실행
             if (animEvent == "Damage")
-            {
-                var player = TargetManager.instance.Target;
-
+            {                
                 // 데미지를 계산하는 함수를 호출하고
-                DamageResult result = CombatManager.CalculateDamage(this, player, 1.5f);
+                DamageResult result = CombatManager.CalculateDamage(this, target, Damage_factor);
 
-                Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
+                Debug.Log(target.name + " 에게 " + result.FinalDamage + " 데미지");
 
                 // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
-                player.Damage(this, result);                
+                target.Damage(this, result);                
             }
             // 타임라인에서 공격이 끝난 신호를 받게된다면 실행
             if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd")
@@ -130,12 +131,20 @@ namespace TurnBased.Entities.Battle {
             // 이거 순서가 공격 준비를 먼저 시작하고 공격을 시작하면 여기가 실행이 된다
             Debug.Log("턴을 받았다!");
 
-            
+            // 타겟을 초기화 한다
+            target = null;
+
             // 강인도가 0이하 라면
-            if (this.Data.stats.CurrentToughness < 0)
+            if (this.CurrentState == CharacterState.Groggy)
             {
+                // 애니메이터의 트리거를 켠다
+                animator.SetTrigger("GroggyToIdle");
+
                 // 현재 강인도를 최대로 한다
-                this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;                
+                this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;
+
+                // 현재 상태를 기본으로 갱신한다
+                this.CurrentState = CharacterState.Idle;
             }
 
             Debug.Log("턴을 받은후 스킬 쿨타임 : " + skill_cool);
@@ -165,12 +174,9 @@ namespace TurnBased.Entities.Battle {
             // 부모 클래스에서 CastSkill 실행후 실행
             base.CastSkill();
             Debug.Log("Enemy SkillAttack");
-
-            // 플레이어 타겟을 가져온다
-            var player = TargetManager.instance.Target;
-
+                        
             // 에너미가 플레이어 앞에 오도록 한다
-            meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f, 0f);
+            meshParent.transform.position = target.gameObject.transform.position - new Vector3(8.47f, 0f);
 
             // 스킬 공격 대미지 계수
             Damage_factor = 1.5f;
@@ -190,12 +196,9 @@ namespace TurnBased.Entities.Battle {
         {
             base.DoAttack();
             Debug.Log("Enemy Attack");
-
-            // 플레이어 타겟을 가져온다 (1인)
-            var player = TargetManager.instance.Target;
-
+                        
             // 에너미가 플레이어 앞에 오도록 한다
-            meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f,0f);
+            meshParent.transform.position = target.gameObject.transform.position - new Vector3(8.47f,0f);
 
             // 일반 공격 대미지 계수
             // (나중에 버프라던가 디버프가 생기면 이곳을 더하거나 빼는 방식도 생각해보자)
@@ -228,13 +231,13 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareAttack()
         {
             base.PrepareAttack();
-                        
-            // 타겟을 세팅한다
-            TargetManager.instance.SetPlayerTarget();
+
+            // 생존해 있는 플레이어를 가져온다
+            target = TargetManager.instance.SetPlayerTarget();
 
             // 현재의 회전값을 저장한다
             EnRotate = meshParent.transform.eulerAngles;
-
+                        
             // 공격하는 함수
             DoAttack();
         }
@@ -245,8 +248,8 @@ namespace TurnBased.Entities.Battle {
         {
             base.PrepareSkill();
 
-            // 타겟을 세팅한다 (일단 대상을 단일로)
-            TargetManager.instance.SetPlayerTarget();
+            // 생존해 있는 플레이어를 가져온다
+            target = TargetManager.instance.SetPlayerTarget();
 
             // 현재의 회전값을 저장한다
             EnRotate = meshParent.transform.eulerAngles;
