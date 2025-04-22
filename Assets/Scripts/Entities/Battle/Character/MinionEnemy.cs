@@ -30,6 +30,8 @@ namespace TurnBased.Entities.Battle {
         // 데미지 피해를 가할시 일반공격과 스킬 데미지 계수를 담을 변수
         public float Damage_factor = 0f;
 
+        public float skill_cool = 0f;
+
         /// <summary> 
         /// 공격후에 애니메이션이 끝날 때의 반환을 처리하는 코루틴
         /// </summary>
@@ -84,7 +86,18 @@ namespace TurnBased.Entities.Battle {
                 StartCoroutine(DelayReturnFromAttack());
 
                 Debug.Log("턴 종료");
-                                
+
+                // 스킬 쿨타임을 증가시킨다
+                skill_cool++;
+                Debug.Log("공격후 스킬 쿨타임 : " + skill_cool);
+
+                // 스킬 쿨타임이 2을 초과하였을때
+                if (skill_cool > 2)
+                { 
+                    // 스킬 쿨타임을 0으로 만든다
+                    skill_cool = 0;
+                }
+
                 // 타임라인의 상태가 Pause일때 (재생이 종료 되었을때)
                 if (normalAttack.state == PlayState.Paused)
                 {
@@ -124,9 +137,21 @@ namespace TurnBased.Entities.Battle {
                 // 현재 강인도를 최대로 한다
                 this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;                
             }
-                                    
-            // 공격을 준비하는 함수를 실행한다
-            PrepareAttack();
+
+            Debug.Log("턴을 받은후 스킬 쿨타임 : " + skill_cool);
+
+            // 스킬 쿨타임이 2이상 이면
+            if (skill_cool >= 2)
+            {
+                // 스킬을 준비하는 함수를 실행한다
+                PrepareSkill();
+            }
+            // 스킬 쿨타임이 2미만 이라면
+            else if(skill_cool < 2)
+            { 
+                // 공격을 준비하는 함수를 실행한다
+                PrepareAttack();
+            }
                         
         }
 

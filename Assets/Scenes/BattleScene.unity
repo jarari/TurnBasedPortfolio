@@ -4812,6 +4812,7 @@ MonoBehaviour:
   skillAttack: {fileID: 1519746495}
   animator: {fileID: 449694314}
   Damage_factor: 0
+  skill_cool: 0
 --- !u!1 &324164946
 GameObject:
   m_ObjectHideFlags: 0
@@ -26960,6 +26961,7 @@ MonoBehaviour:
   skillAttack: {fileID: 1710620641}
   animator: {fileID: 5866666020500299904}
   Damage_factor: 0
+  skill_cool: 0
 --- !u!1 &1605946595
 GameObject:
   m_ObjectHideFlags: 0
@@ -30262,6 +30264,7 @@ MonoBehaviour:
   skillAttack: {fileID: 552090531}
   animator: {fileID: 4542083194747395843}
   Damage_factor: 0
+  skill_cool: 0
 --- !u!1 &1819485779
 GameObject:
   m_ObjectHideFlags: 0
@@ -30673,6 +30676,7 @@ MonoBehaviour:
   skillAttack: {fileID: 442019088}
   animator: {fileID: 145251318}
   Damage_factor: 0
+  skill_cool: 0
 --- !u!1 &1844921017
 GameObject:
   m_ObjectHideFlags: 0
@@ -30727,6 +30731,7 @@ MonoBehaviour:
   skillAttack: {fileID: 1097918541}
   animator: {fileID: 1743398593}
   Damage_factor: 0
+  skill_cool: 0
 --- !u!1 &1846730325
 GameObject:
   m_ObjectHideFlags: 0
