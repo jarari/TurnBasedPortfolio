@@ -21,14 +21,16 @@ namespace TurnBased.Entities.Battle {
         [Header("Components")]
         public Animator animator;   // 캐릭터의 애니메이터
 
-        // 본인의 위치와 회전값을 담을 변수
-        private Vector3 EnPosition;
+        // 본인의 회전값을 담을 변수        
         private Vector3 EnRotate;
 
         // 캐릭터의 마지막 공격 상태를 담을 변수
         private CharacterState _lastAttack;
+                
+        // 데미지 피해를 가할시 일반공격과 스킬 데미지 계수를 담을 변수
+        public float Damage_factor = 0f;
 
-        
+        public float skill_cool = 0f;
 
         /// <summary> 
         /// 공격후에 애니메이션이 끝날 때의 반환을 처리하는 코루틴
@@ -70,7 +72,7 @@ namespace TurnBased.Entities.Battle {
                 var player = TargetManager.instance.Target;
 
                 // 데미지를 계산하는 함수를 호출하고
-                DamageResult result = CombatManager.CalculateDamage(this, player);
+                DamageResult result = CombatManager.CalculateDamage(this, player, 1.5f);
 
                 Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
 
@@ -84,6 +86,17 @@ namespace TurnBased.Entities.Battle {
                 StartCoroutine(DelayReturnFromAttack());
 
                 Debug.Log("턴 종료");
+
+                // 스킬 쿨타임을 증가시킨다
+                skill_cool++;
+                Debug.Log("공격후 스킬 쿨타임 : " + skill_cool);
+
+                // 스킬 쿨타임이 2을 초과하였을때
+                if (skill_cool > 2)
+                { 
+                    // 스킬 쿨타임을 0으로 만든다
+                    skill_cool = 0;
+                }
 
                 // 타임라인의 상태가 Pause일때 (재생이 종료 되었을때)
                 if (normalAttack.state == PlayState.Paused)
@@ -125,8 +138,21 @@ namespace TurnBased.Entities.Battle {
                 this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;                
             }
 
-            // 공격을 준비하는 함수를 실행한다
-            PrepareAttack();
+            Debug.Log("턴을 받은후 스킬 쿨타임 : " + skill_cool);
+
+            // 스킬 쿨타임이 2이상 이면
+            if (skill_cool >= 2)
+            {
+                // 스킬을 준비하는 함수를 실행한다
+                PrepareSkill();
+            }
+            // 스킬 쿨타임이 2미만 이라면
+            else if(skill_cool < 2)
+            { 
+                // 공격을 준비하는 함수를 실행한다
+                PrepareAttack();
+            }
+                        
         }
 
         #region 행동하는 함수 (스킬, 공격, 궁극기, 엑스트라 어택)
@@ -138,34 +164,22 @@ namespace TurnBased.Entities.Battle {
         {
             // 부모 클래스에서 CastSkill 실행후 실행
             base.CastSkill();
-            Debug.Log(gameObject.name + " 의 스킬 발동!");
-                        
+            Debug.Log("Enemy SkillAttack");
+
             // 플레이어 타겟을 가져온다
             var player = TargetManager.instance.Target;
 
             // 에너미가 플레이어 앞에 오도록 한다
             meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f, 0f);
 
-            // 에너미가 플레이어를 바라보게한다
-            meshParent.transform.forward = player.gameObject.transform.position;
-
+            // 스킬 공격 대미지 계수
+            Damage_factor = 1.5f;
             
             // 스킬 공격 애니메이션 재생
             skillAttack.Play();
 
             // 마지막 공격이 스킬공격임을 알린다
             _lastAttack = CharacterState.CastSkill;
-                        
-
-            // 자기자신의 캐릭터를 가져온다
-            Character ch = GetComponent<Character>();
-            // 데미지를 계산하는 함수를 호출하고
-            DamageResult result = CombatManager.CalculateDamage(ch, player);
-
-            Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
-
-            // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
-            player.Damage(this, result);
 
         }
       
@@ -183,12 +197,10 @@ namespace TurnBased.Entities.Battle {
             // 에너미가 플레이어 앞에 오도록 한다
             meshParent.transform.position = player.gameObject.transform.position - new Vector3(8.47f,0f);
 
-            // 에너미가 플레이어를 바라보게한다
-            meshParent.transform.forward = player.gameObject.transform.position;
+            // 일반 공격 대미지 계수
+            // (나중에 버프라던가 디버프가 생기면 이곳을 더하거나 빼는 방식도 생각해보자)
+            Damage_factor = 1.0f;
 
-            // 현제 공격을 진행하는 자신의 이름 (테스트용)
-            Debug.Log(gameObject.name + " 의 공격! ");            
-            
             // 일반공격 애니메이션이 실행
             normalAttack.Play();
             
@@ -216,12 +228,13 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareAttack()
         {
             base.PrepareAttack();
+                        
+            // 타겟을 세팅한다
+            TargetManager.instance.SetPlayerTarget();
 
-            // 턴을 받았을때 에너미의 현재 위치와 회전값을 저장한다            
+            // 현재의 회전값을 저장한다
             EnRotate = meshParent.transform.eulerAngles;
 
-            // 타겟을 세팅한다
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);            
             // 공격하는 함수
             DoAttack();
         }
@@ -231,8 +244,13 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareSkill()
         {
             base.PrepareSkill();
+
             // 타겟을 세팅한다 (일단 대상을 단일로)
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Player);
+            TargetManager.instance.SetPlayerTarget();
+
+            // 현재의 회전값을 저장한다
+            EnRotate = meshParent.transform.eulerAngles;
+
             // 스킬을 사용하는 함수
             CastSkill();
         }
@@ -253,26 +271,19 @@ namespace TurnBased.Entities.Battle {
         /// <param name="result"></param>
         public override void Damage(Character attacker, DamageResult result) 
         {
-            // 부모 클래스의 DagageApply를 실행후 실행
+            // 부모 클래스의 Dagage를 실행후 실행
             base.Damage(attacker, result);
 
             // 데미지 애니메이션의 트리거를 켠다
             animator.SetTrigger("Damage");
-        }
-        /// <summary>
-        /// 사망시 함수
-        /// </summary>
-        public override void Dead()
-        {
-            base.Dead();
 
-            // 사망 에니메이션의 트리거를 켠다
-            animator.SetTrigger("Dead");
-            // 캐릭터 모델을 비활성화
-            SetVisible(false);
-            
+            // 만약 채력이 0이하가 되었다면
+            if (Data.stats.CurrentHP <= 0)
+            {
+                // 사망 에니메이션의 트리거를 켠다
+                animator.SetTrigger("Dead");
+            }
         }
-
 
         /// <summary>
         /// 그로기 함수
