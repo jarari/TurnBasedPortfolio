@@ -110,6 +110,7 @@ namespace TurnBased.Battle {
             Priority = 4;
             if (CinemachineCore.IsLive(this)) {
                 _character.ProcessCamChanged();
+                _character.ProcessCamGain();
             }
             ResetAllCharacterLayers();
             if (_currentContext == Context.TargetEnemy) {
@@ -126,6 +127,7 @@ namespace TurnBased.Battle {
             Priority = 4;
             if (CinemachineCore.IsLive(this)) {
                 _character.ProcessCamChanged();
+                _character.ProcessCamGain();
             }
             ResetAllCharacterLayers();
             _currentContext = Context.Ult;
@@ -197,6 +199,10 @@ namespace TurnBased.Battle {
                 contextCam.Priority = 0;
                 contextCam.NotifyCamChanged();
             }
+            if (_currentContext == Context.Ult) {
+                _ultIdleSplineDolly.CameraPosition = 0;
+            }
+            _character.ProcessCamGain();
         }
     }
 }

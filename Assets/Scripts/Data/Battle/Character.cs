@@ -329,5 +329,7 @@ namespace TurnBased.Battle {
         }
 
         public virtual void ProcessCamChanged() { }
+
+        public virtual void ProcessCamGain() { }
     }
 }
