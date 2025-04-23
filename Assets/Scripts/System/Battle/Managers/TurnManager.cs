@@ -180,17 +180,19 @@ namespace TurnBased.Battle.Managers {
                 predictedQueue.Add(new TurnData(data));
             }
             var first = predictedQueue.First();
-            first.ResetAV();
-            bool inserted = false;
-            for (int i = 1; i < predictedQueue.Count; ++i) {
-                if (predictedQueue[i].RemainingTimeToAct > first.RemainingTimeToAct) {
-                    predictedQueue.Insert(i, new TurnData(first));
-                    inserted = true;
-                    break;
+            if (first.Type == TurnType.Normal) {
+                first.ResetAV();
+                bool inserted = false;
+                for (int i = 1; i < predictedQueue.Count; ++i) {
+                    if (predictedQueue[i].RemainingTimeToAct > first.RemainingTimeToAct) {
+                        predictedQueue.Insert(i, new TurnData(first));
+                        inserted = true;
+                        break;
+                    }
                 }
-            }
-            if (!inserted) {
-                _turnQueue.Add(first);
+                if (!inserted) {
+                    _turnQueue.Add(first);
+                }
             }
             predictedQueue.Remove(first);
             predictedQueue = predictedQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
