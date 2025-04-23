@@ -158,7 +158,7 @@ namespace TurnBased.Battle.Managers {
             else {
                 _targetFilter = null;
             }
-                OnTargetSettingChanged?.Invoke();
+            OnTargetSettingChanged?.Invoke();
             if (shouldInit) {
                 InitializeTarget();
             }
@@ -210,7 +210,40 @@ namespace TurnBased.Battle.Managers {
 
         public List<Character> GetTargets() {
             if (Mode == TargetMode.All) {
-                return CharacterManager.instance.GetEnemyCharacters();
+                if (TargetTeam == CharacterTeam.Enemy) {
+                    if (Filter == TargetFilter.AliveOnly) {
+                        return CharacterManager.instance.GetEnemyCharacters();
+                    }
+                    else if (Filter == TargetFilter.DeadOnly) {
+                        List<Character> targets = new List<Character>();
+                        foreach (var c in CharacterManager.instance.GetAllEnemyCharacters()) {
+                            if (c.IsDead) {
+                                targets.Add(c);
+                            }
+                        }
+                        return targets;
+                    }
+                    else {
+                        return CharacterManager.instance.GetAllEnemyCharacters();
+                    }
+                }
+                else {
+                    if (Filter == TargetFilter.AliveOnly) {
+                        return CharacterManager.instance.GetAllyCharacters();
+                    }
+                    else if (Filter == TargetFilter.DeadOnly) {
+                        List<Character> targets = new List<Character>();
+                        foreach (var c in CharacterManager.instance.GetAllAllyCharacters()) {
+                            if (c.IsDead) {
+                                targets.Add(c);
+                            }
+                        }
+                        return targets;
+                    }
+                    else {
+                        return CharacterManager.instance.GetAllAllyCharacters();
+                    }
+                }
             }
             else if (Mode == TargetMode.Self || Mode == TargetMode.Single) {
                 return new List<Character>() { Target };

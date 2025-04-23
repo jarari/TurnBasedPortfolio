@@ -5,6 +5,7 @@ using UnityEngine.Playables;
 using Unity.Cinemachine;
 using UnityEngine.VFX;
 using UnityEngine.Animations.Rigging;
+using System.Collections.Generic;
 
 namespace TurnBased.Entities.Battle {
     public class Colphne : Character {
@@ -20,10 +21,13 @@ namespace TurnBased.Entities.Battle {
         public Transform healProjectileRoot;
         public Rig aimRig;
         public MultiAimConstraint headTracking;
+        public Transform ultAlly1Pos;
+        public Transform ultAlly2Pos;
         [Header("Components")]
         public Animator animator;
 
         private CharacterState _lastAttack;
+        private List<Character> _ultTargets;
 
         private void OnAnimationEvent_Impl(Character c, string animEvent, string payload) {
             if (animEvent == "AttackEnd") {
@@ -46,7 +50,24 @@ namespace TurnBased.Entities.Battle {
                 if (payload == "Skill") {
                     TargetManager.instance.Target.RestoreHealth(this, Data.stats.Attack);
                 }
+                else if (payload == "Ult") {
+                    var targets = TargetManager.instance.GetTargets();
+                    foreach (var t in targets) {
+                        t.RestoreHealth(this, Data.stats.Attack * 4.2f);
+                    }
+                }
             }
+        }
+
+        private void CastUlt() {
+            ultAttack.Play();
+            meshParent.transform.forward = -Vector3.right;
+            foreach (var c in _ultTargets) {
+                c.meshParent.transform.forward = -Vector3.right;
+                c.meshParent.transform.localPosition = Vector3.zero;
+            }
+            _ultTargets = null;
+            _lastAttack = CharacterState.CastUltAttack;
         }
 
         protected override void Awake() {
@@ -72,12 +93,12 @@ namespace TurnBased.Entities.Battle {
 
         public override void CastUltAttack() {
             base.CastUltAttack();
-            EndTurn();
+            CastUlt();
         }
 
         public override void CastUltSkill() {
-            base.CastUltAttack();
-            EndTurn();
+            base.CastUltSkill();
+            CastUlt();
         }
 
         public override void DoAttack() {
@@ -111,18 +132,18 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareUltAttack() {
             base.PrepareUltAttack();
             aimRig.weight = 0;
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.All, TurnBased.Data.CharacterTeam.Player);
+            animator.SetInteger("State", 2);
         }
 
         public override void PrepareUltSkill() {
-            base.PrepareUltAttack();
-            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.All, TurnBased.Data.CharacterTeam.Player);
+            base.PrepareUltSkill();
         }
 
         public override void ProcessCamChanged() {
             if (_lastAttack == CharacterState.DoAttack) {
                 normalAttack.time = normalAttack.duration;
                 normalAttack.Evaluate();
+                meshParent.transform.forward = -Vector3.right;
             }
             else if (_lastAttack == CharacterState.CastSkill) {
                 skillAttack.time = skillAttack.duration;
@@ -132,8 +153,27 @@ namespace TurnBased.Entities.Battle {
                 ultAttack.time = ultAttack.duration;
                 ultAttack.Evaluate();
             }
-            meshParent.transform.localPosition = Vector3.zero;
-            meshParent.transform.forward = -Vector3.right;
+        }
+
+        public override void ProcessCamGain() {
+            if (CurrentState == CharacterState.PrepareUltAttack) {
+                TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.All, TurnBased.Data.CharacterTeam.Player);
+                foreach (var c in CharacterManager.instance.GetAllAllyCharacters()) {
+                    if (c.IsDead) {
+                        c.SetVisible(false);
+                    }
+                }
+                if (_ultTargets == null) {
+                    _ultTargets = TargetManager.instance.GetTargets();
+                    _ultTargets.Remove(this);
+                    var pos = ultAlly1Pos;
+                    foreach (var c in _ultTargets) {
+                        c.meshParent.transform.position = pos.position;
+                        c.meshParent.transform.forward = pos.forward;
+                        pos = ultAlly2Pos;
+                    }
+                }
+            }
         }
     }
 }

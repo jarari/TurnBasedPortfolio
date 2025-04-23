@@ -2,10 +2,12 @@ using UnityEngine;
 using TurnBased.Data;
 using System;
 using TurnBased.Battle.Managers;
+using Unity.Cinemachine;
 
 namespace TurnBased.Battle {
     public abstract class Character : MonoBehaviour {
         public GameObject meshParent;
+        public CinemachineCamera ultIdleOverride;
 
         [Header("Character Data")]
         [SerializeField]
@@ -327,5 +329,7 @@ namespace TurnBased.Battle {
         }
 
         public virtual void ProcessCamChanged() { }
+
+        public virtual void ProcessCamGain() { }
     }
 }

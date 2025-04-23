@@ -59,8 +59,16 @@ namespace TurnBased.Battle.Managers {
         /// </summary>
         /// <param name="character"></param>
         public void AddUltTurn(Character character) {
-            _turnQueue.Insert(0, new TurnData(character, TurnType.Ult));
-            if (CurrentCharacter.WantCmd == true) {
+            int idx = 0;
+            IEnumerator<TurnData> enumerator = _turnQueue.GetEnumerator();
+            while (enumerator.MoveNext() && enumerator.Current.Type != TurnType.Normal) {
+                idx++;
+                enumerator.MoveNext();
+            }
+            _turnQueue.Insert(idx, new TurnData(character, TurnType.Ult));
+            if (CurrentCharacter.WantCmd == true 
+                && CurrentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack 
+                && CurrentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {
                 var _characterTurn = _turnQueue.Find((t) => t.Character == CurrentCharacter && t.Type == TurnType.Normal);
                 _turnQueue.Remove(_characterTurn);
                 _characterTurn.ModRemainingTime(0);
