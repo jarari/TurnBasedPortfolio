@@ -66,7 +66,9 @@ namespace TurnBased.Battle.Managers {
                 enumerator.MoveNext();
             }
             _turnQueue.Insert(idx, new TurnData(character, TurnType.Ult));
-            if (CurrentCharacter.WantCmd == true) {
+            if (CurrentCharacter.WantCmd == true 
+                && CurrentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack 
+                && CurrentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {
                 var _characterTurn = _turnQueue.Find((t) => t.Character == CurrentCharacter && t.Type == TurnType.Normal);
                 _turnQueue.Remove(_characterTurn);
                 _characterTurn.ModRemainingTime(0);
