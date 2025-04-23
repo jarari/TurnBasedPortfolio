@@ -83,6 +83,7 @@ namespace TurnBased.Entities.Battle {
 
         public override void CastSkill() {
             base.CastSkill();
+            animator.SetInteger("State", 0);
             aimRig.weight = 0;
             var ally = TargetManager.instance.Target;
             healProjectileRoot.transform.localPosition = Vector3.zero;
