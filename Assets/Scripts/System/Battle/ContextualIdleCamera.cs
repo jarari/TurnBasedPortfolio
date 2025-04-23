@@ -165,6 +165,10 @@ namespace TurnBased.Battle {
             _character.OnTurnStart += OnCharacterTurnStart;
             _character.OnTurnEnd += OnCharacterTurnEnd;
             _character.OnUltTurn += OnCharacterUltTurn;
+            if (_character.ultIdleOverride != null) {
+                cmUltIdleCam = _character.ultIdleOverride;
+                _ultIdleSplineDolly = cmUltIdleCam.GetComponent<CinemachineSplineDolly>();
+            }
             TargetManager.instance.OnCamTargetUpdate += OnCamTargetUpdate;
             TargetManager.instance.OnTargetSettingChanged += OnTargetSettingChanged;
             Initialized = true;
