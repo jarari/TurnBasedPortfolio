@@ -686,6 +686,18 @@ MonoBehaviour:
             m_StringArgument: Heal.Ult
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 754161570234261831}
+          m_TargetAssemblyTypeName: TurnBased.Battle.Character, Assembly-CSharp
+          m_MethodName: ProcessAnimationEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: SoundPlay.ColphneUltHeal
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &177084761486879371
 GameObject:
   m_ObjectHideFlags: 0
@@ -27328,6 +27340,7 @@ GameObject:
   - component: {fileID: 3896178275190608079}
   - component: {fileID: 4460558245622183283}
   - component: {fileID: 4899944648936270613}
+  - component: {fileID: 7852612277264305297}
   m_Layer: 0
   m_Name: c_ColphneSR0101_slg_skin_model
   m_TagString: Untagged
@@ -27410,6 +27423,18 @@ MonoBehaviour:
   - m_Rig: {fileID: 2330182825256805607}
     m_Active: 1
   m_Effectors: []
+--- !u!114 &7852612277264305297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5178041243285502907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dee05c27b913e641aae5618d4a337fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5184073564718990032
 GameObject:
   m_ObjectHideFlags: 0
@@ -41809,6 +41834,7 @@ GameObject:
   - component: {fileID: 7395126501072017141}
   - component: {fileID: 4282162464750297218}
   - component: {fileID: 365146022398566966}
+  - component: {fileID: 8631408256179415776}
   m_Layer: 8
   m_Name: c_ColphneSR0101_slg_skin_model
   m_TagString: Untagged
@@ -41880,6 +41906,18 @@ MonoBehaviour:
   - m_Rig: {fileID: 3879215244690813119}
     m_Active: 1
   m_Effectors: []
+--- !u!114 &8631408256179415776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8047427429256944406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dee05c27b913e641aae5618d4a337fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8055108239838691573
 GameObject:
   m_ObjectHideFlags: 0
@@ -42941,6 +42979,18 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: Heal.Skill
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 754161570234261831}
+          m_TargetAssemblyTypeName: TurnBased.Battle.Character, Assembly-CSharp
+          m_MethodName: ProcessAnimationEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: SoundPlay.ColphneUltHeal
             m_BoolArgument: 0
           m_CallState: 2
     - m_PersistentCalls:
