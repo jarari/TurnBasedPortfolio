@@ -37,6 +37,12 @@ Shader "Custom/URP Lit RMO"
         _DetailNormalMapScale("Scale", Range(0.0, 2.0)) = 1.0
         [Normal] _DetailNormalMap("Normal Map", 2D) = "bump" {}
 
+        [Toggle(_OUTLINE_ON)] _EnableOutline ("Enable Outline", Float) = 0
+        _OutlineColor       ("Outline Color",   Color) = (0,0,0,1)
+        _OutlineWidth       ("Outline Width",   Float) = 0.02
+        _OutlineFadeStart   ("Fade Start",      Float) = 20.0
+        _OutlineFadeEnd     ("Fade End",        Float) = 25.0
+
         // SRP batching compatibility for Clear Coat (Not used in Lit)
         [HideInInspector] _ClearCoatMask("_ClearCoatMask", Float) = 0.0
         [HideInInspector] _ClearCoatSmoothness("_ClearCoatSmoothness", Float) = 0.0
@@ -511,6 +517,80 @@ Shader "Custom/URP Lit RMO"
 
             #include "/CustomLitInput.hlsl"
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ObjectMotionVectors.hlsl"
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "Outline"
+            Tags { "LightMode" = "Outline" }
+            Cull Front
+            ZWrite Off
+            ZTest  LEqual
+            Blend  SrcAlpha OneMinusSrcAlpha
+
+            HLSLPROGRAM
+            #pragma vertex   OutlineVertex
+            #pragma fragment OutlineFragment
+            #pragma multi_compile_instancing
+            #pragma shader_feature_local _ _OUTLINE_ON
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                float3 normalOS   : NORMAL;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct Varyings
+            {
+                float4 positionHCS : SV_POSITION;
+                float  camDist    : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            float _EnableOutline;
+            float4 _OutlineColor;
+            float  _OutlineWidth;
+            float  _OutlineFadeStart;
+            float  _OutlineFadeEnd;
+
+            #if defined(_OUTLINE_ON)
+            Varyings OutlineVertex (Attributes IN)
+            {
+                Varyings OUT;
+                UNITY_SETUP_INSTANCE_ID(v);
+                
+                float3 nWS   = TransformObjectToWorldNormal(IN.normalOS);
+                float3 posWS = TransformObjectToWorld(IN.positionOS.xyz) + nWS * _OutlineWidth;
+
+                OUT.positionHCS = TransformWorldToHClip(posWS);
+                OUT.camDist    = distance(_WorldSpaceCameraPos, posWS);
+
+                return OUT;
+            }
+
+            half4 OutlineFragment (Varyings IN) : SV_Target
+            {
+                float fade = 1 - saturate((IN.camDist - _OutlineFadeStart) / (_OutlineFadeEnd - _OutlineFadeStart));
+
+                float drawOutline = step(IN.camDist, _OutlineFadeEnd);
+
+                return half4(_OutlineColor.rgb, _OutlineColor.a * drawOutline * fade);
+            }
+            #else
+            Varyings OutlineVertex (Attributes IN) { 
+                Varyings OUT;
+                UNITY_SETUP_INSTANCE_ID(v);
+
+                OUT.positionHCS = float4(0,0,0,0);
+                OUT.camDist = 0;
+
+                return OUT;
+            }
+            half4 OutlineFragment(Varyings IN) : SV_Target { return 0; }
+            #endif
             ENDHLSL
         }
     }

@@ -4,14 +4,13 @@ using UnityEditor;
 using UnityEditor.Rendering;
 using UnityEditor.Rendering.Universal.ShaderGUI;
 using UnityEngine;
+using static UnityEditor.ShaderData;
 
 namespace TurnBased.Rendering
 {
     internal class LitRMOShader : BaseShaderGUI
     {
-        static readonly string[] workflowModeNames = Enum.GetNames(typeof(LitGUI.WorkflowMode));
-
-        private LitGUI.LitProperties litProperties;
+        private LitRMOGUI.LitProperties litProperties;
         private LitDetailGUI.LitProperties litDetailProperties;
 
         public override void FillAdditionalFoldouts(MaterialHeaderScopeList materialScopesList)
@@ -23,14 +22,14 @@ namespace TurnBased.Rendering
         public override void FindProperties(MaterialProperty[] properties)
         {
             base.FindProperties(properties);
-            litProperties = new LitGUI.LitProperties(properties);
+            litProperties = new LitRMOGUI.LitProperties(properties);
             litDetailProperties = new LitDetailGUI.LitProperties(properties);
         }
 
         // material changed check
         public override void ValidateMaterial(Material material)
         {
-            SetMaterialKeywords(material, LitGUI.SetMaterialKeywords, LitDetailGUI.SetMaterialKeywords);
+            SetMaterialKeywords(material, LitRMOGUI.SetMaterialKeywords, LitDetailGUI.SetMaterialKeywords);
         }
 
         // material main surface options
@@ -38,10 +37,6 @@ namespace TurnBased.Rendering
         {
             // Use default labelWidth
             EditorGUIUtility.labelWidth = 0f;
-
-            if (litProperties.workflowMode != null)
-                DoPopup(LitGUI.Styles.workflowModeText, litProperties.workflowMode, workflowModeNames);
-
             base.DrawSurfaceOptions(material);
         }
 
@@ -49,7 +44,7 @@ namespace TurnBased.Rendering
         public override void DrawSurfaceInputs(Material material)
         {
             base.DrawSurfaceInputs(material);
-            LitGUI.Inputs(litProperties, materialEditor, material);
+            LitRMOGUI.Inputs(litProperties, materialEditor, material);
             DrawEmissionProperties(material, true);
             DrawTileOffset(materialEditor, baseMapProp);
         }
@@ -59,9 +54,15 @@ namespace TurnBased.Rendering
         {
             if (litProperties.reflections != null && litProperties.highlights != null)
             {
-                materialEditor.ShaderProperty(litProperties.highlights, LitGUI.Styles.highlightsText);
-                materialEditor.ShaderProperty(litProperties.reflections, LitGUI.Styles.reflectionsText);
+                materialEditor.ShaderProperty(litProperties.highlights, LitRMOGUI.Styles.highlightsText);
+                materialEditor.ShaderProperty(litProperties.reflections, LitRMOGUI.Styles.reflectionsText);
             }
+
+            materialEditor.ShaderProperty(litProperties.outlineEnabled, LitRMOGUI.Styles.outlineEnabledText);
+            materialEditor.ShaderProperty(litProperties.outlineColor, LitRMOGUI.Styles.outlineColorText);
+            materialEditor.ShaderProperty(litProperties.outlineWidth, LitRMOGUI.Styles.outlineWidthText);
+            materialEditor.ShaderProperty(litProperties.outlineFadeStart, LitRMOGUI.Styles.outlineFadeStartText);
+            materialEditor.ShaderProperty(litProperties.outlineFadeEnd, LitRMOGUI.Styles.outlineFadeEndText);
 
             base.DrawAdvancedOptions(material);
         }
