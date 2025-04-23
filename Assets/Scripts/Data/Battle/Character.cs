@@ -131,6 +131,11 @@ namespace TurnBased.Battle {
             if (args.Length >= 2) {
                 payload = args[1];
             }
+
+            if (argument == "SoundPlay") {
+                SoundManager.instance.Play2DSound(payload);
+            }
+
             OnAnimationEvent?.Invoke(this, argument, payload);
         }
 
