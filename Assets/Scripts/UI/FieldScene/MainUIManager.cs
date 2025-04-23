@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Unity.VisualScripting;
+using System.Collections.Generic;
 
 public class MainUIManager : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class MainUIManager : MonoBehaviour
     public GameObject PartySetupWindow;         // 파티 편성 창 오브젝트
     public GameObject TechniqueEffectWindow;    // 비술 효과 창 오브젝트
     public GameObject CurrentWindow;            // 현재 열려 있는 창
+
+    public List<GameObject> partyMeneber;       // 파티원 오브젝트 리스트
 
     public Button Attack;                       // 공격 버튼 오브젝트
     public Button Technique;                    // 비술 버튼 오브젝트
@@ -53,6 +57,7 @@ public class MainUIManager : MonoBehaviour
     {
         HandleCursor(); // 마우스 커서 처리
         OnKeyInput(); // 조작키 입력 처리
+        UpdatePartyUI(); // 파티 UI 업데이트
     }
 
     private void HandleCursor()
@@ -69,56 +74,79 @@ public class MainUIManager : MonoBehaviour
 
     public void OnKeyInput()
     {
-        if (CurrentWindow == MainUI) // 현재 창이 메인 UI일 때
-        {
-            // if (Input.GetKeyDown(KeyCode.Escape)) // ESC 키를 눌렀을 때
-                // OpenWindow(PhoneWindow); // 휴대폰 창 열기
-            if (Input.GetKeyDown(KeyCode.C)) // C 키를 눌렀을 때
-                OpenWindow(CharacterWindow); // 캐릭터 창 열기
-            if (Input.GetKeyDown(KeyCode.L)) // L 키를 눌렀을 때
-                OpenWindow(PartySetupWindow); // 파티 편성 창 열기
-            // if (Input.GetKeyDown(KeyCode.B)) // B 키를 눌렀을 때
-                // OpenWindow(BackpackWindow); // 가방 창 열기
-            if (Input.GetKeyDown(KeyCode.U)) // U 키를 눌렀을 때
-                OpenWindow(TechniqueEffectWindow); // 비술 효과 창 열기
-            if (Input.GetKeyDown(KeyCode.E)) // E 키를 눌렀을 때
-                StartCoroutine(TechniqueButtonFlash()); // 비술 버튼 이미지를 활성화하고 0.1초 뒤 비활성화
-        }
-
         if (CurrentWindow == MainUI && !Cursor.visible) // 현재 창이 메인 UI이고 마우스 커서가 보이지 않을 때
         {
-            if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭 시
-                StartCoroutine(AttackButtonFlash()); // 공격 버튼 이미지를 활성화하고 0.1초 뒤 비활성화
-            if (Input.GetMouseButtonDown(1)) // 마우스 오른쪽 버튼 클릭 시
-            {
-                if (!Run.GetComponent<Image>().enabled) // 달리기 버튼 오브젝트의 이미지가 비활성화 상태일 때
-                    Run.GetComponent<Image>().enabled = true; // 달리기 버튼 오브젝트의 이미지를 활성화
-                else // 달리기 버튼 오브젝트의 이미지가 활성화 상태일 때
-                    Run.GetComponent<Image>().enabled = false; // 달리기 버튼 오브젝트의 이미지를 비활성화
-            }
+            // if (Input.GetKeyDown(KeyCode.Escape)) OpenWindow(PhoneWindow); // 휴대폰 창 열기
+            if (Input.GetKeyDown(KeyCode.C)) OpenWindow(CharacterWindow); // 캐릭터 창 열기
+            if (Input.GetKeyDown(KeyCode.L)) OpenWindow(PartySetupWindow); // 파티 편성 창 열기
+            // if (Input.GetKeyDown(KeyCode.B)) OpenWindow(BackpackWindow); // 가방 창 열기
+            if (Input.GetKeyDown(KeyCode.U)) OpenWindow(TechniqueEffectWindow); // 비술 효과 창 열기
+            if (Input.GetKeyDown(KeyCode.E)) TechniqueButtonFlash(); // 비술 버튼 클릭 시 비술 버튼 이미지 깜빡임 효과
+            if (Input.GetMouseButtonDown(0)) AttackButtonFlash(); // 공격 버튼 클릭 시 공격 버튼 이미지 깜빡임 효과
+            if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.LeftShift)) ToggleRunButton(); // 달리기 버튼 토글
         }
     }
 
-    private IEnumerator AttackButtonFlash()
+    public void TechniqueButtonFlash()
     {
-        Attack.GetComponent<Image>().enabled = true; // 공격 버튼 이미지 활성화
-        yield return new WaitForSeconds(0.1f); // 0.1초 대기
-        Attack.GetComponent<Image>().enabled = false; // 공격 버튼 이미지 비활성화
+        TechniquePointManager.Instance.UseTechnique(); // 비술 포인트 사용
+        StartCoroutine(TechniqueButtonCoroutine()); // 비술 버튼 이미지를 활성화하고 0.1초 뒤 비활성화
     }
 
-    private IEnumerator TechniqueButtonFlash()
+    private IEnumerator TechniqueButtonCoroutine()
     {
         Technique.GetComponent<Image>().enabled = true; // 비술 버튼 이미지 활성화
         yield return new WaitForSeconds(0.1f); // 0.1초 대기
         Technique.GetComponent<Image>().enabled = false; // 비술 버튼 이미지 비활성화
     }
 
+    public void AttackButtonFlash()
+    {
+        StartCoroutine(AttackButtonCoroutine()); // 공격 버튼 이미지를 활성화하고 0.1초 뒤 비활성화
+    }
+
+    private IEnumerator AttackButtonCoroutine()
+    {
+        Attack.GetComponent<Image>().enabled = true; // 공격 버튼 이미지 활성화
+        yield return new WaitForSeconds(0.1f); // 0.1초 대기
+        Attack.GetComponent<Image>().enabled = false; // 공격 버튼 이미지 비활성화
+    }
+
+    public void ToggleRunButton()
+    {
+        if (!Run.GetComponent<Image>().enabled) // 달리기 버튼 오브젝트의 이미지가 비활성화 상태일 때
+            Run.GetComponent<Image>().enabled = true; // 달리기 버튼 오브젝트의 이미지를 활성화
+        else // 달리기 버튼 오브젝트의 이미지가 활성화 상태일 때
+            Run.GetComponent<Image>().enabled = false; // 달리기 버튼 오브젝트의 이미지를 비활성화
+    }
     public void OpenWindow(GameObject window)
     {
         if (!window.activeSelf) // 창이 비활성화 상태일 때
         {
             window.SetActive(true); // 창 활성화
             CurrentWindow = window; // 현재 창을 연 창으로 설정
+        }
+    }
+
+    public void UpdatePartyUI()
+    {
+        string[] party = PartyManager.Instance.GetParty();
+        for (int i = 0; i < party.Length; i++)
+        {
+            if (party[i] != null)
+            {
+                // 파티원 오브젝트를 활성화
+                partyMeneber[i].SetActive(true);
+
+                // 파티원 오브젝트의 자식 오브젝트 중에서 이름이 "CharacterName"인 오브젝트를 찾아서 텍스트를 캐릭터 이름으로 설정
+                // 파티원 오브젝트의 자식 오브젝트 중에서 이름이 "CharacterImage"인 오브젝트를 찾아서 이미지를 캐릭터 이미지로 설정
+                // 파티원 오브젝트의 자식 오브젝트 중에서 이름이 "Ultimate"인 오브젝트를 찾아서 이미지를 필살기 이미지로 설정
+            }
+            else
+            {
+                // 파티원 오브젝트를 비활성화
+                partyMeneber[i].SetActive(false);
+            }
         }
     }
 }
