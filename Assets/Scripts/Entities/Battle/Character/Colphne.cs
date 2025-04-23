@@ -139,6 +139,16 @@ namespace TurnBased.Entities.Battle {
             base.PrepareUltSkill();
         }
 
+        public override void Damage(Character attacker, DamageResult result) {
+            base.Damage(attacker, result);
+            animator.SetTrigger("Hit");
+        }
+
+        public override void Dead() {
+            base.Dead();
+            animator.SetTrigger("Die");
+        }
+
         public override void ProcessCamChanged() {
             if (_lastAttack == CharacterState.DoAttack) {
                 normalAttack.time = normalAttack.duration;
