@@ -58,12 +58,17 @@ namespace TurnBased.Battle {
                 return CurrentState == CharacterState.Dead;
             }
         }
+        public AudioSource VOAudioSource { get; private set; }
 
 
         protected virtual void Awake() {
             Data = Instantiate(_baseData);
             Data.stats.CurrentToughness = Data.stats.MaxToughness;
             Data.stats.CurrentHP = Data.stats.MaxHP;
+            VOAudioSource = GetComponent<AudioSource>();
+            if (VOAudioSource == null) {
+                VOAudioSource = gameObject.AddComponent<AudioSource>();
+            }
         }
 
         protected virtual void Start() {
@@ -134,6 +139,9 @@ namespace TurnBased.Battle {
 
             if (argument == "SoundPlay") {
                 SoundManager.instance.Play2DSound(payload);
+            }
+            else if (argument == "VOSoundPlay") {
+                SoundManager.instance.PlayVOSound(this, payload);
             }
 
             OnAnimationEvent?.Invoke(this, argument, payload);
