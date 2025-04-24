@@ -11304,10 +11304,34 @@ MonoBehaviour:
     volume: 1
     audioClips:
     - {fileID: 8300000, guid: abe028720cf4de041b23eb3127b8855e, type: 3}
+  - name: ColphneVOUltStandby
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: e6b339399410c7c43aec28d7b9b7ee81, type: 3}
   - name: ColphneVOUlt
     volume: 1
     audioClips:
     - {fileID: 8300000, guid: 1ad85a49de57b9044a3f33d71c4685ce, type: 3}
+  - name: ColphnePistolClick1
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 715ddd79ff1d88142ae527b41a2c71ce, type: 3}
+  - name: ColphnePistolClick2
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 2ea3d9bfa2172e9479bdb6b77e037677, type: 3}
+  - name: ColphneCloth1
+    volume: 0.65
+    audioClips:
+    - {fileID: 8300000, guid: 46bf489055fd42c40983b2da792a0edd, type: 3}
+  - name: ColphneCloth2
+    volume: 0.65
+    audioClips:
+    - {fileID: 8300000, guid: 4a1c885784ef3b14c88734718c5e104b, type: 3}
+  - name: UIUltStandby
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 6830079818c219445be0ce3d475e1082, type: 3}
   _2dAudioSource: {fileID: 511772497}
   _musicAudioSource: {fileID: 845374951}
 --- !u!1 &729263310
@@ -14361,35 +14385,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6456783016959461949, guid: 099a05f2e37c8484b82293ce982428fb, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.010615148
+      value: 0.04201223
       objectReference: {fileID: 0}
     - target: {fileID: 6456783016959461949, guid: 099a05f2e37c8484b82293ce982428fb, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0017009992
+      value: -0.003904779
       objectReference: {fileID: 0}
     - target: {fileID: 6456783016959461949, guid: 099a05f2e37c8484b82293ce982428fb, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.98734623
+      value: 0.9948218
       objectReference: {fileID: 0}
     - target: {fileID: 6456783016959461949, guid: 099a05f2e37c8484b82293ce982428fb, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.15821461
+      value: 0.09246268
       objectReference: {fileID: 0}
     - target: {fileID: 7682934422521054067, guid: 099a05f2e37c8484b82293ce982428fb, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.04365065
+      value: 0.04216
       objectReference: {fileID: 0}
     - target: {fileID: 7682934422521054067, guid: 099a05f2e37c8484b82293ce982428fb, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0041568964
+      value: -0.003925668
       objectReference: {fileID: 0}
     - target: {fileID: 7682934422521054067, guid: 099a05f2e37c8484b82293ce982428fb, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9945387
+      value: 0.9948
       objectReference: {fileID: 0}
     - target: {fileID: 7682934422521054067, guid: 099a05f2e37c8484b82293ce982428fb, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.09471092
+      value: 0.09262957
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -75,6 +75,7 @@ namespace TurnBased.Battle.Managers {
                 _turnQueue.Insert(1, _characterTurn);
                 StartNextTurn();
             }
+            SoundManager.instance.Play2DSound("UIUltStandby");
         }
 
         /// <summary>

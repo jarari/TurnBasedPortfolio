@@ -76,6 +76,16 @@ namespace TurnBased.Battle.Managers {
             }
         }
 
+        public void PlayVOSound(Character c, string soundName) {
+            var soundData = GetSoundData(soundName);
+            if (soundData != null) {
+                c.VOAudioSource.Stop();
+                c.VOAudioSource.volume = soundData.volume;
+                c.VOAudioSource.clip = soundData.GetRandomClip();
+                c.VOAudioSource.Play();
+            }
+        }
+
         public void PlayMusic(AudioClip clip) {
             _musicAudioSource.Stop();
             _musicAudioSource.clip = clip;

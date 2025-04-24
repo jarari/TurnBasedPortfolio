@@ -88,6 +88,11 @@ namespace TurnBased.Entities.Battle {
             headTracking.data.sourceObjects.Add(new WeightedTransform(TargetManager.instance.camTarget.transform, 0.6f));
         }
 
+        public override void TakeUltTurn() {
+            base.TakeUltTurn();
+            SoundManager.instance.PlayVOSound(this, "ColphneVOUltStandby");
+        }
+
         public override void CastSkill() {
             base.CastSkill();
             animator.SetInteger("State", 0);
