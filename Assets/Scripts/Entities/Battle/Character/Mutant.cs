@@ -6,14 +6,17 @@ using UnityEngine.Playables;
 using System.Collections;
 using Unity.Cinemachine;
 
+namespace TurnBased.Entities.Battle
+{
 
-namespace TurnBased.Entities.Battle { 
-    
+
     /// <summary> 
     /// 일반 몬스터
     /// </summary>
     public class Mutant : Character
-    {
+    { 
+
+    
         [Header("Timelines")]
         public PlayableDirector normalAttack;    // 일반 공격 애니메이션
         public PlayableDirector skillAttack;        // 스킬 공격 애니메이션       
@@ -34,13 +37,13 @@ namespace TurnBased.Entities.Battle {
         public float Damage_factor = 0f;
 
         public float skill_cool = 0f;
-        
+
         /// <summary> 
         /// 공격후에 애니메이션이 끝날 때의 반환을 처리하는 코루틴
         /// </summary>
         /// <returns></returns>
         private IEnumerator DelayReturnFromAttack()
-        {            
+        {
             // 일시 정지 없이 다음 프레임에서 실행함
             yield return null;
             // 마지막 공격 상태가 DoAttack 일 경우
@@ -58,7 +61,7 @@ namespace TurnBased.Entities.Battle {
                 skillAttack.time = skillAttack.duration;
                 // 타임라인을 현재 시간에 맞게 상태를 업데이트
                 skillAttack.Evaluate();
-            }          
+            }
         }
 
         /// <summary>
@@ -71,18 +74,18 @@ namespace TurnBased.Entities.Battle {
         {
             // 타임라인에서 데미지 시그널을 받게 된다면 실행
             if (animEvent == "Damage")
-            {                
+            {
                 // 데미지를 계산하는 함수를 호출하고
                 DamageResult result = CombatManager.CalculateDamage(this, target, Damage_factor);
 
                 Debug.Log(target.name + " 에게 " + result.FinalDamage + " 데미지");
 
                 // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
-                target.Damage(this, result);                
+                target.Damage(this, result);
             }
             // 타임라인에서 공격이 끝난 신호를 받게된다면 실행
             if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd")
-            {                
+            {
                 // 공격후 애니메이션 처리 코루틴을 호출후
                 StartCoroutine(DelayReturnFromAttack());
 
@@ -94,7 +97,7 @@ namespace TurnBased.Entities.Battle {
 
                 // 스킬 쿨타임이 2을 초과하였을때
                 if (skill_cool > 2)
-                { 
+                {
                     // 스킬 쿨타임을 0으로 만든다
                     skill_cool = 0;
                 }
@@ -106,7 +109,7 @@ namespace TurnBased.Entities.Battle {
                     meshParent.transform.localPosition = Vector3.zero;
                     // 공격하기 위해 틀었던 회전값을 원래대로 가져온다
                     meshParent.transform.eulerAngles = EnRotate;
-                                        
+
                     // 턴을 종료한다
                     EndTurn();
                 }
@@ -119,7 +122,7 @@ namespace TurnBased.Entities.Battle {
             // 이벤트가 발생했을 경우 실행될 함수를 추가한다
             OnAnimationEvent += OnAnimationEvent_Impl;
         }
-        
+
         /// <summary>
         /// 턴을 받았을때
         /// </summary>
@@ -156,12 +159,12 @@ namespace TurnBased.Entities.Battle {
                 PrepareSkill();
             }
             // 스킬 쿨타임이 2미만 이라면
-            else if(skill_cool < 2)
-            { 
+            else if (skill_cool < 2)
+            {
                 // 공격을 준비하는 함수를 실행한다
                 PrepareAttack();
             }
-                        
+
         }
 
         #region 행동하는 함수 (스킬, 공격, 궁극기, 엑스트라 어택)
@@ -174,13 +177,13 @@ namespace TurnBased.Entities.Battle {
             // 부모 클래스에서 CastSkill 실행후 실행
             base.CastSkill();
             Debug.Log("Enemy SkillAttack");
-                        
+
             // 에너미가 플레이어 앞에 오도록 한다
             meshParent.transform.position = target.gameObject.transform.position - new Vector3(8.47f, 0f);
 
             // 스킬 공격 대미지 계수
             Damage_factor = 1.5f;
-            
+
             // 스킬 공격 애니메이션 재생
             skillAttack.Play();
 
@@ -188,7 +191,7 @@ namespace TurnBased.Entities.Battle {
             _lastAttack = CharacterState.CastSkill;
 
         }
-      
+
         /// <summary>
         /// 공격을 시작할때
         /// </summary>
@@ -196,9 +199,9 @@ namespace TurnBased.Entities.Battle {
         {
             base.DoAttack();
             Debug.Log("Enemy Attack");
-                        
+
             // 에너미가 플레이어 앞에 오도록 한다
-            meshParent.transform.position = target.gameObject.transform.position - new Vector3(8.47f,0f);
+            meshParent.transform.position = target.gameObject.transform.position - new Vector3(8.47f, 0f);
 
             // 일반 공격 대미지 계수
             // (나중에 버프라던가 디버프가 생기면 이곳을 더하거나 빼는 방식도 생각해보자)
@@ -206,10 +209,10 @@ namespace TurnBased.Entities.Battle {
 
             // 일반공격 애니메이션이 실행
             normalAttack.Play();
-            
+
             // 마지막 공격이 일반공격임을 보낸다
             _lastAttack = CharacterState.DoAttack;
-            
+
         }
 
         /// <summary>
@@ -237,7 +240,7 @@ namespace TurnBased.Entities.Battle {
 
             // 현재의 회전값을 저장한다
             EnRotate = meshParent.transform.eulerAngles;
-                        
+
             // 공격하는 함수
             DoAttack();
         }
@@ -272,7 +275,7 @@ namespace TurnBased.Entities.Battle {
         /// </summary>
         /// <param name="attacker">때린놈</param>
         /// <param name="result"></param>
-        public override void Damage(Character attacker, DamageResult result) 
+        public override void Damage(Character attacker, DamageResult result)
         {
             // 부모 클래스의 Dagage를 실행후 실행
             base.Damage(attacker, result);
@@ -280,13 +283,19 @@ namespace TurnBased.Entities.Battle {
             // 데미지 애니메이션의 트리거를 켠다
             animator.SetTrigger("Damage");
 
-            // 만약 채력이 0이하가 되었다면
-            if (Data.stats.CurrentHP <= 0)
-            {
-                // 사망 에니메이션의 트리거를 켠다
-                animator.SetTrigger("Dead");
-            }
+            Debug.Log("데미지를 입었다");
+
         }
+
+        /// <summary>
+        /// 그로기 준비함수
+        /// </summary>
+        public override void PrepareGroggy()
+        {
+            base.PrepareGroggy();
+
+        }
+
 
         /// <summary>
         /// 그로기 함수
@@ -294,6 +303,9 @@ namespace TurnBased.Entities.Battle {
         public override void Groggy()
         {
             base.Groggy();
+
+            Debug.Log("그로기 상태 진입");
+
             // 그로기 애니메이션 트리거를 켠다
             animator.SetTrigger("Groggy");
 
@@ -302,8 +314,23 @@ namespace TurnBased.Entities.Battle {
             Data.stats.Defense = (Data.stats.Defense) / 2;
         }
 
+        /// <summary>
+        /// 사망시 호출되는 함수
+        /// </summary>
+        public override void Dead()
+        {
+            base.Dead();
+
+            Debug.Log("데드 진입 애니메이션 실행");
+
+            // 데드 애니메이션의 트리거를 켠다
+            animator.SetTrigger("Dead");
+        }
+
     }
 
 
 
 }
+    
+
