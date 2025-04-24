@@ -13932,12 +13932,12 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 5909282697461981299, guid: 71ed6782ac6ec7948b266deba89308b0, type: 2}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 8300000, guid: 2ac22e7984afaea4cb9bcbfe85d5f0aa, type: 3}
+  m_Resource: {fileID: 8300000, guid: 2ac22e7984afaea4cb9bcbfe85d5f0aa, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -34227,7 +34227,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7956354307755641875}
+  m_Father: {fileID: 4822021326827799259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &712616554023104081
 Transform:
@@ -36486,7 +36486,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2493676544278609336
 Transform:
   m_ObjectHideFlags: 0
@@ -37357,7 +37357,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3194105434030169835
 Transform:
   m_ObjectHideFlags: 0
@@ -39354,6 +39354,7 @@ Transform:
   m_Children:
   - {fileID: 1355340149072441013}
   - {fileID: 7956354307755641875}
+  - {fileID: 709426982023695951}
   - {fileID: 4285613186257155022}
   - {fileID: 8106004252700504544}
   - {fileID: 1673504069727564509}
@@ -41026,7 +41027,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &6055156969452152092
 GameObject:
   m_ObjectHideFlags: 0
@@ -42758,7 +42759,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!137 &7515610926262791369
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -43596,8 +43597,7 @@ Transform:
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 709426982023695951}
+  m_Children: []
   m_Father: {fileID: 4822021326827799259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7976231862637496872
