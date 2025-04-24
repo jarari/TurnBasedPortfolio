@@ -23,6 +23,7 @@ namespace TurnBased.Entities.Battle {
         public MultiAimConstraint headTracking;
         public Transform ultAlly1Pos;
         public Transform ultAlly2Pos;
+        public GameObject healEffectPrefab;
         [Header("Components")]
         public Animator animator;
 
@@ -49,11 +50,17 @@ namespace TurnBased.Entities.Battle {
             else if (animEvent == "Heal") {
                 if (payload == "Skill") {
                     TargetManager.instance.Target.RestoreHealth(this, Data.stats.Attack);
+                    var go = Instantiate(healEffectPrefab, TargetManager.instance.Target.transform.position, Quaternion.identity);
+                    go.GetComponent<VisualEffect>().Play();
+                    Destroy(go, 3f);
                 }
                 else if (payload == "Ult") {
                     var targets = TargetManager.instance.GetTargets();
                     foreach (var t in targets) {
                         t.RestoreHealth(this, Data.stats.Attack * 4.2f);
+                        var go = Instantiate(healEffectPrefab, t.transform.position, Quaternion.identity);
+                        go.GetComponent<VisualEffect>().Play();
+                        Destroy(go, 3f);
                     }
                 }
             }

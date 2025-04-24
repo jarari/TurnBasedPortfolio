@@ -23384,6 +23384,7 @@ MonoBehaviour:
   headTracking: {fileID: 7806736282239429921}
   ultAlly1Pos: {fileID: 3307422460647882444}
   ultAlly2Pos: {fileID: 3464622659901256163}
+  healEffectPrefab: {fileID: 6787294579408483678, guid: 7f57c58fc9066054d97701b2dfcfba03, type: 3}
   animator: {fileID: 4460558245622183283}
 --- !u!1 &4146930606916024025
 GameObject:
