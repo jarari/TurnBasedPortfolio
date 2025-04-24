@@ -24,7 +24,7 @@ public class PartyManager : MonoBehaviour
         // 데이터에서 캐릭터 ID를 가져와서 배열에 저장
         for (int i = 0; i < characters.Length; i++)
         {
-            characters[i] = CharacterDataManager.Instance.GetCharacterData(i).ID;
+            characters[i] = CharacterDataManager.Instance.GetCharacterDataByIndex(i).ID;
         }
     }
     

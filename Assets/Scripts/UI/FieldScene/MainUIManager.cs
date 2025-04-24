@@ -137,10 +137,18 @@ public class MainUIManager : MonoBehaviour
             {
                 // 파티원 오브젝트를 활성화
                 partyMeneber[i].SetActive(true);
+                
+                Text characterNameText = partyMeneber[i].transform.Find("CharacterName").GetComponent<Text>(); // 파티원 오브젝트의 자식 오브젝트 중에서 이름이 "CharacterName"인 오브젝트를 찾기
+                characterNameText.text = CharacterDataManager.GetCharacterName(party[i]); // 캐릭터 이름을 가져와서 텍스트 설정
 
-                // 파티원 오브젝트의 자식 오브젝트 중에서 이름이 "CharacterName"인 오브젝트를 찾아서 텍스트를 캐릭터 이름으로 설정
-                // 파티원 오브젝트의 자식 오브젝트 중에서 이름이 "CharacterImage"인 오브젝트를 찾아서 이미지를 캐릭터 이미지로 설정
-                // 파티원 오브젝트의 자식 오브젝트 중에서 이름이 "Ultimate"인 오브젝트를 찾아서 이미지를 필살기 이미지로 설정
+                Image characterImage = partyMeneber[i].transform.Find("CharacterImage").GetComponent<Image>(); // 파티원 오브젝트의 자식 오브젝트 중에서 이름이 "CharacterImage"인 오브젝트를 찾기
+                Sprite sprite = Resources.Load<Sprite>(CharacterDataManager.GetCharacterImagePath(party[i])); // 캐릭터 이미지 경로를 가져와서 스프라이트 로드
+                Debug.Log(CharacterDataManager.GetCharacterImagePath(party[i]));
+                characterImage.sprite = sprite; // 캐릭터 이미지 설정
+
+                Image ultimateImage = partyMeneber[i].transform.Find("Ultimate").GetComponent<Image>(); // 파티원 오브젝트의 자식 오브젝트 중에서 이름이 "Ultimate"인 오브젝트를 찾기
+                Sprite ultimateSprite = Resources.Load<Sprite>(CharacterDataManager.GetCharacterImagePath(party[i])); // 캐릭터 이미지 경로를 가져와서 스프라이트 로드
+                // ultimateImage.sprite = ultimateSprite; // 캐릭터 이미지 설정
             }
             else
             {

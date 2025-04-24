@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,7 @@ public class CharacterUIManager : MonoBehaviour
     public GameObject DetailUI;        // 상세 정보 UI 오브젝트
     public GameObject SkillUI;         // 스킬 정보 UI 오브젝트
 
+    public RawImage ChracterRenderTexture; // 캐릭터 렌더 텍스쳐
     public Text NameText;   // 캐릭터 이름을 표시할 텍스트
     public Image AttributeImage; // 캐릭터 속성을 표시할 이미지
 
@@ -47,17 +49,16 @@ public class CharacterUIManager : MonoBehaviour
         CharacterDataManager.Instance.LoadCharacterData();
 
         // 기본 캐릭터 UI 업데이트
-        UpdateCharacterUI(selectedCharacter);
+        UpdateCharacterUI("C1");
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) CloseCharacterWindow(); // ESC 키를 눌렀을 때 캐릭터 창 닫기 
-        if (Input.GetKeyDown(KeyCode.Tab)) ToggleDetailAndSkill(); // Tab 키를 눌렀을 때 상세 정보와 스킬 정보 전환
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SelectCharacter(1);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SelectCharacter(2);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SelectCharacter(3);
-        if (Input.GetKeyDown(KeyCode.Alpha4)) SelectCharacter(4);
+        if (Input.GetKeyDown(KeyCode.Escape)) CloseCharacterWindow(); // ESC 키를 눌렀을 때 캐릭터 창 닫기
+        if (Input.GetKeyDown(KeyCode.Alpha1)) UpdateCharacterUI("C1");
+        if (Input.GetKeyDown(KeyCode.Alpha2)) UpdateCharacterUI("C2");
+        if (Input.GetKeyDown(KeyCode.Alpha3)) UpdateCharacterUI("C3");
+        if (Input.GetKeyDown(KeyCode.Alpha4)) UpdateCharacterUI("C4");
     }
 
     public void CloseCharacterWindow()
@@ -69,41 +70,36 @@ public class CharacterUIManager : MonoBehaviour
         }
     }
 
-    public void ToggleDetailAndSkill()
+    public void SelectDatailMenu()
     {
-        if (CharacterWindow.activeSelf) // 캐릭터 창이 활성화 상태일 때
+        if (!DetailUI.activeSelf) // 상세 정보 UI가 비활성화 상태일 때
         {
-            if (!DetailUI.activeSelf) // 상세 정보가 비활성화 상태일 때
-            {
-                DetailUI.SetActive(true); // 상세 정보 활성화
-                SkillUI.SetActive(false); // 행적 비활성화
-            }
-            else if (DetailUI.activeSelf) // 상세 정보가 활성화 상태일 때
-            {
-                DetailUI.SetActive(false); // 상세 정보 비활성화
-                SkillUI.SetActive(true); // 행적 활성화
-            }
+            DetailUI.SetActive(true); // 상세 정보 활성화
+            SkillUI.SetActive(false); // 행적 비활성화
         }
     }
 
-    public void SelectCharacter(int CharacterIndex)
+    public void SelectSkillMenu()   
     {
-        if (CharacterWindow.activeSelf)
+        if (!SkillUI.activeSelf) // 스킬 정보 UI가 활성화 상태일 때
         {
-            // 상세 정보와 스킬 정보를 보여줄 캐릭터의 인덱스를 설정
-            selectedCharacter = CharacterIndex - 1;
-            UpdateCharacterUI(selectedCharacter);
+            DetailUI.SetActive(false); // 상세 정보 비활성화
+            SkillUI.SetActive(true); // 행적 활성화
         }
     }
 
-    public void UpdateCharacterUI(int characterIndex)
+    public void UpdateCharacterUI(string ID)
     {
-        var character = CharacterDataManager.Instance.GetCharacterData(characterIndex); // 캐릭터 데이터 가져오기
+        var character = CharacterDataManager.GetCharacterDataByID(ID); // 캐릭터 데이터 가져오기
         if (character == null)
             return;
 
-        // 캐릭터 이름과 속성 출력
+        // 캐릭터 이름 출력
         NameText.text = character.Name;
+
+        // 캐릭터 렌더 텍스쳐 로드 및 설정
+        RenderTexture renderTexture = Resources.Load<RenderTexture>(CharacterDataManager.GetCharacterRenderTexturePath(ID));
+        ChracterRenderTexture.texture = renderTexture; // 렌더 텍스쳐 설정
 
         // 속성 이미지 로드 및 설정
         Sprite attributeSprite = AttributeImages.FirstOrDefault(sprite => sprite.name == character.Attribute); // 속성 이름과 일치하는 스프라이트 찾기
