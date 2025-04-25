@@ -11,7 +11,7 @@ namespace TurnBased.Entities.Battle
 
 
     /// <summary> 
-    /// 일반 몬스터
+    /// 뮤턴트
     /// </summary>
     public class Mutant : Character
     { 
@@ -81,8 +81,6 @@ namespace TurnBased.Entities.Battle
                 // 데미지를 계산하는 함수를 호출하고
                 DamageResult result = CombatManager.CalculateDamage(this, target, Damage_factor);
 
-                Debug.Log(target.name + " 에게 " + result.FinalDamage + " 데미지");
-
                 // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
                 target.Damage(this, result);
             }
@@ -99,8 +97,7 @@ namespace TurnBased.Entities.Battle
 
                 // 스킬 쿨타임을 증가시킨다
                 skill_cool++;
-                Debug.Log("공격후 스킬 쿨타임 : " + skill_cool);
-
+                
                 // 스킬 쿨타임이 2을 초과하였을때
                 if (skill_cool > 2)
                 {
@@ -162,24 +159,36 @@ namespace TurnBased.Entities.Battle
 
                 // 현재 상태를 기본으로 갱신한다
                 this.CurrentState = CharacterState.Idle;
+
+                // 공격할 함수를 실행한다
+                AttackStart();
             }                      
             // 현재 상태가 그로기가 아니라면
             else 
             {
-                // 스킬 쿨타임이 2이상 이면
-                if (skill_cool >= 2)
-                {
-                    // 스킬을 준비하는 함수를 실행한다
-                    PrepareSkill();
-                }
-                // 스킬 쿨타임이 2미만 이라면
-                else if (skill_cool < 2)
-                {
-                    // 공격을 준비하는 함수를 실행한다
-                    PrepareAttack();
-                }
+                // 공격할 함수를 실행한다
+                AttackStart();
             }
 
+        }
+
+        /// <summary>
+        /// 스킬 쿨타임에 따라 공격을 고를 함수
+        /// </summary>
+        private void AttackStart()
+        {
+            // 스킬 쿨타임이 2이상 이면
+            if (skill_cool >= 2)
+            {
+                // 스킬을 준비하는 함수를 실행한다
+                PrepareSkill();
+            }
+            // 스킬 쿨타임이 2미만 이라면
+            else if (skill_cool < 2)
+            {
+                // 공격을 준비하는 함수를 실행한다
+                PrepareAttack();
+            }
         }
 
         #region 행동하는 함수 (스킬, 공격, 궁극기, 엑스트라 어택)
@@ -191,7 +200,7 @@ namespace TurnBased.Entities.Battle
         {
             // 부모 클래스에서 CastSkill 실행후 실행
             base.CastSkill();
-            Debug.Log("Enemy SkillAttack");
+            Debug.Log(this.name + "공격");
 
             // 에너미가 플레이어 앞에 오도록 한다
             meshParent.transform.position = target.gameObject.transform.position - new Vector3(8.47f, 0f);
@@ -213,8 +222,8 @@ namespace TurnBased.Entities.Battle
         public override void DoAttack()
         {
             base.DoAttack();
-            Debug.Log("Enemy Attack");
-
+            Debug.Log( this.name + " 공격!");
+            
             // 에너미가 플레이어 앞에 오도록 한다
             meshParent.transform.position = target.gameObject.transform.position - new Vector3(8.47f, 0f);
 
