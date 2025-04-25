@@ -154,8 +154,7 @@ namespace TurnBased.Entities.Battle
             {
                 // 애니메이터의 트리거를 켠다
                 animator.SetTrigger("GroggyToIdle");
-                animator.SetBool("GroggyBool", false);
-
+                
                 // 현재 강인도를 최대로 한다
                 this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;
 
@@ -249,46 +248,18 @@ namespace TurnBased.Entities.Battle
         /// </summary>
         public override void PrepareAttack()
         {
-            // 턴을 받았다면
-            if (myTurn == true)
-            {
-                base.PrepareAttack();
-
-                // 생존해 있는 플레이어를 가져온다
-                target = TargetManager.instance.SetPlayerTarget();
-
-                // 현재의 회전값을 저장한다
-                EnRotate = meshParent.transform.eulerAngles;
-
-                // 공격하는 함수
-                DoAttack();
-            }
-            // 턴을 받지 않았다면
-            else
-                return;
+            base.PrepareAttack();
+            // 카메라 정리하는 함수를 시작한다
+            ProcessCamGain();
         }
         /// <summary>
         /// 스킬을 준비하는 함수
         /// </summary>
         public override void PrepareSkill()
         {
-            // 턴을 받았다면
-            if (myTurn == true)
-            {
-                base.PrepareSkill();
-
-                // 생존해 있는 플레이어를 가져온다
-                target = TargetManager.instance.SetPlayerTarget();
-
-                // 현재의 회전값을 저장한다
-                EnRotate = meshParent.transform.eulerAngles;
-
-                // 스킬을 사용하는 함수
-                CastSkill();
-            }
-            // 턴을 받지 않았다면
-            else
-                return;
+            base.PrepareSkill();
+            // 카메라 정리하는 함수를 시작한다
+            ProcessCamGain();
         }
         /// <summary>
         /// 궁극기를 준비하는 함수
@@ -297,6 +268,59 @@ namespace TurnBased.Entities.Battle
         {
             base.PrepareUltAttack();
         }
+
+        /// <summary>
+        /// 카메라 정리를 하는 함수
+        /// </summary>
+        public override void ProcessCamGain()
+        {
+            base.ProcessCamGain();
+
+            // 만약 현재 상태가 공격 준비 상태라면
+            if (CurrentState == CharacterState.PrepareAttack)
+            {
+                // 턴을 받았다면
+                if (myTurn == true)
+                {
+                    base.PrepareAttack();
+
+                    // 생존해 있는 플레이어를 가져온다
+                    target = TargetManager.instance.SetPlayerTarget();
+
+                    // 현재의 회전값을 저장한다
+                    EnRotate = meshParent.transform.eulerAngles;
+
+                    // 공격하는 함수
+                    DoAttack();
+                }
+                // 턴을 받지 않았다면
+                else
+                    return;
+            }
+            // 만약 현재 상태가 스킬 준비 상태라면
+            else if (CurrentState == CharacterState.PrepareSkill)
+            {
+                // 턴을 받았다면
+                if (myTurn == true)
+                {
+                    base.PrepareSkill();
+
+                    // 생존해 있는 플레이어를 가져온다
+                    target = TargetManager.instance.SetPlayerTarget();
+
+                    // 현재의 회전값을 저장한다
+                    EnRotate = meshParent.transform.eulerAngles;
+
+                    // 스킬을 사용하는 함수
+                    CastSkill();
+                }
+                // 턴을 받지 않았다면
+                else
+                    return;
+            }
+
+        }
+
 
         #endregion
 
@@ -342,8 +366,7 @@ namespace TurnBased.Entities.Battle
 
             // 그로기 애니메이션 트리거를 켠다
             animator.SetTrigger("Groggy");
-            animator.SetBool("GroggyBool", true);
-
+            
             AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
             Debug.Log("현재 애니메이션 상태 : " + state.fullPathHash + " , 이름 : " + state.IsName("Groggy"));
             Debug.Log("캐릭터의 현재 상태 : " + this.CurrentState);
