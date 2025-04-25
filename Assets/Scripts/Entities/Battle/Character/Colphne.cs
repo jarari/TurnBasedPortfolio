@@ -23,6 +23,7 @@ namespace TurnBased.Entities.Battle {
         public MultiAimConstraint headTracking;
         public Transform ultAlly1Pos;
         public Transform ultAlly2Pos;
+        public GameObject healEffectPrefab;
         [Header("Components")]
         public Animator animator;
 
@@ -49,11 +50,17 @@ namespace TurnBased.Entities.Battle {
             else if (animEvent == "Heal") {
                 if (payload == "Skill") {
                     TargetManager.instance.Target.RestoreHealth(this, Data.stats.Attack);
+                    var go = Instantiate(healEffectPrefab, TargetManager.instance.Target.transform.position, Quaternion.identity);
+                    go.GetComponent<VisualEffect>().Play();
+                    Destroy(go, 3f);
                 }
                 else if (payload == "Ult") {
                     var targets = TargetManager.instance.GetTargets();
                     foreach (var t in targets) {
                         t.RestoreHealth(this, Data.stats.Attack * 4.2f);
+                        var go = Instantiate(healEffectPrefab, t.transform.position, Quaternion.identity);
+                        go.GetComponent<VisualEffect>().Play();
+                        Destroy(go, 3f);
                     }
                 }
             }
@@ -81,8 +88,14 @@ namespace TurnBased.Entities.Battle {
             headTracking.data.sourceObjects.Add(new WeightedTransform(TargetManager.instance.camTarget.transform, 0.6f));
         }
 
+        public override void TakeUltTurn() {
+            base.TakeUltTurn();
+            SoundManager.instance.PlayVOSound(this, "ColphneVOUltStandby");
+        }
+
         public override void CastSkill() {
             base.CastSkill();
+            animator.SetInteger("State", 0);
             aimRig.weight = 0;
             var ally = TargetManager.instance.Target;
             healProjectileRoot.transform.localPosition = Vector3.zero;
