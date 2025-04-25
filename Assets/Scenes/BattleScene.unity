@@ -4095,6 +4095,7 @@ MonoBehaviour:
   skillAttack: {fileID: 1519746495}
   animator: {fileID: 8781752552729919737}
   target: {fileID: 0}
+  targetPosition: {fileID: 0}
   Damage_factor: 0
   skill_cool: 0
 --- !u!1 &324727878
@@ -23619,6 +23620,7 @@ MonoBehaviour:
   skillAttack: {fileID: 1710620641}
   animator: {fileID: 5866666020500299904}
   target: {fileID: 0}
+  targetPosition: {fileID: 0}
   Damage_factor: 0
   skill_cool: 0
 --- !u!1 &1605946595
@@ -26514,6 +26516,7 @@ MonoBehaviour:
   skillAttack: {fileID: 552090531}
   animator: {fileID: 4542083194747395843}
   target: {fileID: 0}
+  targetPosition: {fileID: 0}
   Damage_factor: 0
   skill_cool: 0
 --- !u!1 &1820226192
@@ -26867,6 +26870,7 @@ MonoBehaviour:
   skillAttack: {fileID: 442019088}
   animator: {fileID: 1444369110729234593}
   target: {fileID: 0}
+  targetPosition: {fileID: 0}
   Damage_factor: 0
   skill_cool: 0
 --- !u!1 &1844921017
@@ -26924,6 +26928,7 @@ MonoBehaviour:
   skillAttack: {fileID: 1097918541}
   animator: {fileID: 7384005369737881992}
   target: {fileID: 0}
+  targetPosition: {fileID: 0}
   Damage_factor: 0
   skill_cool: 0
 --- !u!1 &1846730325

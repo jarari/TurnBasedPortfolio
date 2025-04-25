@@ -342,7 +342,7 @@ namespace TurnBased.Battle.Managers {
             // 유니티의 랜덤 클래스를 사용해서 0부터 살아있는 플레이어 숫자까지 랜덤한 숫자를 고른다
             int rand = UnityEngine.Random.Range(0, player_list.Count);
             // 랜덤하게 선택된 플레이어를 하나 가져오고
-            Character player_target = player_list[rand];            
+            Character player_target = player_list[rand];
             
             // 살아있는 캐릭터를 반환한다
             return player_target;

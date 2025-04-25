@@ -24,14 +24,13 @@ namespace TurnBased.Entities.Battle
         [Header("Components")]
         public Animator animator;   // 캐릭터의 애니메이터
 
-        // 본인의 회전값을 담을 변수        
-        private Vector3 EnRotate;
-
         // 캐릭터의 마지막 공격 상태를 담을 변수
         private CharacterState _lastAttack;
 
         // 공격할 플레이어를 담을 변수
         public Character target;
+        // 공격할 플레이어의 칸의 위치를 담을 변수
+        public GameObject targetPosition;
 
         // 데미지 피해를 가할시 일반공격과 스킬 데미지 계수를 담을 변수
         public float Damage_factor = 0f;
@@ -40,6 +39,7 @@ namespace TurnBased.Entities.Battle
 
         // 턴을 받은 뒤 행동하기 위한 변수
         private bool myTurn = false;
+
 
         /// <summary> 
         /// 공격후에 애니메이션이 끝날 때의 반환을 처리하는 코루틴
@@ -109,10 +109,8 @@ namespace TurnBased.Entities.Battle
                     if (normalAttack.time >= normalAttack.duration)
                     { 
                         // 에너미의 부모객체를 기준으로 상대적인 위치를 0으로 맞춘다
-                        meshParent.transform.localPosition = Vector3.zero;
-                        // 공격하기 위해 틀었던 회전값을 원래대로 가져온다
-                        meshParent.transform.eulerAngles = EnRotate;
-
+                        animator.gameObject.transform.localPosition = Vector3.zero;
+                        
                         // 자신의 턴이 끝났음을 알린다
                         myTurn = false;
 
@@ -213,8 +211,8 @@ namespace TurnBased.Entities.Battle
 
             Debug.Log( this.name + " 공격!");
             
-            // 에너미가 플레이어 앞에 오도록 한다
-            meshParent.transform.position = target.gameObject.transform.position - new Vector3(8.47f, 0f);
+            // 에니메이터인 몬스터가 에너미가 플레이어 앞에 오도록 한다            
+            animator.gameObject.transform.position = targetPosition.transform.position - new Vector3(8.47f, 0f);
 
             // 일반 공격 대미지 계수
             // (나중에 버프라던가 디버프가 생기면 이곳을 더하거나 빼는 방식도 생각해보자)
@@ -248,18 +246,43 @@ namespace TurnBased.Entities.Battle
         /// </summary>
         public override void PrepareAttack()
         {
-            base.PrepareAttack();
-            // 카메라 정리하는 함수를 시작한다
-            ProcessCamGain();
+            // 턴을 받았다면
+            if (myTurn == true)
+            {                
+                base.PrepareAttack();
+
+                // 생존해 있는 플레이어를 가져온다
+                target = TargetManager.instance.SetPlayerTarget();
+
+                targetPosition = target.gameObject;
+
+                // 공격하는 함수
+                DoAttack();
+            }
+            // 턴을 받지 않았다면
+            else
+                return;
         }
         /// <summary>
         /// 스킬을 준비하는 함수
         /// </summary>
         public override void PrepareSkill()
         {
-            base.PrepareSkill();
-            // 카메라 정리하는 함수를 시작한다
-            ProcessCamGain();
+            // 턴을 받았다면
+            if (myTurn == true)
+            {
+                base.PrepareSkill();
+
+                // 생존해 있는 플레이어를 가져온다
+                target = TargetManager.instance.SetPlayerTarget();
+
+                // 스킬을 사용하는 함수
+                CastSkill();
+            }
+            // 턴을 받지 않았다면
+            else
+                return;
+
         }
         /// <summary>
         /// 궁극기를 준비하는 함수
@@ -268,59 +291,6 @@ namespace TurnBased.Entities.Battle
         {
             base.PrepareUltAttack();
         }
-
-        /// <summary>
-        /// 카메라 정리를 하는 함수
-        /// </summary>
-        public override void ProcessCamGain()
-        {
-            base.ProcessCamGain();
-
-            // 만약 현재 상태가 공격 준비 상태라면
-            if (CurrentState == CharacterState.PrepareAttack)
-            {
-                // 턴을 받았다면
-                if (myTurn == true)
-                {
-                    base.PrepareAttack();
-
-                    // 생존해 있는 플레이어를 가져온다
-                    target = TargetManager.instance.SetPlayerTarget();
-
-                    // 현재의 회전값을 저장한다
-                    EnRotate = meshParent.transform.eulerAngles;
-
-                    // 공격하는 함수
-                    DoAttack();
-                }
-                // 턴을 받지 않았다면
-                else
-                    return;
-            }
-            // 만약 현재 상태가 스킬 준비 상태라면
-            else if (CurrentState == CharacterState.PrepareSkill)
-            {
-                // 턴을 받았다면
-                if (myTurn == true)
-                {
-                    base.PrepareSkill();
-
-                    // 생존해 있는 플레이어를 가져온다
-                    target = TargetManager.instance.SetPlayerTarget();
-
-                    // 현재의 회전값을 저장한다
-                    EnRotate = meshParent.transform.eulerAngles;
-
-                    // 스킬을 사용하는 함수
-                    CastSkill();
-                }
-                // 턴을 받지 않았다면
-                else
-                    return;
-            }
-
-        }
-
 
         #endregion
 
