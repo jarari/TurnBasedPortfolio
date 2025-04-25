@@ -30,7 +30,11 @@ public class CharacterUIManager : MonoBehaviour
 
     public List<StatUI> StatUIList; // 스탯 UI 리스트
 
-    private int selectedCharacter = 0; // 선택된 캐릭터 인덱스
+    public AudioClip Select;                    // 선택 효과음
+    public AudioClip Confirm;                   // 확인 효과음
+    public AudioClip Cancel;                    // 취소 효과음
+
+    private AudioSource audioSource;            // 오디오 소스
 
     private void Awake()
     {
@@ -42,6 +46,8 @@ public class CharacterUIManager : MonoBehaviour
         {
             Destroy(gameObject); // 중복된 인스턴스 삭제
         }
+
+        audioSource = gameObject.AddComponent<AudioSource>(); // AudioSource 컴포넌트 추가
     }
     private void Start()
     {
@@ -67,6 +73,7 @@ public class CharacterUIManager : MonoBehaviour
         {
             CharacterWindow.SetActive(false); // 캐릭터 창 비활성화
             MainUIManager.Instance.CurrentWindow = MainUI; // 현재 창을 메인 UI로 설정
+            audioSource.PlayOneShot(Cancel); // 취소 효과음 재생
         }
     }
 
@@ -76,6 +83,7 @@ public class CharacterUIManager : MonoBehaviour
         {
             DetailUI.SetActive(true); // 상세 정보 활성화
             SkillUI.SetActive(false); // 행적 비활성화
+            audioSource.PlayOneShot(Select); // 선택 효과음 재생
         }
     }
 
@@ -85,6 +93,7 @@ public class CharacterUIManager : MonoBehaviour
         {
             DetailUI.SetActive(false); // 상세 정보 비활성화
             SkillUI.SetActive(true); // 행적 활성화
+            audioSource.PlayOneShot(Select); // 선택 효과음 재생
         }
     }
 
@@ -125,5 +134,6 @@ public class CharacterUIManager : MonoBehaviour
             StatUIList[i].StatName.text = stat.Key;   // 스탯 이름 설정
             StatUIList[i].StatValue.text = stat.Value; // 스탯 값 설정
         }
+        // audioSource.PlayOneShot(Select); // 선택 효과음 재생
     }
 }

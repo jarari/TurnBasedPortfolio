@@ -17,12 +17,20 @@ public class PartySetupUIManager : MonoBehaviour
     public List<Texture> CharacterRenderTexture; // 캐릭터 렌더 텍스처 리스트
     public Texture CharacterSlotTexture; // 캐릭터 슬롯 텍스처
 
+    public AudioClip Select;                    // 선택 효과음
+    public AudioClip Confirm;                   // 확인 효과음
+    public AudioClip Cancel;                    // 취소 효과음
+
+    private AudioSource audioSource;            // 오디오 소스
+
     private void Awake()
     {
         if (Instance == null)
             Instance = this; // 인스턴스 설정
         else
             Destroy(gameObject); // 중복된 인스턴스 삭제
+
+        audioSource = gameObject.AddComponent<AudioSource>(); // AudioSource 컴포넌트 추가
     }
 
     private void Start()
@@ -37,7 +45,6 @@ public class PartySetupUIManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) ClosePartySetupWindow();
-        if (Input.GetKeyDown(KeyCode.Return)) ToggleCharacterListWindow();
         if (CharacterListWindow.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1)) ToggleCharacter("C1");
@@ -54,6 +61,7 @@ public class PartySetupUIManager : MonoBehaviour
             PartySetupWindow.SetActive(false); // 파티 편성 창 비활성화
             CharacterListWindow.SetActive(false); // 캐릭터 목록 창 비활성화
             MainUIManager.Instance.CurrentWindow = MainUI; // 현재 창을 메인 UI로 설정
+            audioSource.PlayOneShot(Cancel); // 취소 효과음 재생
         }
     }
 
@@ -61,6 +69,7 @@ public class PartySetupUIManager : MonoBehaviour
     {
         CharacterListWindow.SetActive(!CharacterListWindow.activeSelf);
         ConfirmButton.SetActive(CharacterListWindow.activeSelf);
+        audioSource.PlayOneShot(Confirm); // 확인 효과음 재생
     }
 
     public void ToggleCharacter(string ID)
@@ -69,12 +78,14 @@ public class PartySetupUIManager : MonoBehaviour
         {
             DeselectCharacter(ID); // 캐릭터 선택 해제
             PartyManager.Instance.RemoveCharacterFromParty(ID); // 슬롯에서 캐릭터 제거
+            audioSource.PlayOneShot(Cancel); // 취소 효과음 재생
         }
         else // 캐릭터가 파티에 없으면
         {
             if (PartyManager.Instance.IsPartyFull()) return; // 파티가 가득 차면 편성 불가
             PartyManager.Instance.AddCharacterToParty(ID); // 슬롯에 캐릭터 추가
             SelectCharacter(ID); // 캐릭터 선택
+            audioSource.PlayOneShot(Select); // 선택 효과음 재생
         }
     }
 

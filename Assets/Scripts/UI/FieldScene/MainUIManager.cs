@@ -20,7 +20,12 @@ public class MainUIManager : MonoBehaviour
     public Button Attack;                       // 공격 버튼 오브젝트
     public Button Technique;                    // 비술 버튼 오브젝트
     public Button Run;                          // 달리기 버튼 오브젝트
+    
+    public AudioClip Select;                    // 선택 효과음
+    public AudioClip Confirm;                   // 확인 효과음
+    public AudioClip Cancel;                    // 취소 효과음
 
+    private AudioSource audioSource;            // 오디오 소스
     private void Awake()
     {
         if (Instance == null)
@@ -33,6 +38,8 @@ public class MainUIManager : MonoBehaviour
         {
             Destroy(gameObject); // 현재 오브젝트 파괴
         }
+
+        audioSource = gameObject.AddComponent<AudioSource>(); // AudioSource 컴포넌트 추가
     }
 
     void Start()
@@ -51,6 +58,7 @@ public class MainUIManager : MonoBehaviour
         Attack.GetComponent<Image>().enabled = false; // 공격 버튼 오브젝트 이미지 비활성화
         Technique.GetComponent<Image>().enabled = false; // 비술 버튼 오브젝트 이미지 비활성화
         Run.GetComponent<Image>().enabled = false; // 달리기 버튼 오브젝트 이미지 비활성화
+
     }
 
     void Update()
@@ -125,6 +133,7 @@ public class MainUIManager : MonoBehaviour
         {
             window.SetActive(true); // 창 활성화
             CurrentWindow = window; // 현재 창을 연 창으로 설정
+            audioSource.PlayOneShot(Select); // 선택 효과음 재생
         }
     }
 
@@ -143,7 +152,6 @@ public class MainUIManager : MonoBehaviour
 
                 Image characterImage = partyMeneber[i].transform.Find("CharacterImage").GetComponent<Image>(); // 파티원 오브젝트의 자식 오브젝트 중에서 이름이 "CharacterImage"인 오브젝트를 찾기
                 Sprite sprite = Resources.Load<Sprite>(CharacterDataManager.GetCharacterImagePath(party[i])); // 캐릭터 이미지 경로를 가져와서 스프라이트 로드
-                Debug.Log(CharacterDataManager.GetCharacterImagePath(party[i]));
                 characterImage.sprite = sprite; // 캐릭터 이미지 설정
 
                 Image ultimateImage = partyMeneber[i].transform.Find("Ultimate").GetComponent<Image>(); // 파티원 오브젝트의 자식 오브젝트 중에서 이름이 "Ultimate"인 오브젝트를 찾기

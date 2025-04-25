@@ -5580,6 +5580,9 @@ MonoBehaviour:
   Attack: {fileID: 1177641759427522219}
   Technique: {fileID: 4362643182589851798}
   Run: {fileID: 4615666957770085099}
+  Select: {fileID: 8300000, guid: c9fb7a64f7371304db9374012b894be3, type: 3}
+  Confirm: {fileID: 8300000, guid: eb37cacc3404218488516dbd44e96e45, type: 3}
+  Cancel: {fileID: 8300000, guid: b46d06a1831065f418beaa521e990192, type: 3}
 --- !u!4 &973805221
 Transform:
   m_ObjectHideFlags: 0
@@ -5637,6 +5640,9 @@ MonoBehaviour:
     StatValue: {fileID: 4009087368756727785}
   - StatName: {fileID: 1491231187816008360}
     StatValue: {fileID: 2304862751869811589}
+  Select: {fileID: 8300000, guid: c9fb7a64f7371304db9374012b894be3, type: 3}
+  Confirm: {fileID: 8300000, guid: eb37cacc3404218488516dbd44e96e45, type: 3}
+  Cancel: {fileID: 8300000, guid: b46d06a1831065f418beaa521e990192, type: 3}
 --- !u!114 &973805223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5668,6 +5674,9 @@ MonoBehaviour:
   - {fileID: 8400000, guid: 021f11c98c8347243a43c92f006cf9a7, type: 2}
   - {fileID: 8400000, guid: 0c7e3e95b3461db4eb5e6f335217cca3, type: 2}
   CharacterSlotTexture: {fileID: 2800000, guid: 0c843f11eec1f284baa815bd32009793, type: 3}
+  Select: {fileID: 8300000, guid: c9fb7a64f7371304db9374012b894be3, type: 3}
+  Confirm: {fileID: 8300000, guid: eb37cacc3404218488516dbd44e96e45, type: 3}
+  Cancel: {fileID: 8300000, guid: b46d06a1831065f418beaa521e990192, type: 3}
 --- !u!114 &973805224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5682,6 +5691,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainUI: {fileID: 1532072336061306218}
   TechniqueEffectWindow: {fileID: 1727550437}
+  Cancel: {fileID: 8300000, guid: b46d06a1831065f418beaa521e990192, type: 3}
 --- !u!114 &973805225
 MonoBehaviour:
   m_ObjectHideFlags: 0
