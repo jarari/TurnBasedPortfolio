@@ -392,7 +392,7 @@ Material:
     - _LinkDetailsWithBase: 1
     - _MatCap: 0
     - _MaterialID: 1
-    - _Metallic: 0
+    - _Metallic: 1
     - _Mode: 0
     - _Nearest_Distance: 0.5
     - _NormalMapSpace: 0

@@ -246,7 +246,7 @@ inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfa
     outSurfaceData.albedo = albedoAlpha.rgb * _BaseColor.rgb;
     outSurfaceData.albedo = AlphaModulate(outSurfaceData.albedo, outSurfaceData.alpha);
     
-    outSurfaceData.metallic = specGloss.g;
+    outSurfaceData.metallic = specGloss.g * _Metallic;
     outSurfaceData.specular = half3(0.0, 0.0, 0.0);
 
 #ifdef _RMO_SETUP
