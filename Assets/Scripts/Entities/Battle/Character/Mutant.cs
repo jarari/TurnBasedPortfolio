@@ -38,6 +38,9 @@ namespace TurnBased.Entities.Battle
 
         public float skill_cool = 0f;
 
+        // 턴 종료 중복 방지 변수
+        private bool isTurnEnd = false;
+
         /// <summary> 
         /// 공격후에 애니메이션이 끝날 때의 반환을 처리하는 코루틴
         /// </summary>
@@ -86,6 +89,9 @@ namespace TurnBased.Entities.Battle
             // 타임라인에서 공격이 끝난 신호를 받게된다면 실행
             if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd")
             {
+                // 중복 처리 방지
+                isTurnEnd = true;
+
                 // 공격후 애니메이션 처리 코루틴을 호출후
                 StartCoroutine(DelayReturnFromAttack());
 
@@ -105,13 +111,21 @@ namespace TurnBased.Entities.Battle
                 // 타임라인의 상태가 Pause일때 (재생이 종료 되었을때)
                 if (normalAttack.state == PlayState.Paused)
                 {
-                    // 에너미의 부모객체를 기준으로 상대적인 위치를 0으로 맞춘다
-                    meshParent.transform.localPosition = Vector3.zero;
-                    // 공격하기 위해 틀었던 회전값을 원래대로 가져온다
-                    meshParent.transform.eulerAngles = EnRotate;
+                    // 일반공격 애니메이션이 끝났다면
+                    if (normalAttack.time >= normalAttack.duration)
+                    { 
+                        // 에너미의 부모객체를 기준으로 상대적인 위치를 0으로 맞춘다
+                        meshParent.transform.localPosition = Vector3.zero;
+                        // 공격하기 위해 틀었던 회전값을 원래대로 가져온다
+                        meshParent.transform.eulerAngles = EnRotate;
 
-                    // 턴을 종료한다
-                    EndTurn();
+                        // 턴을 종료한다
+                        EndTurn();
+                        // 중복방지 초기화
+                        isTurnEnd = false;
+                    }
+
+
                 }
             }
         }
@@ -137,7 +151,7 @@ namespace TurnBased.Entities.Battle
             // 타겟을 초기화 한다
             target = null;
 
-            // 강인도가 0이하 라면
+            // 현재 상태가 그로기라면
             if (this.CurrentState == CharacterState.Groggy)
             {
                 // 애니메이터의 트리거를 켠다
@@ -148,21 +162,22 @@ namespace TurnBased.Entities.Battle
 
                 // 현재 상태를 기본으로 갱신한다
                 this.CurrentState = CharacterState.Idle;
-            }
-
-            Debug.Log("턴을 받은후 스킬 쿨타임 : " + skill_cool);
-
-            // 스킬 쿨타임이 2이상 이면
-            if (skill_cool >= 2)
+            }                      
+            // 현재 상태가 그로기가 아니라면
+            else 
             {
-                // 스킬을 준비하는 함수를 실행한다
-                PrepareSkill();
-            }
-            // 스킬 쿨타임이 2미만 이라면
-            else if (skill_cool < 2)
-            {
-                // 공격을 준비하는 함수를 실행한다
-                PrepareAttack();
+                // 스킬 쿨타임이 2이상 이면
+                if (skill_cool >= 2)
+                {
+                    // 스킬을 준비하는 함수를 실행한다
+                    PrepareSkill();
+                }
+                // 스킬 쿨타임이 2미만 이라면
+                else if (skill_cool < 2)
+                {
+                    // 공격을 준비하는 함수를 실행한다
+                    PrepareAttack();
+                }
             }
 
         }
@@ -280,8 +295,12 @@ namespace TurnBased.Entities.Battle
             // 부모 클래스의 Dagage를 실행후 실행
             base.Damage(attacker, result);
 
-            // 데미지 애니메이션의 트리거를 켠다
-            animator.SetTrigger("Damage");
+            // 캐릭터의 상태가 dead상태가 아닐때
+            if (this.CurrentState != CharacterState.Dead)
+            { 
+                // 데미지 애니메이션의 트리거를 켠다
+                animator.SetTrigger("Damage");            
+            }
 
             Debug.Log("데미지를 입었다");
 
@@ -309,6 +328,10 @@ namespace TurnBased.Entities.Battle
             // 그로기 애니메이션 트리거를 켠다
             animator.SetTrigger("Groggy");
 
+            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+            Debug.Log("현재 애니메이션 상태 : " + state.fullPathHash + " , 이름 : " + state.IsName("Groggy"));
+            Debug.Log("캐릭터의 현재 상태 : " + this.CurrentState);
+
             // 현재 스피드와 방어력을 절반으로 한다
             Data.stats.Speed = (Data.stats.Speed) / 2;
             Data.stats.Defense = (Data.stats.Defense) / 2;
@@ -328,9 +351,4 @@ namespace TurnBased.Entities.Battle
         }
 
     }
-
-
-
 }
-    
-
