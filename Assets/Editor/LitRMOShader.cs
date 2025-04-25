@@ -8,8 +8,9 @@ using static UnityEditor.ShaderData;
 
 namespace TurnBased.Rendering
 {
-    internal class LitRMOShader : BaseShaderGUI
-    {
+    internal class LitRMOShader : BaseShaderGUI {
+        static readonly string[] workflowModeNames = Enum.GetNames(typeof(LitRMOGUI.WorkflowMode));
+
         private LitRMOGUI.LitProperties litProperties;
         private LitDetailGUI.LitProperties litDetailProperties;
 
@@ -37,6 +38,10 @@ namespace TurnBased.Rendering
         {
             // Use default labelWidth
             EditorGUIUtility.labelWidth = 0f;
+
+            if (litProperties.workflowMode != null)
+                DoPopup(LitRMOGUI.Styles.workflowModeText, litProperties.workflowMode, workflowModeNames);
+
             base.DrawSurfaceOptions(material);
         }
 

@@ -7,11 +7,30 @@ namespace TurnBased.Rendering {
     /// Editor script for the Lit material inspector.
     /// </summary>
     public static class LitRMOGUI {
+        /// <summary>
+        /// Workflow modes for the shader.
+        /// </summary>
+        public enum WorkflowMode {
+            /// <summary>
+            /// Use this for RMO maps.
+            /// </summary>
+            RMO = 0,
+
+            /// <summary>
+            /// Use this for SMO maps.
+            /// </summary>
+            SMO
+        }
 
         /// <summary>
         /// Container for the text and tooltips used to display the shader.
         /// </summary>
         public static class Styles {
+            /// <summary>
+            /// The text and tooltip for the workflow Mode GUI.
+            /// </summary>
+            public static GUIContent workflowModeText = EditorGUIUtility.TrTextContent("Workflow Mode",
+                "Select a workflow that fits your textures. Choose between RMO or SMO.");
             /// <summary>
             /// The text and tooltip for the metallic Map GUI.
             /// </summary>
@@ -94,6 +113,11 @@ namespace TurnBased.Rendering {
         /// </summary>
         public struct LitProperties {
             // Surface Input Props
+
+            /// <summary>
+            /// The MaterialProperty for workflow mode.
+            /// </summary>
+            public MaterialProperty workflowMode;
 
             /// <summary>
             /// The MaterialProperty for metallic value.
@@ -183,6 +207,8 @@ namespace TurnBased.Rendering {
             /// </summary>
             /// <param name="properties"></param>
             public LitProperties(MaterialProperty[] properties) {
+                // Surface Option Props
+                workflowMode = BaseShaderGUI.FindProperty("_WorkflowMode", properties, false);
                 metallic = BaseShaderGUI.FindProperty("_Metallic", properties);
                 metallicGlossMap = BaseShaderGUI.FindProperty("_MetallicGlossMap", properties);
                 smoothness = BaseShaderGUI.FindProperty("_Smoothness", properties, false);
@@ -307,11 +333,21 @@ namespace TurnBased.Rendering {
             EditorGUI.indentLevel -= 2;
         }
 
+        // (shared by all lit shaders, including shadergraph Lit Target and Lit.shader)
+        internal static void SetupSpecularWorkflowKeyword(Material material, out bool isRMOWorkFlow) {
+            isRMOWorkFlow = true;     // default is RMO
+            if (material.HasProperty("_WorkflowMode"))
+                isRMOWorkFlow = ((WorkflowMode)material.GetFloat("_WorkflowMode")) == WorkflowMode.RMO;
+            CoreUtils.SetKeyword(material, "_RMO_SETUP", isRMOWorkFlow);
+        }
+
         /// <summary>
         /// Sets up the keywords for the Lit shader and material.
         /// </summary>
         /// <param name="material"></param>
         public static void SetMaterialKeywords(Material material) {
+            SetupSpecularWorkflowKeyword(material, out bool isSpecularWorkFlow);
+
             var specularGlossMap = "_MetallicGlossMap";
             var hasGlossMap = material.GetTexture(specularGlossMap) != null;
 
