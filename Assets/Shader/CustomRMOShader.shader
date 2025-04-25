@@ -10,7 +10,7 @@ Shader "Custom/URP Lit RMO"
 
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
-        _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
+        _Smoothness("Smoothness", Range(0.0, 1.0)) = 1
         _SmoothnessTextureChannel("Smoothness texture channel", Float) = 0
 
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
