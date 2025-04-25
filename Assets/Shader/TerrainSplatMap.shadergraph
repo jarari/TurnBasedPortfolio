@@ -4229,8 +4229,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -449.0,
-            "y": -955.0,
+            "x": -448.9999694824219,
+            "y": -937.9998779296875,
             "width": 166.0,
             "height": 118.0
         }
@@ -9320,7 +9320,7 @@
         "m_Id": "4ff94059a03144ab97580a8a66bc66ea"
     },
     "m_AllowMaterialOverride": false,
-    "m_SurfaceType": 1,
+    "m_SurfaceType": 0,
     "m_ZTestMode": 4,
     "m_ZWriteControl": 0,
     "m_AlphaMode": 0,
