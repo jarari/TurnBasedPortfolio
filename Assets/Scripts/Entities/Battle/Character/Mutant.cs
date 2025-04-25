@@ -38,8 +38,8 @@ namespace TurnBased.Entities.Battle
 
         public float skill_cool = 0f;
 
-        // 턴 종료 중복 방지 변수
-        private bool isTurnEnd = false;
+        // 턴을 받은 뒤 행동하기 위한 변수
+        private bool myTurn = false;
 
         /// <summary> 
         /// 공격후에 애니메이션이 끝날 때의 반환을 처리하는 코루틴
@@ -87,9 +87,6 @@ namespace TurnBased.Entities.Battle
             // 타임라인에서 공격이 끝난 신호를 받게된다면 실행
             if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd")
             {
-                // 중복 처리 방지
-                isTurnEnd = true;
-
                 // 공격후 애니메이션 처리 코루틴을 호출후
                 StartCoroutine(DelayReturnFromAttack());
 
@@ -116,10 +113,11 @@ namespace TurnBased.Entities.Battle
                         // 공격하기 위해 틀었던 회전값을 원래대로 가져온다
                         meshParent.transform.eulerAngles = EnRotate;
 
+                        // 자신의 턴이 끝났음을 알린다
+                        myTurn = false;
+
                         // 턴을 종료한다
                         EndTurn();
-                        // 중복방지 초기화
-                        isTurnEnd = false;
                     }
 
 
@@ -148,35 +146,23 @@ namespace TurnBased.Entities.Battle
             // 타겟을 초기화 한다
             target = null;
 
+            // 자신의 턴임을 알린다
+            myTurn = true;
+
             // 현재 상태가 그로기라면
             if (this.CurrentState == CharacterState.Groggy)
             {
                 // 애니메이터의 트리거를 켠다
                 animator.SetTrigger("GroggyToIdle");
+                animator.SetBool("GroggyBool", false);
 
                 // 현재 강인도를 최대로 한다
                 this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;
 
                 // 현재 상태를 기본으로 갱신한다
-                this.CurrentState = CharacterState.Idle;
-
-                // 공격할 함수를 실행한다
-                AttackStart();
-            }                      
-            // 현재 상태가 그로기가 아니라면
-            else 
-            {
-                // 공격할 함수를 실행한다
-                AttackStart();
+                this.CurrentState = CharacterState.Idle;                                
             }
-
-        }
-
-        /// <summary>
-        /// 스킬 쿨타임에 따라 공격을 고를 함수
-        /// </summary>
-        private void AttackStart()
-        {
+            
             // 스킬 쿨타임이 2이상 이면
             if (skill_cool >= 2)
             {
@@ -189,6 +175,7 @@ namespace TurnBased.Entities.Battle
                 // 공격을 준비하는 함수를 실행한다
                 PrepareAttack();
             }
+
         }
 
         #region 행동하는 함수 (스킬, 공격, 궁극기, 엑스트라 어택)
@@ -208,6 +195,8 @@ namespace TurnBased.Entities.Battle
             // 스킬 공격 대미지 계수
             Damage_factor = 1.5f;
 
+            // 스킬 공격 애니메이션을 멈춘뒤
+            skillAttack.Stop();
             // 스킬 공격 애니메이션 재생
             skillAttack.Play();
 
@@ -222,6 +211,7 @@ namespace TurnBased.Entities.Battle
         public override void DoAttack()
         {
             base.DoAttack();
+
             Debug.Log( this.name + " 공격!");
             
             // 에너미가 플레이어 앞에 오도록 한다
@@ -231,6 +221,8 @@ namespace TurnBased.Entities.Battle
             // (나중에 버프라던가 디버프가 생기면 이곳을 더하거나 빼는 방식도 생각해보자)
             Damage_factor = 1.0f;
 
+            // 일반공격 애니메이션을 멈춘뒤
+            normalAttack.Stop();
             // 일반공격 애니메이션이 실행
             normalAttack.Play();
 
@@ -257,32 +249,46 @@ namespace TurnBased.Entities.Battle
         /// </summary>
         public override void PrepareAttack()
         {
-            base.PrepareAttack();
+            // 턴을 받았다면
+            if (myTurn == true)
+            {
+                base.PrepareAttack();
 
-            // 생존해 있는 플레이어를 가져온다
-            target = TargetManager.instance.SetPlayerTarget();
+                // 생존해 있는 플레이어를 가져온다
+                target = TargetManager.instance.SetPlayerTarget();
 
-            // 현재의 회전값을 저장한다
-            EnRotate = meshParent.transform.eulerAngles;
+                // 현재의 회전값을 저장한다
+                EnRotate = meshParent.transform.eulerAngles;
 
-            // 공격하는 함수
-            DoAttack();
+                // 공격하는 함수
+                DoAttack();
+            }
+            // 턴을 받지 않았다면
+            else
+                return;
         }
         /// <summary>
         /// 스킬을 준비하는 함수
         /// </summary>
         public override void PrepareSkill()
         {
-            base.PrepareSkill();
+            // 턴을 받았다면
+            if (myTurn == true)
+            {
+                base.PrepareSkill();
 
-            // 생존해 있는 플레이어를 가져온다
-            target = TargetManager.instance.SetPlayerTarget();
+                // 생존해 있는 플레이어를 가져온다
+                target = TargetManager.instance.SetPlayerTarget();
 
-            // 현재의 회전값을 저장한다
-            EnRotate = meshParent.transform.eulerAngles;
+                // 현재의 회전값을 저장한다
+                EnRotate = meshParent.transform.eulerAngles;
 
-            // 스킬을 사용하는 함수
-            CastSkill();
+                // 스킬을 사용하는 함수
+                CastSkill();
+            }
+            // 턴을 받지 않았다면
+            else
+                return;
         }
         /// <summary>
         /// 궁극기를 준비하는 함수
@@ -336,6 +342,7 @@ namespace TurnBased.Entities.Battle
 
             // 그로기 애니메이션 트리거를 켠다
             animator.SetTrigger("Groggy");
+            animator.SetBool("GroggyBool", true);
 
             AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
             Debug.Log("현재 애니메이션 상태 : " + state.fullPathHash + " , 이름 : " + state.IsName("Groggy"));
