@@ -20,6 +20,7 @@ namespace TurnBased.Entities.Battle
         [Header("Timelines")]
         public PlayableDirector normalAttack;    // 일반 공격 애니메이션
         public PlayableDirector skillAttack;        // 스킬 공격 애니메이션       
+        public PlayableDirector Groggy_anim;    // 그로기 애니메이션
 
         [Header("Components")]
         public Animator animator;   // 캐릭터의 애니메이터
@@ -29,9 +30,7 @@ namespace TurnBased.Entities.Battle
 
         // 공격할 플레이어를 담을 변수
         public Character target;
-        // 공격할 플레이어의 칸의 위치를 담을 변수
-        public GameObject targetPosition;
-
+        
         // 데미지 피해를 가할시 일반공격과 스킬 데미지 계수를 담을 변수
         public float Damage_factor = 0f;
 
@@ -149,17 +148,62 @@ namespace TurnBased.Entities.Battle
 
             // 현재 상태가 그로기라면
             if (this.CurrentState == CharacterState.Groggy)
-            {
-                // 애니메이터의 트리거를 켠다
-                animator.SetTrigger("GroggyToIdle");
-                
+            {                
+                // 다음 프레임에서 공격을 시작하기위한 코루틴을 실행한다
+                StartCoroutine(Groggy_Idle());
+
+                // 애니메이터의 불값을 변경한다               
+                animator.SetBool("GroggyBool", false);
+
                 // 현재 강인도를 최대로 한다
                 this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;
 
-                // 현재 상태를 기본으로 갱신한다
-                this.CurrentState = CharacterState.Idle;                                
+
             }
-            
+            // 현재 상태가 그로기가 아니라면
+            else
+            { 
+                // 스킬 쿨타임이 2이상 이면
+                if (skill_cool >= 2)
+                {
+                    // 스킬을 준비하는 함수를 실행한다
+                    PrepareSkill();
+                }
+                // 스킬 쿨타임이 2미만 이라면
+                else if (skill_cool < 2)
+                {
+                    // 공격을 준비하는 함수를 실행한다
+                    PrepareAttack();
+                }
+            }
+
+        }
+
+        IEnumerator Groggy_Idle()
+        {
+
+            // 그로기 타임라인을 정지시킨뒤 재생을 시킨다
+            Groggy_anim.Stop();
+            Groggy_anim.Play();
+
+            // 그로기 타임라인이 실행중일때
+            while (Groggy_anim.state == PlayState.Playing)
+            { 
+                // 매 프래임 대기
+                yield return null;
+            }
+
+            Debug.Log("코루틴 실행");
+
+            // 그로기 타임라인을 끝까지 진행시킨다
+            Groggy_anim.time = Groggy_anim.duration;
+            // 타임라인을 현재 시간에 맞게 상태를 업데이트
+            Groggy_anim.Evaluate();
+
+            // 그로기 상태 진입으로 절반으로 내렸던 스피드와 방어력을 원래대로 돌린다
+            Data.stats.Speed = (Data.stats.Speed) * 2;
+            Data.stats.Defense = (Data.stats.Defense) * 2;
+                        
             // 스킬 쿨타임이 2이상 이면
             if (skill_cool >= 2)
             {
@@ -172,7 +216,6 @@ namespace TurnBased.Entities.Battle
                 // 공격을 준비하는 함수를 실행한다
                 PrepareAttack();
             }
-
         }
 
         #region 행동하는 함수 (스킬, 공격, 궁극기, 엑스트라 어택)
@@ -187,7 +230,7 @@ namespace TurnBased.Entities.Battle
             Debug.Log(this.name + "공격");
 
             // 에너미가 플레이어 앞에 오도록 한다
-            meshParent.transform.position = target.gameObject.transform.position - new Vector3(8.47f, 0f);
+            animator.gameObject.transform.position = target.transform.position - new Vector3(8.47f, 0f);
 
             // 스킬 공격 대미지 계수
             Damage_factor = 1.5f;
@@ -212,7 +255,7 @@ namespace TurnBased.Entities.Battle
             Debug.Log( this.name + " 공격!");
             
             // 에니메이터인 몬스터가 에너미가 플레이어 앞에 오도록 한다            
-            animator.gameObject.transform.position = targetPosition.transform.position - new Vector3(8.47f, 0f);
+            animator.gameObject.transform.position = target.transform.position - new Vector3(8.47f, 0f);
 
             // 일반 공격 대미지 계수
             // (나중에 버프라던가 디버프가 생기면 이곳을 더하거나 빼는 방식도 생각해보자)
@@ -253,8 +296,6 @@ namespace TurnBased.Entities.Battle
 
                 // 생존해 있는 플레이어를 가져온다
                 target = TargetManager.instance.SetPlayerTarget();
-
-                targetPosition = target.gameObject;
 
                 // 공격하는 함수
                 DoAttack();
@@ -335,8 +376,9 @@ namespace TurnBased.Entities.Battle
             Debug.Log("그로기 상태 진입");
 
             // 그로기 애니메이션 트리거를 켠다
-            animator.SetTrigger("Groggy");
-            
+            //animator.SetTrigger("Groggy");
+            animator.SetBool("GroggyBool", true);
+
             AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
             Debug.Log("현재 애니메이션 상태 : " + state.fullPathHash + " , 이름 : " + state.IsName("Groggy"));
             Debug.Log("캐릭터의 현재 상태 : " + this.CurrentState);

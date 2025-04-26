@@ -326,6 +326,9 @@ namespace TurnBased.Battle {
                     // 에너미는 최종적으로 받는 데미지를 모두 받는다.
                     Data.stats.CurrentHP -= result.FinalDamage;
 
+                    // 그로기 상태이니 그로기 상태를 계속한다
+                    CurrentState = CharacterState.Groggy;
+
                     // 채력이 만약 0이하가 되었다면
                     if (Data.stats.CurrentHP <= 0) {
                         // 죽음을 다룰 함수를 실행한다
