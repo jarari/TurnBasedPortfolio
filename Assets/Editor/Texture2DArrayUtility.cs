@@ -13,7 +13,7 @@ public class Texture2DArrayUtility {
 
         int w = sources[0].width, h = sources[0].height;
         var fmt = sources[0].format;
-        var arr = new Texture2DArray(w, h, sources.Length, fmt, true);
+        var arr = new Texture2DArray(w, h, sources.Length, fmt, false);
 
         // copy each slice
         for (int i = 0; i < sources.Length; i++) {
