@@ -85,7 +85,7 @@ namespace TurnBased.Entities.Battle
             // 타임라인에서 사운드 플레이 시그널을 받게 된다면 실행
             if (animEvent == "PlaySound_1")
             {
-                // 사운드 메니저에서 등록해 놓은 사운드를 실행한다
+                // 사운드 메니저에 등록 해놓은 사운드를 실행한다
                 SoundManager.instance.PlayVOSound(this, "Enemy_Mutant_Normal_Attack");
             }            
             if (animEvent == "PlaySound_2")

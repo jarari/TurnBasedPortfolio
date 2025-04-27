@@ -79,6 +79,26 @@ namespace TurnBased.Entities.Battle
                 // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
                 target.Damage(this, result);
             }
+
+            #region 사운드
+
+            // 타임라인에서 사운드 플레이 시그널을 받게 된다면 실행
+            if (animEvent == "PlaySound_1")
+            {
+                // 사운드 메니저에 등록 해놓은 사운드를 실행한다
+                SoundManager.instance.PlayVOSound(this, "Enemy_Machine_Normal_Attack");
+            }
+            if (animEvent == "PlaySound_2")
+            {
+                SoundManager.instance.PlayVOSound(this, "Enemy_Machine_Skill_Attack1");
+            }
+            if (animEvent == "PlaySound_3")
+            {
+                SoundManager.instance.PlayVOSound(this, "Enemy_Machine_Skill_Attack2");
+            }
+
+            #endregion
+
             // 타임라인에서 공격이 끝난 신호를 받게된다면 실행
             if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd")
             {
@@ -255,7 +275,7 @@ namespace TurnBased.Entities.Battle
 
             // 일반 공격 대미지 계수
             // (나중에 버프라던가 디버프가 생기면 이곳을 더하거나 빼는 방식도 생각해보자)
-            Damage_factor = 1.0f;
+            Damage_factor = 0.5f;
 
             // 일반공격 애니메이션을 멈춘뒤
             normalAttack.Stop();
