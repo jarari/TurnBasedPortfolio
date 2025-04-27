@@ -5,6 +5,8 @@ using TurnBased.Data;
 using UnityEngine.Playables;
 using System.Collections;
 using Unity.Cinemachine;
+using UnityEngine.VFX;
+using UnityEngine.Rendering;
 
 namespace TurnBased.Entities.Battle {
     public class SoccerPlayer : Character {
@@ -16,6 +18,7 @@ namespace TurnBased.Entities.Battle {
         public GameObject skillBallLeft;
         public GameObject skillBallRight;
         public GameObject ultGoalPost;
+        public GameObject hitEffectPrefab;
         [Header("Components")]
         public Animator animator;
 
@@ -38,6 +41,15 @@ namespace TurnBased.Entities.Battle {
                 foreach (var t in targets) {
                     DamageResult result = CombatManager.CalculateDamage(c, t, attackMult);
                     t.Damage(c, result);
+                    if (_lastAttack != CharacterState.CastUltAttack) {
+                        var go = Instantiate(hitEffectPrefab, t.transform.position + Vector3.up * 1.2f, Quaternion.identity);
+                        go.GetComponent<ParticleSystem>().Play();
+                        Destroy(go, 3f);
+                    }
+                }
+
+                if (_lastAttack != CharacterState.CastUltAttack) {
+                    SoundManager.instance.Play2DSound("SoccerExplosion");
                 }
             }
         }
@@ -155,6 +167,16 @@ namespace TurnBased.Entities.Battle {
             Debug.Log("Prepare Ult Skill");
             animator.SetInteger("State", 2);
             TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
+        }
+
+        public override void Damage(Character attacker, DamageResult result) {
+            base.Damage(attacker, result);
+            animator.SetTrigger("Hit");
+        }
+
+        public override void Dead() {
+            base.Dead();
+            animator.SetTrigger("Die");
         }
 
         public override void ProcessCamChanged() {
