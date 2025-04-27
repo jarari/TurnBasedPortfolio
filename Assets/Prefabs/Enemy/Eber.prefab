@@ -29721,7 +29721,7 @@ GameObject:
   - component: {fileID: 5693887758866864528}
   - component: {fileID: 6586239436424215052}
   m_Layer: 0
-  m_Name: E_NormalCam
+  m_Name: E_Normal_Brain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55695,7 +55695,7 @@ GameObject:
   - component: {fileID: 6317039257594518678}
   - component: {fileID: 8533041894268920349}
   m_Layer: 0
-  m_Name: E_SkillCam
+  m_Name: E_Skill_Brain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

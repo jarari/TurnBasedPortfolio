@@ -348,5 +348,23 @@ namespace TurnBased.Battle.Managers {
             return player_target;
         }
 
+        /// <summary>
+        /// 모든 플레이어를 타겟으로 하는 함수
+        /// </summary>
+        /// <returns></returns>
+        public List<Character> SetMPlayerTarget()
+        {
+            // 살아있는 플레이어 리스트를 가져오고
+            List<Character> player_list = CharacterManager.instance.GetAllyCharacters();
+            // 만약 그런 플레이어가 없다면
+            if (player_list == null || player_list.Count == 0)
+            {
+                // null을 반환 한다
+                return null;
+            }
+            // 플레이어 리스트를 반환한다
+            return player_list;
+        }
+
     }
 }

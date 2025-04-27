@@ -374,16 +374,6 @@ namespace TurnBased.Entities.Battle
         }
 
         /// <summary>
-        /// 그로기 준비함수
-        /// </summary>
-        public override void PrepareGroggy()
-        {
-            base.PrepareGroggy();
-
-        }
-
-
-        /// <summary>
         /// 그로기 함수
         /// </summary>
         public override void Groggy()
@@ -393,11 +383,8 @@ namespace TurnBased.Entities.Battle
             Debug.Log("그로기 상태 진입");
 
             // 그로기 애니메이션 트리거를 켠다
-            //animator.SetTrigger("Groggy");
             animator.SetBool("GroggyBool", true);
 
-            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
-            Debug.Log("현재 애니메이션 상태 : " + state.fullPathHash + " , 이름 : " + state.IsName("Groggy"));
             Debug.Log("캐릭터의 현재 상태 : " + this.CurrentState);
 
             // 현재 스피드와 방어력을 절반으로 한다
