@@ -11,27 +11,26 @@ namespace TurnBased.Data {
 
     [System.Serializable]
     public struct BaseStats {
-        public float CurrentHP { get; set; }
+        /// <summary>
+        /// 최대 체력
+        /// </summary>
         [field: SerializeField]
         public float MaxHP { get; set; }
-        /// <summary>
-        /// 현재 강인도
-        /// </summary>
-        public float CurrentToughness { get; set; }
         /// <summary>
         /// 최대 강인도
         /// </summary>
         [field: SerializeField]
         public float MaxToughness { get; set; }
         /// <summary>
-        /// 현재 궁극기 포인트
-        /// </summary>
-        public float CurrentUltPts { get; set; }
-        /// <summary>
         /// 궁극기 발동 가능 포인트
         /// </summary>
         [field: SerializeField]
         public float UseUltThreshold { get; set; }
+        /// <summary>
+        /// 궁극기 포인트 최대량
+        /// </summary>
+        [field: SerializeField]
+        public float MaxUltPts { get; set; }
         /// <summary>
         /// 공격력
         /// </summary>

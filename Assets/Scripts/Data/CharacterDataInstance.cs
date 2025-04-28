@@ -62,6 +62,7 @@ namespace TurnBased.Data {
         public Stat Defense { get; }
         public Stat Speed { get; }
         public float UltThreshold { get; }
+        public float MaxUltPts { get; }
         public ElementType ElementType { get; }
         public ElementType Weakness { get; }
         public CharacterTeam Team { get; }
@@ -75,6 +76,7 @@ namespace TurnBased.Data {
             Defense = new Stat(data.stats.Defense);
             Speed = new Stat(data.stats.Speed);
             UltThreshold = data.stats.UseUltThreshold;
+            MaxUltPts = data.stats.MaxUltPts;
             ElementType = data.stats.ElementType;
             Weakness = data.stats.Weakness;
             Team = data.team;
