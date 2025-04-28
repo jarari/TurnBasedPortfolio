@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TurnBased.Data;
-using static UnityEngine.EventSystems.EventTrigger;
-using NUnit.Framework;
 
 namespace TurnBased.Battle.Managers {
     /// <summary>

@@ -3,10 +3,6 @@ using TurnBased.Battle;
 using TurnBased.Battle.Managers;
 using TurnBased.Data;
 using UnityEngine.Playables;
-using System.Collections;
-using Unity.Cinemachine;
-using UnityEngine.VFX;
-using UnityEngine.Rendering;
 
 namespace TurnBased.Entities.Battle {
     public class SoccerPlayer : Character {
