@@ -16,11 +16,14 @@ namespace TurnBased.Battle {
 
         private void Awake() {
             _owner = GetComponent<Character>();
+        }
+
+        private void Start() {
             TurnManager.instance.OnBeforeTurnStart += HandleBeforeTurnStart;
             TurnManager.instance.OnTurnEnd += HandleTurnEnd;
         }
 
-        void OnDestroy() {
+        private void OnDestroy() {
             TurnManager.instance.OnBeforeTurnStart -= HandleBeforeTurnStart;
             TurnManager.instance.OnTurnEnd -= HandleTurnEnd;
         }
