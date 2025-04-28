@@ -134,6 +134,7 @@ namespace TurnBased.Battle.Managers {
                 first.Character.TakeUltTurn();
             }
             else if (first.Type == TurnType.ExtraAttack) {
+                first.Character.TakeExtraAttackTurn();
                 first.Character.DoExtraAttack(first.ExtraAttackTarget);
             }
         }
