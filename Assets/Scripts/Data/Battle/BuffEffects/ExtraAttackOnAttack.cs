@@ -14,7 +14,9 @@ namespace TurnBased.Battle.BuffEffects {
         }
 
         private void HandleOwnerAttack(Character attacker, Character victim, DamageResult result) {
-            TurnManager.instance.AddExtraAtackTurn(_caster, victim);
+            if (_owner != _caster) {
+                TurnManager.instance.AddExtraAtackTurn(_caster, victim);
+            }
         }
 
         public void OnRemove(Character caster, Character owner) {
