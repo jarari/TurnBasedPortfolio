@@ -200,6 +200,11 @@ namespace TurnBased.Battle.Managers {
             return predictedQueue;
         }
 
+        public List<Character> GetActionOrder()
+        {
+            return _turnQueue.Select(td => td.Character).ToList(); // 행동 서열을 리스트로 반환
+        }
+
         public void PrintTurnQueue() {
             Debug.Log("=== Turn Queue ===");
             foreach (var td in _turnQueue) {

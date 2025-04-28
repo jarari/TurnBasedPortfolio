@@ -3340,7 +3340,7 @@ GameObject:
   - component: {fileID: 267868117}
   - component: {fileID: 267868116}
   m_Layer: 0
-  m_Name: Enemy1
+  m_Name: CharacterE1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5672,7 +5672,7 @@ GameObject:
   - component: {fileID: 459370673}
   - component: {fileID: 459370672}
   m_Layer: 0
-  m_Name: Enemy4
+  m_Name: CharacterE4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7238,7 +7238,7 @@ GameObject:
   - component: {fileID: 538204623}
   - component: {fileID: 538204622}
   m_Layer: 0
-  m_Name: Enemy3
+  m_Name: CharacterE3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8511,7 +8511,7 @@ GameObject:
   - component: {fileID: 590639833}
   - component: {fileID: 590639832}
   m_Layer: 0
-  m_Name: Ally1
+  m_Name: Character1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8882,6 +8882,7 @@ GameObject:
   - component: {fileID: 616726810}
   - component: {fileID: 616726811}
   - component: {fileID: 616726812}
+  - component: {fileID: 616726814}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -8957,6 +8958,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1343516129}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &616726814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616726809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e39d8eda515b4bf469a07fecc30b4160, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionOrderUIObjects:
+  - {fileID: 590639830}
+  - {fileID: 1659629212}
+  - {fileID: 1605946595}
+  - {fileID: 267868114}
+  - {fileID: 1787951791}
+  - {fileID: 538204620}
+  - {fileID: 459370670}
+  - {fileID: 823578596}
 --- !u!1 &617746500
 GameObject:
   m_ObjectHideFlags: 0
@@ -12268,7 +12290,7 @@ GameObject:
   - component: {fileID: 823578599}
   - component: {fileID: 823578598}
   m_Layer: 0
-  m_Name: Enemy5
+  m_Name: CharacterE5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23682,7 +23704,7 @@ GameObject:
   - component: {fileID: 1605946598}
   - component: {fileID: 1605946597}
   m_Layer: 0
-  m_Name: Ally3
+  m_Name: Character3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24298,7 +24320,7 @@ GameObject:
   - component: {fileID: 1659629215}
   - component: {fileID: 1659629214}
   m_Layer: 0
-  m_Name: Ally2
+  m_Name: Colphne
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26065,7 +26087,7 @@ GameObject:
   - component: {fileID: 1787951794}
   - component: {fileID: 1787951793}
   m_Layer: 0
-  m_Name: Enemy2
+  m_Name: CharacterE2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
