@@ -88,7 +88,7 @@ namespace TurnBased.Data {
         }
 
         public void RemoveModifier(StatModifier mod) {
-            if (_modifiers.Remove(mod))
+            if (_modifiers.RemoveAll((sm) => sm == mod ) > 0)
                 RecalculateStat(mod.stat);
         }
 
