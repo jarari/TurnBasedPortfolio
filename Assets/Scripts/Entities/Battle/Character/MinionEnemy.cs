@@ -141,7 +141,7 @@ namespace TurnBased.Entities.Battle {
                 animator.SetTrigger("GroggyToIdle");
 
                 // 현재 강인도를 최대로 한다
-                this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;
+                this.Data.Toughness.Reset();
 
                 // 현재 상태를 기본으로 갱신한다
                 this.CurrentState = CharacterState.Idle;
@@ -215,9 +215,9 @@ namespace TurnBased.Entities.Battle {
         /// <summary>
         /// 엑스트라 어텍을 할때
         /// </summary>
-        public override void DoExtraAttack()
+        public override void DoExtraAttack(Character target)
         {
-            base.DoExtraAttack();
+            base.DoExtraAttack(target);
         }
 
         #endregion
@@ -281,7 +281,7 @@ namespace TurnBased.Entities.Battle {
             animator.SetTrigger("Damage");
 
             // 만약 채력이 0이하가 되었다면
-            if (Data.stats.CurrentHP <= 0)
+            if (Data.HP.Current <= 0)
             {
                 // 사망 에니메이션의 트리거를 켠다
                 animator.SetTrigger("Dead");
@@ -298,8 +298,8 @@ namespace TurnBased.Entities.Battle {
             animator.SetTrigger("Groggy");
 
             // 현재 스피드와 방어력을 절반으로 한다
-            Data.stats.Speed = (Data.stats.Speed) / 2;
-            Data.stats.Defense = (Data.stats.Defense) / 2;
+            //Data.Speed.Set((Data.Speed.Current) / 2);
+            //Data.Defense.Set((Data.Defense.Current) / 2);
         }
 
     }

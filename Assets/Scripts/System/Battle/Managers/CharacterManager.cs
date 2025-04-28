@@ -73,7 +73,7 @@ namespace TurnBased.Battle.Managers {
         }
 
         public void RemoveCharacter(Character c) {
-            if (c.Data.team == Data.CharacterTeam.Player) {
+            if (c.Data.Team == Data.CharacterTeam.Player) {
                 int idx = GetAllyIndex(c);
                 _allyIdxDict.Remove(c);
                 _idxAllyDict.Remove(idx);
@@ -103,7 +103,7 @@ namespace TurnBased.Battle.Managers {
         public List<Character> GetAllyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
-                if (!c.IsDead && c.Data.team == Data.CharacterTeam.Player) {
+                if (!c.IsDead && c.Data.Team == Data.CharacterTeam.Player) {
                     list.Add(c);
                 }
             }
@@ -113,7 +113,7 @@ namespace TurnBased.Battle.Managers {
         public List<Character> GetAllAllyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
-                if (c.Data.team == Data.CharacterTeam.Player) {
+                if (c.Data.Team == Data.CharacterTeam.Player) {
                     list.Add(c);
                 }
             }
@@ -123,7 +123,7 @@ namespace TurnBased.Battle.Managers {
         public List<Character> GetEnemyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
-                if (!c.IsDead && c.Data.team == Data.CharacterTeam.Enemy) {
+                if (!c.IsDead && c.Data.Team == Data.CharacterTeam.Enemy) {
                     list.Add(c);
                 }
             }
@@ -133,7 +133,7 @@ namespace TurnBased.Battle.Managers {
         public List<Character> GetAllEnemyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
-                if (c.Data.team == Data.CharacterTeam.Enemy) {
+                if (c.Data.Team == Data.CharacterTeam.Enemy) {
                     list.Add(c);
                 }
             }

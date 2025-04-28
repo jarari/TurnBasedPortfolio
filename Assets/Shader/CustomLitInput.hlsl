@@ -128,11 +128,7 @@ TEXTURE2D(_MetallicGlossMap);   SAMPLER(sampler_MetallicGlossMap);
 TEXTURE2D(_SpecGlossMap);       SAMPLER(sampler_SpecGlossMap);
 TEXTURE2D(_ClearCoatMap);       SAMPLER(sampler_ClearCoatMap);
 
-#ifdef _SPECULAR_SETUP
-    #define SAMPLE_METALLICSPECULAR(uv) SAMPLE_TEXTURE2D(_SpecGlossMap, sampler_SpecGlossMap, uv)
-#else
-    #define SAMPLE_METALLICSPECULAR(uv) SAMPLE_TEXTURE2D(_MetallicGlossMap, sampler_MetallicGlossMap, uv)
-#endif
+#define SAMPLE_METALLICSPECULAR(uv) SAMPLE_TEXTURE2D(_MetallicGlossMap, sampler_MetallicGlossMap, uv)
 
 half4 SampleMetallicSpecGloss(float2 uv, half albedoAlpha)
 {
@@ -146,17 +142,9 @@ half4 SampleMetallicSpecGloss(float2 uv, half albedoAlpha)
         specGloss.a *= _Smoothness;
     #endif
 #else // _METALLICSPECGLOSSMAP
-    #if _SPECULAR_SETUP
-        specGloss.rgb = _SpecColor.rgb;
-    #else
-        specGloss.rgb = _Metallic.rrr;
-    #endif
-
-    #ifdef _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-        specGloss.a = albedoAlpha * _Smoothness;
-    #else
-        specGloss.a = _Smoothness;
-    #endif
+    specGloss.g = _Metallic;
+    specGloss.r = 1 - _Smoothness;
+    specGloss.ba = 1;
 #endif
 
     return specGloss;
@@ -258,13 +246,21 @@ inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfa
     outSurfaceData.albedo = albedoAlpha.rgb * _BaseColor.rgb;
     outSurfaceData.albedo = AlphaModulate(outSurfaceData.albedo, outSurfaceData.alpha);
     
-    outSurfaceData.metallic = specGloss.g;
+    outSurfaceData.metallic = specGloss.g * _Metallic;
     outSurfaceData.specular = half3(0.0, 0.0, 0.0);
 
+#ifdef _RMO_SETUP
     outSurfaceData.smoothness = (half(1.0) - specGloss.r) * _Smoothness;
+#else
+    outSurfaceData.smoothness = specGloss.r * _Smoothness;
+#endif
     outSurfaceData.normalTS = SampleNormal(uv, TEXTURE2D_ARGS(_BumpMap, sampler_BumpMap), _BumpScale);
     outSurfaceData.occlusion = specGloss.b * _OcclusionStrength;
+#if defined(_EMISSION)
+    outSurfaceData.emission = specGloss.a * _EmissionColor.rgb;
+#else
     outSurfaceData.emission = SampleEmission(uv, _EmissionColor.rgb, TEXTURE2D_ARGS(_EmissionMap, sampler_EmissionMap));
+#endif
 
 #if defined(_CLEARCOAT) || defined(_CLEARCOATMAP)
     half2 clearCoat = SampleClearCoat(uv);

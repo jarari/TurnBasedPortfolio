@@ -26,8 +26,9 @@ namespace TurnBased.Battle {
         /// ео е╦ют
         /// </summary>
         public TurnType Type { get; private set; }
+        public Character ExtraAttackTarget { get; private set; }
 
-        public TurnData(Character character, TurnType type) {
+        public TurnData(Character character, TurnType type, Character extraAttackTarget = null) {
             Character = character;
             Type = type;
             if (type == TurnType.Normal) {
@@ -37,6 +38,7 @@ namespace TurnBased.Battle {
                 CurrentAV = AVCap;
                 RemainingTimeToAct = 0f;
             }
+            ExtraAttackTarget = extraAttackTarget;
         }
 
         public TurnData(TurnData clone) {
@@ -50,8 +52,8 @@ namespace TurnBased.Battle {
         /// </summary>
         /// <param name="deltaTime"></param>
         public void AdvanceTurn(float deltaTime) {
-            CurrentAV = Mathf.Min(CurrentAV + deltaTime * Character.Data.stats.Speed, AVCap);
-            RemainingTimeToAct = (AVCap - CurrentAV) / Character.Data.stats.Speed;
+            CurrentAV = Mathf.Min(CurrentAV + deltaTime * Character.Data.Speed.Current, AVCap);
+            RemainingTimeToAct = (AVCap - CurrentAV) / Character.Data.Speed.Current;
         }
 
         /// <summary>
@@ -60,7 +62,7 @@ namespace TurnBased.Battle {
         /// <param name="time"></param>
         public void ModRemainingTime(float time) {
             RemainingTimeToAct = time;
-            CurrentAV = AVCap - RemainingTimeToAct * Character.Data.stats.Speed;
+            CurrentAV = AVCap - RemainingTimeToAct * Character.Data.Speed.Current;
         }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace TurnBased.Battle {
         /// </summary>
         public void ResetAV() {
             CurrentAV = 0f;
-            RemainingTimeToAct = AVCap / Character.Data.stats.Speed;
+            RemainingTimeToAct = AVCap / Character.Data.Speed.Current;
         }
     }
 

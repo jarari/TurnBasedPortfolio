@@ -29,8 +29,8 @@ namespace TurnBased.Entities.Battle {
             StartCoroutine(TestCoroutine());
             Debug.Log("Enemy Attack");
         }
-        public override void DoExtraAttack() {
-            base.DoExtraAttack();
+        public override void DoExtraAttack(Character target) {
+            base.DoExtraAttack(target);
         }
         public override void PrepareAttack() {
             base.PrepareAttack();

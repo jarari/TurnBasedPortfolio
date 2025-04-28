@@ -12161,7 +12161,7 @@ Camera:
   m_Depth: 2
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 319
+    m_Bits: 375
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -13027,6 +13027,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7362921295992987469}
   - component: {fileID: 169077802815142213}
+  - component: {fileID: 2336987977437675919}
   - component: {fileID: -3556457133477057203}
   m_Layer: 0
   m_Name: SoccerPlayer
@@ -13072,7 +13073,20 @@ MonoBehaviour:
   skillBallLeft: {fileID: 906399814310842941}
   skillBallRight: {fileID: 4979568601734901305}
   ultGoalPost: {fileID: 5580947448523572468}
+  hitEffectPrefab: {fileID: 1828176872806910, guid: b9ca2ad6c95406245a4ac4cac4481747, type: 3}
   animator: {fileID: 8934103034842399115}
+--- !u!114 &2336987977437675919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5650078710049367956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc28efba826577a49b92e35390fd8041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!82 &-3556457133477057203
 AudioSource:
   m_ObjectHideFlags: 0
@@ -23029,6 +23043,7 @@ GameObject:
   - component: {fileID: 4050872825711133538}
   - component: {fileID: 8934103034842399115}
   - component: {fileID: 1624851598752542923}
+  - component: {fileID: 4115785432313232854}
   m_Layer: 0
   m_Name: Ch08_nonPBR
   m_TagString: Untagged
@@ -23103,6 +23118,18 @@ MonoBehaviour:
   - m_Rig: {fileID: 2027543345074167579}
     m_Active: 1
   m_Effectors: []
+--- !u!114 &4115785432313232854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6106359437261809941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dee05c27b913e641aae5618d4a337fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6237310288993032541
 GameObject:
   m_ObjectHideFlags: 0
@@ -33945,8 +33972,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8626691821283560764}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0044577676, y: -0.06822693, z: -0.0003824222, w: 0.9976598}
-  m_LocalPosition: {x: 1.0331348, y: 1.3918407, z: 3.0503283}
+  m_LocalRotation: {x: -0.0052976445, y: -0.066974245, z: -0.00017640794, w: 0.9977406}
+  m_LocalPosition: {x: 1.0321859, y: 1.3898958, z: 3.042592}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -33985,7 +34012,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.084206
+  field of view: 60.318615
   orthographic: 0
   orthographic size: 5
   m_Depth: 2

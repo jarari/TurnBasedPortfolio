@@ -15,7 +15,8 @@ MonoBehaviour:
   stats:
     <MaxHP>k__BackingField: 900
     <MaxToughness>k__BackingField: 0
-    <UseUltThreshold>k__BackingField: 0
+    <UseUltThreshold>k__BackingField: 100
+    <MaxUltPts>k__BackingField: 100
     <Attack>k__BackingField: 75
     <Defense>k__BackingField: 0
     <Speed>k__BackingField: 134
