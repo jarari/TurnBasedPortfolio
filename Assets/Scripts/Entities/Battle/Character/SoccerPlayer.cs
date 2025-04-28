@@ -46,6 +46,7 @@ namespace TurnBased.Entities.Battle {
                         go.GetComponent<ParticleSystem>().Play();
                         Destroy(go, 3f);
                     }
+                    OnInflictedDamage?.Invoke(this, t, result);
                 }
 
                 if (_lastAttack != CharacterState.CastUltAttack) {
@@ -139,8 +140,8 @@ namespace TurnBased.Entities.Battle {
             _lastAttack = CharacterState.DoAttack;
         }
 
-        public override void DoExtraAttack() {
-            base.DoExtraAttack();
+        public override void DoExtraAttack(Character target) {
+            base.DoExtraAttack(target);
         }
 
         public override void PrepareAttack() {

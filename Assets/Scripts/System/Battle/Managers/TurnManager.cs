@@ -25,10 +25,13 @@ namespace TurnBased.Battle.Managers {
         /// 라운드 변경 시 이벤트
         /// </summary>
         public Action OnRoundChanged;
+        public Action<Character, TurnType> OnBeforeTurnStart;
+        public Action<Character, TurnType> OnTurnEnd;
 
         private float _roundRemaining;
 
         private List<TurnData> _turnQueue = new List<TurnData>();
+        private TurnType _lastTurnType;
 
         private void Awake() {
             if (instance != null) {
@@ -82,8 +85,14 @@ namespace TurnBased.Battle.Managers {
         /// 추가 공격 턴 추가 (추가 공격 발동시 호출)
         /// </summary>
         /// <param name="character"></param>
-        public void AddExtraAtackTurn(Character character) {
-            _turnQueue.Insert(0, new TurnData(character, TurnType.ExtraAttack));
+        public void AddExtraAtackTurn(Character character, Character target) {
+            int idx = 0;
+            IEnumerator<TurnData> enumerator = _turnQueue.GetEnumerator();
+            while (enumerator.MoveNext() && enumerator.Current.Type != TurnType.Normal) {
+                idx++;
+                enumerator.MoveNext();
+            }
+            _turnQueue.Insert(idx, new TurnData(character, TurnType.ExtraAttack, target));
         }
 
         public void InitializeTurnQueue() {
@@ -99,6 +108,8 @@ namespace TurnBased.Battle.Managers {
             var first = _turnQueue.First();
             _turnQueue.Remove(first);
             CurrentCharacter = first.Character;
+            _lastTurnType = first.Type;
+            OnBeforeTurnStart?.Invoke(first.Character, first.Type);
             if (first.Type == TurnType.Normal) {
                 _roundRemaining = _roundRemaining - first.RemainingTimeToAct;
                 foreach (var turnData in _turnQueue) {
@@ -123,7 +134,8 @@ namespace TurnBased.Battle.Managers {
                 first.Character.TakeUltTurn();
             }
             else if (first.Type == TurnType.ExtraAttack) {
-                first.Character.DoExtraAttack();
+                first.Character.TakeExtraAttackTurn();
+                first.Character.DoExtraAttack(first.ExtraAttackTarget);
             }
         }
 
@@ -168,6 +180,7 @@ namespace TurnBased.Battle.Managers {
                     OnRoundChanged?.Invoke();
                 }
             }
+            OnTurnEnd?.Invoke(CurrentCharacter, _lastTurnType);
             StartCoroutine(StartNextTurnDelayed());
         }
 

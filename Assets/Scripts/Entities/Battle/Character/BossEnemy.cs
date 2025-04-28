@@ -115,12 +115,12 @@ namespace TurnBased.Entities.Battle {
        
             // 불값을 이용해 한번만 호출 되도록한다
             // 에너미의 현제 채력이 전채 채력의 절반 이하가 되고 광폭화 불값이 false일때
-            if (Data.stats.CurrentHP <= (Data.stats.MaxHP / 2) && ram == false)
+            if (Data.HP.Current <= (Data.HP.CurrentMax / 2) && ram == false)
             {
                 // 캐릭터의 상태를 광폭화 로 갱신한다
                 e_State = EnemyState.Rampage;
                 // 광폭화시 공격력을 1.5배한다
-                Data.stats.Attack += (Data.stats.Attack / 2);
+                //Data.Attack.Modify(Data.Attack.Current / 2);
 
                 // 불값을 변경한다
                 ram = true;
@@ -214,9 +214,9 @@ namespace TurnBased.Entities.Battle {
         }
 
         // 엑스트라 어텍을 할때
-        public override void DoExtraAttack()
+        public override void DoExtraAttack(Character target)
         {
-            base.DoExtraAttack();
+            base.DoExtraAttack(target);
         }
 
         #endregion
@@ -263,8 +263,8 @@ namespace TurnBased.Entities.Battle {
         {
             base.Groggy();
             // 현재 스피드와 방어력을 절반으로 한다
-            Data.stats.Speed = (Data.stats.Speed) / 2;
-            Data.stats.Defense = (Data.stats.Defense) / 2;
+            //Data.Speed.Set((Data.Speed.Current) / 2);
+            //Data.Defense.Set((Data.Defense.Current) / 2);
         }
 
         

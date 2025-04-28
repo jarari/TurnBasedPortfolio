@@ -157,7 +157,7 @@ namespace TurnBased.Entities.Battle
                 animator.SetBool("GroggyBool", false);
 
                 // 현재 강인도를 최대로 한다
-                this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;
+                this.Data.Toughness.Reset();
 
                 // 현재 상태를 기본으로 갱신한다
                 this.CurrentState = CharacterState.Idle;                                
@@ -234,9 +234,9 @@ namespace TurnBased.Entities.Battle
         /// <summary>
         /// 엑스트라 어텍을 할때
         /// </summary>
-        public override void DoExtraAttack()
+        public override void DoExtraAttack(Character target)
         {
-            base.DoExtraAttack();
+            base.DoExtraAttack(target);
         }
 
         #endregion
@@ -349,8 +349,8 @@ namespace TurnBased.Entities.Battle
             Debug.Log("캐릭터의 현재 상태 : " + this.CurrentState);
 
             // 현재 스피드와 방어력을 절반으로 한다
-            Data.stats.Speed = (Data.stats.Speed) / 2;
-            Data.stats.Defense = (Data.stats.Defense) / 2;
+            //Data.Speed.Set((Data.Speed.Current) / 2);
+            //Data.Defense.Set((Data.Defense.Current) / 2);
         }
 
         /// <summary>

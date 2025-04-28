@@ -13027,6 +13027,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7362921295992987469}
   - component: {fileID: 169077802815142213}
+  - component: {fileID: 2336987977437675919}
   - component: {fileID: -3556457133477057203}
   m_Layer: 0
   m_Name: SoccerPlayer
@@ -13074,6 +13075,18 @@ MonoBehaviour:
   ultGoalPost: {fileID: 5580947448523572468}
   hitEffectPrefab: {fileID: 1828176872806910, guid: b9ca2ad6c95406245a4ac4cac4481747, type: 3}
   animator: {fileID: 8934103034842399115}
+--- !u!114 &2336987977437675919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5650078710049367956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc28efba826577a49b92e35390fd8041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!82 &-3556457133477057203
 AudioSource:
   m_ObjectHideFlags: 0
