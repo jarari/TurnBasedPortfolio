@@ -19,6 +19,7 @@ namespace TurnBased.Entities.Battle
         public PlayableDirector normalAttack;    // 일반 공격 애니메이션
         public PlayableDirector skillAttack;        // 스킬 공격 애니메이션       
         public PlayableDirector Groggy_anim;    // 그로기 애니메이션
+        public PlayableDirector Rampage_anim;   // 광폭화 애니메이션
 
         [Header("Components")]
         public Animator animator;   // 캐릭터의 애니메이터
@@ -50,6 +51,9 @@ namespace TurnBased.Entities.Battle
 
         // 보스의 광폭화 상태를 나타내는 불값
         bool ram = false;
+
+        // 광폭화용 파티클 오브젝트를 담을 변수
+        public GameObject ramObj;
 
         #endregion
 
@@ -127,11 +131,7 @@ namespace TurnBased.Entities.Battle
             }
             if (animEvent == "PlaySound_3")
             {
-                SoundManager.instance.PlayVOSound(this, "Enemy_EberBird_Skill_Attack2");
-            }
-            if (animEvent == "PlaySound_4")
-            {
-                SoundManager.instance.PlayVOSound(this, "Enemy_EberBird_Skill_Attack3");
+                SoundManager.instance.PlayVOSound(this, "Enemy_EberBird_Rampage");
             }
 
             #endregion
@@ -186,6 +186,8 @@ namespace TurnBased.Entities.Battle
             // 보스의 상태를 노말로 한다
             b_State = BossState.Normal;
 
+            // 광폭화 파티클을 비활성화 한다
+            ramObj.SetActive(false);
         }
 
         /// <summary>
@@ -439,6 +441,9 @@ namespace TurnBased.Entities.Battle
                     // 현재 상태가 그로기 상태라면
                     if (this.CurrentState == CharacterState.Groggy)
                     {
+                        // 광폭화 애니메이션을 재생할 코루틴을 실행
+                        StartCoroutine(StartRam());
+
                         // 에너미의 현재 상태를 기본으로 한다
                         this.CurrentState = CharacterState.Idle;
 
@@ -457,7 +462,31 @@ namespace TurnBased.Entities.Battle
             }
             Debug.Log("데미지를 입었다");
         }
-               
+
+        // 광폭화 코루틴
+        IEnumerator StartRam()
+        {
+            // 만약을 위해 광폭화 애니메이션을 중지한다
+            Rampage_anim.Stop();
+            Rampage_anim.Play();
+
+            // 광폭화 타임라인이 실행중일때
+            while (Rampage_anim.state == PlayState.Playing)
+            { 
+                // 매 프래임 대기
+                yield return null;
+            }
+
+            Debug.Log("광폭화 코루틴 실행");
+
+            // 광폭화 타임라인을 끝까지 진행시킨다
+            Rampage_anim.time = Rampage_anim.duration;
+            // 타임라인을 현재 시간에 맞게 상태를 업데이트
+            Rampage_anim.Evaluate();
+
+            // 광폭화용 파티클을 활성화 한다
+            ramObj.SetActive(true); 
+        }
 
         /// <summary>
         /// 그로기 함수
@@ -486,6 +515,9 @@ namespace TurnBased.Entities.Battle
             base.Dead();
 
             Debug.Log("데드 진입 애니메이션 실행");
+
+            // 광폭화용 파티클을 비활성화 한다
+            ramObj.SetActive(false);
 
             // 데드 애니메이션의 트리거를 켠다
             animator.SetTrigger("Dead");
