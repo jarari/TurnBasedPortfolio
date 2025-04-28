@@ -1965,6 +1965,7 @@ GameObject:
   - component: {fileID: 7930331817670987524}
   - component: {fileID: 6087286383735802851}
   - component: {fileID: 5450080849823943735}
+  - component: {fileID: 5936475838396504459}
   m_Layer: 0
   m_Name: Y_Bot
   m_TagString: Untagged
@@ -2011,6 +2012,7 @@ MonoBehaviour:
   skillAttack: {fileID: 1677092721901557790}
   Groggy_anim: {fileID: 7269514284098113365}
   animator: {fileID: 7719417677941967950}
+  Debuff: {fileID: 0}
   target: {fileID: 0}
   Damage_factor: 0
   skill_cool: 0
@@ -2111,6 +2113,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5936475838396504459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3459734733514873974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc28efba826577a49b92e35390fd8041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3491034259285135946
 GameObject:
   m_ObjectHideFlags: 0

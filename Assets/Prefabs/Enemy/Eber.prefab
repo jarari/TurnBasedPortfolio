@@ -50754,6 +50754,7 @@ GameObject:
   - component: {fileID: 1066217163019577714}
   - component: {fileID: 3357352257298804532}
   - component: {fileID: 6560273212750809296}
+  - component: {fileID: 8549851086835117376}
   m_Layer: 0
   m_Name: Eber
   m_TagString: Untagged
@@ -50800,6 +50801,7 @@ MonoBehaviour:
   skillAttack: {fileID: 8599737403148063241}
   Groggy_anim: {fileID: 3773982512947758910}
   animator: {fileID: 5385281271499008004}
+  Debuff: {fileID: 0}
   target: {fileID: 0}
   Damage_factor: 0
   skill_cool: 0
@@ -50900,6 +50902,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8549851086835117376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5343080657001798120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc28efba826577a49b92e35390fd8041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5374848611153392094
 GameObject:
   m_ObjectHideFlags: 0

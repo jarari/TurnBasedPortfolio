@@ -2860,6 +2860,7 @@ GameObject:
   - component: {fileID: 50604886615698868}
   - component: {fileID: 1240602361996301452}
   - component: {fileID: 7540967982965205952}
+  - component: {fileID: 6184867694714430361}
   m_Layer: 0
   m_Name: Alien_Soldier
   m_TagString: Untagged
@@ -2906,6 +2907,7 @@ MonoBehaviour:
   skillAttack: {fileID: 6272895803306398692}
   Groggy_anim: {fileID: 6115879666336231422}
   animator: {fileID: 7273819714409786475}
+  Debuff: {fileID: 0}
   target: {fileID: 0}
   Damage_factor: 0
   skill_cool: 0
@@ -3006,6 +3008,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6184867694714430361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6179733450111935287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc28efba826577a49b92e35390fd8041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6360680413510695493
 GameObject:
   m_ObjectHideFlags: 0
