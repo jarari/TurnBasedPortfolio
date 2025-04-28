@@ -33,7 +33,7 @@ namespace TurnBased.Battle {
         private Context _delayedContext;
 
         protected override CinemachineVirtualCameraBase ChooseCurrentCamera(Vector3 worldUp, float deltaTime) {
-            if (Initialized && _character.Data.team == CharacterTeam.Player) {
+            if (Initialized && _character.Data.Team == CharacterTeam.Player) {
                 switch (_currentContext) {
                     case Context.WaitingTurn:
                     default:

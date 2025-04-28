@@ -264,7 +264,7 @@ namespace TurnBased.Battle.Managers {
         }
 
         private SearchResult GetCharacterOn_Internal(Character c, SearchDirection dir) {
-            if (c.Data.team == CharacterTeam.Enemy) {
+            if (c.Data.Team == CharacterTeam.Enemy) {
                 int d = dir == SearchDirection.Left ? -1 : 1;
                 int idxToTry = CharacterManager.instance.GetEnemyIndex(c) + d;
                 int enemyCount = CharacterManager.instance.GetMaxEnemyCount();

@@ -1,9 +1,16 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TurnBased.Data {
+    public enum StatType {
+        HP,
+        Toughness,
+        Attack,
+        Defense,
+        Speed
+    }
+
     [System.Serializable]
-    public struct CharacterStats {
+    public struct BaseStats {
         public float CurrentHP { get; set; }
         [field: SerializeField]
         public float MaxHP { get; set; }
@@ -59,7 +66,7 @@ namespace TurnBased.Data {
 
     [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/CharacterData", order = 1)]
     public class CharacterData : ScriptableObject {
-        public CharacterStats stats;
+        public BaseStats stats;
         public CharacterTeam team;
     }
 }

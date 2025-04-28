@@ -14,7 +14,7 @@ namespace TurnBased.Battle.Managers {
 
         private bool CanCharacterTakeInput() {
             var currentCharacter = TurnManager.instance.CurrentCharacter;
-            return currentCharacter.WantCmd && currentCharacter.Data.team == Data.CharacterTeam.Player;
+            return currentCharacter.WantCmd && currentCharacter.Data.Team == Data.CharacterTeam.Player;
         }
 
         /// <summary>

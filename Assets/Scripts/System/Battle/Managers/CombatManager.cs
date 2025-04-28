@@ -22,10 +22,10 @@ namespace TurnBased.Battle.Managers {
         public static DamageResult CalculateDamage(Character attacker, Character defender, float attackMult = 1f)
         {
             // 때린 놈의 공격력을 가져온다
-            float normalAttack = attacker.Data.stats.Attack * attackMult;
+            float normalAttack = attacker.Data.Attack.Current * attackMult;
 
             // 맞은 놈의 방어력 만큼 때린 놈의 공격력을 내리고 그거와 0중 더 큰값을 반환한다
-            float afterDamage = Mathf.Max(0, normalAttack - defender.Data.stats.Defense);
+            float afterDamage = Mathf.Max(0, normalAttack - defender.Data.Defense.Current);
 
             // 최종적으로 받을 데미지를 가져온다
             float finalDamage = afterDamage;

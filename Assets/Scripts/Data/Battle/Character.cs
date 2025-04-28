@@ -46,7 +46,7 @@ namespace TurnBased.Battle {
         public Action<Character, Character, DamageResult> OnDamage;
         public Action<Character, Character, float> OnRestoreHealth;
 
-        public CharacterData Data { get; private set; }
+        public CharacterDataInstance Data { get; private set; }
 
         public CharacterState CurrentState { get; protected set; }
         public bool WantCmd { get; set; }
@@ -62,9 +62,7 @@ namespace TurnBased.Battle {
 
 
         protected virtual void Awake() {
-            Data = Instantiate(_baseData);
-            Data.stats.CurrentToughness = Data.stats.MaxToughness;
-            Data.stats.CurrentHP = Data.stats.MaxHP;
+            Data = new CharacterDataInstance(_baseData);
             VOAudioSource = GetComponent<AudioSource>();
             if (VOAudioSource == null) {
                 VOAudioSource = gameObject.AddComponent<AudioSource>();
@@ -80,7 +78,7 @@ namespace TurnBased.Battle {
         /// </summary>
         public virtual void TakeTurn() {
             WantCmd = true;
-            if (Data.team == CharacterTeam.Player)
+            if (Data.Team == CharacterTeam.Player)
             {
                 if (WantState == CharacterState.PrepareAttack)
                 {
@@ -294,29 +292,27 @@ namespace TurnBased.Battle {
             // 캐릭터의 현재 상태를 데미지로 처리
             CurrentState = CharacterState.Damage;
 
-            if (Data.stats.MaxToughness > 0) {
+            if (Data.Toughness.CurrentMax > 0) {
                 // 만약 강인도가 있다면
-                if (Data.stats.CurrentToughness > 0) {
+                if (Data.Toughness.Current > 0) {
 
                     // 채력을 최종적으로 받는 데미지의 반으로 받고
-                    Data.stats.CurrentHP -= (result.FinalDamage / 2);
+                    Data.HP.ModifyCurrent(-result.FinalDamage / 2);
 
                     // 플레이어가 약점 속성으로 때린다면
-                    if (CombatManager.CheckElementMatch(attacker.Data.stats.ElementType, Data.stats.Weakness)) {
+                    if (CombatManager.CheckElementMatch(attacker.Data.ElementType, Data.Weakness)) {
                         // 에너미의 강인도는 플레이어의 공격력만큼 깎인다
-                        Data.stats.CurrentToughness -= result.NormalAttack;
+                        Data.Toughness.ModifyCurrent(-result.NormalAttack);
 
                         // 강인도가 만약 0이하가 되었다면
-                        if (Data.stats.CurrentToughness <= 0) {
-                            // 현재 강인도를 0으로 만든다
-                            Data.stats.CurrentToughness = 0;
+                        if (Data.Toughness.Current <= 0) {
                             // 그로기를 다룰 함수를 실행한다
                             Groggy();
                         }
                     }
 
                     // 채력이 만약 0이하가 되었다면
-                    if (Data.stats.CurrentHP <= 0) {
+                    if (Data.HP.Current <= 0) {
                         // 죽음을 다룰 함수를 실행한다
                         Dead();
                     }
@@ -324,20 +320,30 @@ namespace TurnBased.Battle {
                 // 만약 강인도가 없다면
                 else {
                     // 에너미는 최종적으로 받는 데미지를 모두 받는다.
-                    Data.stats.CurrentHP -= result.FinalDamage;
+                    Data.HP.ModifyCurrent(-result.FinalDamage);
 
                     // 채력이 만약 0이하가 되었다면
-                    if (Data.stats.CurrentHP <= 0) {
+                    if (Data.HP.Current <= 0) {
                         // 죽음을 다룰 함수를 실행한다
                         Dead();
                     }
+                }
+            }
+            else {
+                // 캐릭터는 최종적으로 받는 데미지를 모두 받는다.
+                Data.HP.ModifyCurrent(-result.FinalDamage);
+
+                // 채력이 만약 0이하가 되었다면
+                if (Data.HP.Current <= 0) {
+                    // 죽음을 다룰 함수를 실행한다
+                    Dead();
                 }
             }
             OnDamage?.Invoke(this, attacker, result);
         }
 
         public virtual void RestoreHealth(Character healer, float value) {
-            Data.stats.CurrentHP = Mathf.Min(Data.stats.CurrentHP + value, Data.stats.MaxHP);
+            Data.HP.ModifyCurrent(value);
             OnRestoreHealth?.Invoke(this, healer, value);
         }
 

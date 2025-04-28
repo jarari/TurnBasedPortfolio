@@ -49,7 +49,7 @@ namespace TurnBased.Entities.Battle {
             }
             else if (animEvent == "Heal") {
                 if (payload == "Skill") {
-                    TargetManager.instance.Target.RestoreHealth(this, Data.stats.Attack);
+                    TargetManager.instance.Target.RestoreHealth(this, Data.Attack.Current);
                     var go = Instantiate(healEffectPrefab, TargetManager.instance.Target.transform.position, Quaternion.identity);
                     go.GetComponent<VisualEffect>().Play();
                     Destroy(go, 3f);
@@ -57,7 +57,7 @@ namespace TurnBased.Entities.Battle {
                 else if (payload == "Ult") {
                     var targets = TargetManager.instance.GetTargets();
                     foreach (var t in targets) {
-                        t.RestoreHealth(this, Data.stats.Attack * 4.2f);
+                        t.RestoreHealth(this, Data.Attack.Current * 4.2f);
                         var go = Instantiate(healEffectPrefab, t.transform.position, Quaternion.identity);
                         go.GetComponent<VisualEffect>().Play();
                         Destroy(go, 3f);
