@@ -26,8 +26,9 @@ namespace TurnBased.Battle {
         /// ео е╦ют
         /// </summary>
         public TurnType Type { get; private set; }
+        public Character ExtraAttackTarget { get; private set; }
 
-        public TurnData(Character character, TurnType type) {
+        public TurnData(Character character, TurnType type, Character extraAttackTarget = null) {
             Character = character;
             Type = type;
             if (type == TurnType.Normal) {
@@ -37,6 +38,7 @@ namespace TurnBased.Battle {
                 CurrentAV = AVCap;
                 RemainingTimeToAct = 0f;
             }
+            ExtraAttackTarget = extraAttackTarget;
         }
 
         public TurnData(TurnData clone) {
