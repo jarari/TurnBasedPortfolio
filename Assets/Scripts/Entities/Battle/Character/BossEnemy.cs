@@ -214,9 +214,9 @@ namespace TurnBased.Entities.Battle {
         }
 
         // 엑스트라 어텍을 할때
-        public override void DoExtraAttack()
+        public override void DoExtraAttack(Character target)
         {
-            base.DoExtraAttack();
+            base.DoExtraAttack(target);
         }
 
         #endregion

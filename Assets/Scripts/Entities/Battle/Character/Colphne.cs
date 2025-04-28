@@ -24,25 +24,39 @@ namespace TurnBased.Entities.Battle {
         public Transform ultAlly1Pos;
         public Transform ultAlly2Pos;
         public GameObject healEffectPrefab;
+        public BuffData healBuff;
         [Header("Components")]
         public Animator animator;
 
         private CharacterState _lastAttack;
         private List<Character> _ultTargets;
+        private bool _damageEventFired = false;
+        private Character _extraAttackTarget;
 
         private void OnAnimationEvent_Impl(Character c, string animEvent, string payload) {
             if (animEvent == "AttackEnd") {
+                _damageEventFired = false;
                 animator.SetInteger("State", 0);
                 EndTurn();
             }
             else if (animEvent == "WeaponFire") {
                 muzzleflash.Play();
                 impulseSource.GenerateImpulse();
-                var targets = TargetManager.instance.GetTargets();
-                foreach (var t in targets) {
-                    DamageResult result = CombatManager.CalculateDamage(c, t, 0.25f);
-                    t.Damage(c, result);
+                if (_lastAttack == CharacterState.DoExtraAttack) {
+                    DamageResult result = CombatManager.CalculateDamage(c, _extraAttackTarget, 0.25f);
+                    _extraAttackTarget.Damage(c, result);
                 }
+                else {
+                    var targets = TargetManager.instance.GetTargets();
+                    foreach (var t in targets) {
+                        DamageResult result = CombatManager.CalculateDamage(c, t, 0.25f);
+                        t.Damage(c, result);
+                        if (!_damageEventFired) {
+                            OnInflictedDamage?.Invoke(this, t, result);
+                        }
+                    }
+                }
+                _damageEventFired = true;
             }
             else if (animEvent == "MoveProjectile") {
                 healProjectileRoot.transform.position = TargetManager.instance.Target.transform.position;
@@ -53,6 +67,7 @@ namespace TurnBased.Entities.Battle {
                     var go = Instantiate(healEffectPrefab, TargetManager.instance.Target.transform.position, Quaternion.identity);
                     go.GetComponent<VisualEffect>().Play();
                     Destroy(go, 3f);
+                    TargetManager.instance.Target.GetComponent<CharacterBuffSystem>().ApplyBuff("ColphneHeal", this, healBuff);
                 }
                 else if (payload == "Ult") {
                     var targets = TargetManager.instance.GetTargets();
@@ -61,6 +76,7 @@ namespace TurnBased.Entities.Battle {
                         var go = Instantiate(healEffectPrefab, t.transform.position, Quaternion.identity);
                         go.GetComponent<VisualEffect>().Play();
                         Destroy(go, 3f);
+                        t.GetComponent<CharacterBuffSystem>().ApplyBuff("ColphneHeal", this, healBuff);
                     }
                 }
             }
@@ -126,8 +142,16 @@ namespace TurnBased.Entities.Battle {
             _lastAttack = CharacterState.DoAttack;
         }
 
-        public override void DoExtraAttack() {
-            base.DoExtraAttack();
+        public override void DoExtraAttack(Character target) {
+            base.DoExtraAttack(target);
+            _extraAttackTarget = target;
+            aimRig.weight = 0;
+            Vector3 diff = target.transform.position - transform.position;
+            diff.y = 0;
+            diff.Normalize();
+            meshParent.transform.forward = diff;
+            normalAttack.Play();
+            _lastAttack = CharacterState.DoExtraAttack;
         }
 
         public override void PrepareAttack() {
@@ -163,7 +187,7 @@ namespace TurnBased.Entities.Battle {
         }
 
         public override void ProcessCamChanged() {
-            if (_lastAttack == CharacterState.DoAttack) {
+            if (_lastAttack == CharacterState.DoAttack || _lastAttack == CharacterState.DoExtraAttack) {
                 normalAttack.time = normalAttack.duration;
                 normalAttack.Evaluate();
                 meshParent.transform.forward = -Vector3.right;

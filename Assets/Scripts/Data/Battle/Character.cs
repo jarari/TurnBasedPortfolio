@@ -43,6 +43,7 @@ namespace TurnBased.Battle {
         public Action<Character> OnUltTurn;
         public Action<Character, string, string> OnAnimationEvent;
         public Action<Character, bool> OnVisibilityChange;
+        public Action<Character, Character, DamageResult> OnInflictedDamage;
         public Action<Character, Character, DamageResult> OnDamage;
         public Action<Character, Character, float> OnRestoreHealth;
 
@@ -162,7 +163,7 @@ namespace TurnBased.Battle {
         /// <summary>
         /// 추가 공격 발동
         /// </summary>
-        public virtual void DoExtraAttack() {
+        public virtual void DoExtraAttack(Character target) {
             CurrentState = CharacterState.DoExtraAttack;
         }
         /// <summary>
