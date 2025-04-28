@@ -1548,6 +1548,7 @@ GameObject:
   m_Component:
   - component: {fileID: 138415363}
   - component: {fileID: 138415364}
+  - component: {fileID: 138415365}
   m_Layer: 0
   m_Name: Character3
   m_TagString: Untagged
@@ -1586,6 +1587,18 @@ MonoBehaviour:
   meshParent: {fileID: 1660885002}
   ultIdleOverride: {fileID: 0}
   _baseData: {fileID: 11400000, guid: a9e6b7aa63d165f4f8fe2cd9c33796b5, type: 2}
+--- !u!114 &138415365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138415362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc28efba826577a49b92e35390fd8041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &142672742
 GameObject:
   m_ObjectHideFlags: 0
@@ -34778,10 +34791,8 @@ PrefabInstance:
       propertyPath: m_WarningMessage
       value: "\nBinding warning: Some generic clip(s) animate transforms that are
         already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-        'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-        'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-        'mixamorig7:RightLeg'\n\tFrom animation clip 'stall ball'"
+        by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tFrom animation
+        clip 'stall ball'"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
