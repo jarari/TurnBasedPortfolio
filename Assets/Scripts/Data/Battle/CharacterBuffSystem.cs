@@ -57,10 +57,11 @@ namespace TurnBased.Battle {
         public void ApplyBuff(string identifier, Character caster, BuffData buffData) {
             BuffInstance instance;
             if (_activeBuffs.ContainsKey(identifier)) {
+                instance = _activeBuffs[identifier];
+                instance.ResetDuration();
                 if (!buffData.stackable) {
                     return;
                 }
-                instance = _activeBuffs[identifier];
             }
             else {
                 instance = new BuffInstance(buffData, caster, _owner);
