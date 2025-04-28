@@ -105,8 +105,6 @@ namespace TurnBased.Entities.Battle
                 // 공격후 애니메이션 처리 코루틴을 호출후
                 StartCoroutine(DelayReturnFromAttack());
 
-                Debug.Log("턴 종료");
-
                 // 스킬 쿨타임을 증가시킨다
                 skill_cool++;
                 
@@ -118,16 +116,18 @@ namespace TurnBased.Entities.Battle
                 }
 
                 // 타임라인의 상태가 Pause일때 (재생이 종료 되었을때)
-                if (normalAttack.state == PlayState.Paused)
+                if (normalAttack.state == PlayState.Paused || skillAttack.state == PlayState.Paused)
                 {
-                    // 일반공격 애니메이션이 끝났다면
-                    if (normalAttack.time >= normalAttack.duration)
+                    // 일반공격 또는 스킬공격 애니메이션이 끝났다면
+                    if (normalAttack.time >= normalAttack.duration || skillAttack.time >= skillAttack.duration)
                     { 
                         // 에너미의 부모객체를 기준으로 상대적인 위치를 0으로 맞춘다
                         animator.gameObject.transform.localPosition = Vector3.zero;
                         
                         // 자신의 턴이 끝났음을 알린다
                         myTurn = false;
+                        
+                        Debug.Log("턴 종료");
 
                         // 턴을 종료한다
                         EndTurn();

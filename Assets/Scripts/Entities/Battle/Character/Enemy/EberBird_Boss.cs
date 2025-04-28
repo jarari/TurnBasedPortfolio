@@ -28,7 +28,7 @@ namespace TurnBased.Entities.Battle
 
         // 공격할 플레이어를 담을 변수
         public Character target;
-        // 생존해있는 플레이어들을 담을 배열
+        // 생존해있는 플레이어들을 담을 리스트
         public List<Character> M_targets;
         // 생존한 플레이어들의 중앙을 잡을 벡터
         Vector3 Center;
@@ -46,10 +46,10 @@ namespace TurnBased.Entities.Battle
         // 에너미의 상태 (노말, 광폭화)
         public enum BossState { Normal, Rampage}
         // ↑로 만든 변수
-        public BossState b_State;
+        public BossState b_State;        
 
-        // 보스의 채력 카운트 (채력바 갯수) -> 이건 해보고 아닌거 같으면 빼자
-        int b_hpCount = 1;
+        // 보스의 광폭화 상태를 나타내는 불값
+        bool ram = false;
 
         #endregion
 
@@ -98,15 +98,16 @@ namespace TurnBased.Entities.Battle
             }
             else if (animEvent == "Skill_Damage")
             {
-                // 스킬 준비 함수에서 받아온 플레이어 리스트를 순회하며
-                foreach (var player in M_targets)
+                // for문으로 받아온 플레이어 리스트를 순회하며
+                for(int i =0; i< M_targets.Count; i++)
                 {
                     // 데미지를 계산하는 함수를 호출하고
-                    DamageResult result = CombatManager.CalculateDamage(this, player, Damage_factor);
+                    DamageResult result = CombatManager.CalculateDamage(this, M_targets[i], Damage_factor);
 
                     // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
-                    target.Damage(this, result);
+                    M_targets[i].Damage(this, result);
 
+                    Debug.Log(M_targets[i].name + " 에게 데미지");
                 }
 
             }
@@ -118,15 +119,19 @@ namespace TurnBased.Entities.Battle
             if (animEvent == "PlaySound_1")
             {
                 // 사운드 메니저에 등록 해놓은 사운드를 실행한다
-                SoundManager.instance.PlayVOSound(this, "Enemy_Mutant_Normal_Attack");
+                SoundManager.instance.PlayVOSound(this, "Enemy_EberBird_Normal_Attack");
             }
             if (animEvent == "PlaySound_2")
             {
-                SoundManager.instance.PlayVOSound(this, "Enemy_Mutant_Skill_Attack1");
+                SoundManager.instance.PlayVOSound(this, "Enemy_EberBird_Skill_Attack1");
             }
             if (animEvent == "PlaySound_3")
             {
-                SoundManager.instance.PlayVOSound(this, "Enemy_Mutant_Skill_Attack2");
+                SoundManager.instance.PlayVOSound(this, "Enemy_EberBird_Skill_Attack2");
+            }
+            if (animEvent == "PlaySound_4")
+            {
+                SoundManager.instance.PlayVOSound(this, "Enemy_EberBird_Skill_Attack3");
             }
 
             #endregion
@@ -137,23 +142,22 @@ namespace TurnBased.Entities.Battle
                 // 공격후 애니메이션 처리 코루틴을 호출후
                 StartCoroutine(DelayReturnFromAttack());
 
-                Debug.Log("턴 종료");
 
                 // 스킬 쿨타임을 증가시킨다
                 skill_cool++;
 
-                // 스킬 쿨타임이 2을 초과하였을때
-                if (skill_cool > 2)
+                // 스킬 쿨타임이 3을 초과하였을때
+                if (skill_cool > 3)
                 {
                     // 스킬 쿨타임을 0으로 만든다
                     skill_cool = 0;
                 }
 
                 // 타임라인의 상태가 Pause일때 (재생이 종료 되었을때)
-                if (normalAttack.state == PlayState.Paused)
+                if (normalAttack.state == PlayState.Paused || skillAttack.state == PlayState.Paused)
                 {
-                    // 일반공격 애니메이션이 끝났다면
-                    if (normalAttack.time >= normalAttack.duration)
+                    // 일반공격 또는 스킬공격 애니메이션이 끝났다면
+                    if (normalAttack.time >= normalAttack.duration || skillAttack.time >= skillAttack.duration)
                     {
                         // 에너미의 부모객체를 기준으로 상대적인 위치를 0으로 맞춘다
                         animator.gameObject.transform.localPosition = Vector3.zero;
@@ -161,6 +165,8 @@ namespace TurnBased.Entities.Battle
                         // 자신의 턴이 끝났음을 알린다
                         myTurn = false;
 
+                        Debug.Log("턴 종료");
+                        
                         // 턴을 종료한다
                         EndTurn();
                     }
@@ -288,7 +294,7 @@ namespace TurnBased.Entities.Battle
             animator.gameObject.transform.position = Center - new Vector3(8.47f, 0f);
 
             // 스킬 공격 대미지 계수
-            Damage_factor = 1.5f;
+            Damage_factor = 0.25f;
 
             // 스킬 공격 애니메이션을 멈춘뒤
             skillAttack.Stop();
@@ -314,7 +320,7 @@ namespace TurnBased.Entities.Battle
 
             // 일반 공격 대미지 계수
             // (나중에 버프라던가 디버프가 생기면 이곳을 더하거나 빼는 방식도 생각해보자)
-            Damage_factor = 1.0f;
+            Damage_factor = 0.45f;
 
             // 일반공격 애니메이션을 멈춘뒤
             normalAttack.Stop();
@@ -414,20 +420,42 @@ namespace TurnBased.Entities.Battle
         {
             // 부모 클래스의 Dagage를 실행후 실행
             base.Damage(attacker, result);
-
-            // 보스의 채력바가 안 남았다면
-            if (b_hpCount <= 0)
+                        
+            // 캐릭터의 상태가 dead상태가 아닐때
+            if (this.CurrentState != CharacterState.Dead)
             {
-                // 캐릭터의 상태가 dead상태가 아닐때
-                if (this.CurrentState != CharacterState.Dead)
+                // 데미지 애니메이션의 트리거를 켠다
+                animator.SetTrigger("Damage");
+
+                // 현재 광폭화 상태가 아니면서 채력이 최대 채력의 절반 이하라면
+                if (ram == false && this.Data.stats.CurrentHP <= (this.Data.stats.MaxHP) / 2)
                 {
-                    // 데미지 애니메이션의 트리거를 켠다
-                    animator.SetTrigger("Damage");
+                    // 상태를 광폭화로 바꾼다
+                    b_State = BossState.Rampage;
+
+                    // 공격력을 1.5배로 한다
+                    this.Data.stats.Attack += (this.Data.stats.Attack) / 2;
+                    
+                    // 현재 상태가 그로기 상태라면
+                    if (this.CurrentState == CharacterState.Groggy)
+                    {
+                        // 에너미의 현재 상태를 기본으로 한다
+                        this.CurrentState = CharacterState.Idle;
+
+                        // 현재 강인도를 최대치로 한다
+                        this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;
+
+                        animator.SetBool("GroggyBool", false);
+
+                        Debug.Log("광폭화로 그로기 상태에서 강인도를 회복");
+                    }
+
+                    // 광폭화 상태임을 알린다
+                    ram = true;
+                    Debug.Log("광폭화 상태 진입");
                 }
             }
-
             Debug.Log("데미지를 입었다");
-
         }
                
 
@@ -457,91 +485,10 @@ namespace TurnBased.Entities.Battle
         {
             base.Dead();
 
-            // 보스의 채력바가 없다면
-            if (b_hpCount <= 0)
-            { 
-                Debug.Log("데드 진입 애니메이션 실행");
+            Debug.Log("데드 진입 애니메이션 실행");
 
-                // 데드 애니메이션의 트리거를 켠다
-                animator.SetTrigger("Dead");
-            }
-
-            // 보스의 채력바가 하나이상 있다면
-            else if (b_hpCount > 0)
-            {
-
-                // 현재 상태를 기본 상태로 바꾸고
-                this.CurrentState = CharacterState.Idle;
-
-                // 보스의 채력을 최대 채력으로 만든다
-                this.Data.stats.CurrentHP = this.Data.stats.MaxHP;
-
-                // 채력바 카운트를 하나 깐다
-                b_hpCount--;
-
-                // 만약 채력바 카운트가 0이하 라면
-                if(b_hpCount <= 0)
-                    // 채력바 카운트를 0으로 한다
-                    b_hpCount = 0;
-
-                // 만약 현재 강인도가 0이하 라면
-                if (this.Data.stats.CurrentToughness <= 0)
-                {
-
-                    // 보스 부활시 그로기 상태라면 호출할 코루틴을 실행
-                    StartCoroutine(Boss_Resurrection());
-
-                    // 상태를 광폭화로 바꾼다
-                    b_State = BossState.Rampage;
-                    Debug.Log(" 광폭화 상태 진입 ");
-
-                    // 공격력을 1.5배로 한다
-                    this.Data.stats.Attack += (this.Data.stats.Attack) / 2;
-                }
-                // 만약 현재 강인도가 있다면
-                else
-                {
-                    // 상태를 광폭화로 바꾼다
-                    b_State = BossState.Rampage;
-                    
-                    // 공격력을 1.5배로 한다
-                    this.Data.stats.Attack += (this.Data.stats.Attack) / 2;
-                }
-
-
-            }
-
+            // 데드 애니메이션의 트리거를 켠다
+            animator.SetTrigger("Dead");
         }
-        // 보스 부활시 그로기 상태라면 호출할 함수
-        IEnumerator Boss_Resurrection()
-        {
-            // 그로기 타임라인을 정지시킨뒤 재생을 시킨다
-            Groggy_anim.Stop();
-            Groggy_anim.Play();
-
-            // 그로기 타임라인이 실행중일때
-            while (Groggy_anim.state == PlayState.Playing)
-            {
-                // 매 프래임 대기
-                yield return null;
-            }
-
-            Debug.Log("부활 코루틴 실행");
-
-            // 현재 강인도를 최대로 한다
-            this.Data.stats.CurrentToughness = this.Data.stats.MaxToughness;
-
-            // 그로기 타임라인을 끝까지 진행시킨다
-            Groggy_anim.time = Groggy_anim.duration;
-            // 타임라인을 현재 시간에 맞게 상태를 업데이트
-            Groggy_anim.Evaluate();
-
-            // 그로기 상태 진입으로 절반으로 내렸던 스피드와 방어력을 원래대로 돌린다
-            Data.stats.Speed = (Data.stats.Speed) * 2;
-            Data.stats.Defense = (Data.stats.Defense) * 2;
-
-        }
-
-
     }
 }

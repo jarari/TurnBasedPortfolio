@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: EberBird_Boss
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 1000
+    <MaxHP>k__BackingField: 500
     <MaxToughness>k__BackingField: 100
     <UseUltThreshold>k__BackingField: 0
     <Attack>k__BackingField: 0
     <Defense>k__BackingField: 0
-    <Speed>k__BackingField: 80
+    <Speed>k__BackingField: 130
     <ElementType>k__BackingField: 0
     <Weakness>k__BackingField: 28
   team: 1
