@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TurnBased.Data;
 using UnityEngine;
 
 namespace TurnBased.Battle.Managers {
@@ -7,19 +8,7 @@ namespace TurnBased.Battle.Managers {
         public static SoundManager instance;
         public const float MusicVolumeDefault = 0.7f;
 
-        [System.Serializable]
-        public class SoundData {
-            public string name;
-            public float volume = 1.0f;
-            public List<AudioClip> audioClips;
-            public AudioClip GetRandomClip() {
-                if (audioClips.Count == 1) {
-                    return audioClips[0];
-                }
-                return audioClips[Random.Range(0, audioClips.Count)];
-            }
-        }
-        public List<SoundData> soundData = new List<SoundData>();
+        public List<SoundPack> soundPacks = new();
         [SerializeField]
         private AudioSource _2dAudioSource;
         [SerializeField]
@@ -40,9 +29,11 @@ namespace TurnBased.Battle.Managers {
             }
             instance = this;
 
-            foreach (var sound in soundData) {
-                if (!_soundDict.ContainsKey(sound.name)) {
-                    _soundDict.Add(sound.name, sound);
+            foreach (var pack in soundPacks) {
+                foreach (var sound in pack.soundData) {
+                    if (!_soundDict.ContainsKey(sound.name)) {
+                        _soundDict.Add(sound.name, sound);
+                    }
                 }
             }
 
