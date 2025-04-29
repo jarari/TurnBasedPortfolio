@@ -23096,8 +23096,10 @@ Animator:
   m_AnimatePhysics: 0
   m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
     are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tFrom animation clip
-    'stall ball'"
+    by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
+    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
+    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
+    'mixamorig7:RightLeg'\n\tFrom animation clip 'stall ball'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -23236,6 +23238,7 @@ Transform:
   - {fileID: 9151795564009678901}
   - {fileID: 4893235095602544436}
   - {fileID: 2216615963840728497}
+  - {fileID: 4667184787505429988}
   m_Father: {fileID: 8043407038175713714}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!320 &7966230476215795154
@@ -23273,6 +23276,8 @@ PlayableDirector:
     value: {fileID: 3828704758058657002}
   - key: {fileID: 2142924887982577132, guid: 9cf7f19b617a02d40954d7051c57effb, type: 2}
     value: {fileID: 6237310288993032541}
+  - key: {fileID: 813390462663220701, guid: 9cf7f19b617a02d40954d7051c57effb, type: 2}
+    value: {fileID: 7001609771866260398}
   m_ExposedReferences:
     m_References:
     - 4bb1d467cd437ed498ca7425ea7b630f: {fileID: 7791168322870939758}
@@ -23447,6 +23452,99 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.15395862, y: 0.46120417, z: 0.07560595}
     m_Extent: {x: 0.24125692, y: 0.18006064, z: 0.18795988}
   m_DirtyAABB: 0
+--- !u!1 &7001609771866260398
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4667184787505429988}
+  - component: {fileID: 1474922610259097631}
+  - component: {fileID: 5106358119080774021}
+  m_Layer: 8
+  m_Name: Grass
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 0
+--- !u!4 &4667184787505429988
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7001609771866260398}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -353.5, y: 0, z: 356.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6418523721999739157}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!218 &1474922610259097631
+Terrain:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7001609771866260398}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_TerrainData: {fileID: 15600000, guid: 260d026d3d4c23545ab0dfd8f714a415, type: 2}
+  m_TreeDistance: 5000
+  m_TreeBillboardDistance: 50
+  m_TreeCrossFadeLength: 5
+  m_TreeMaximumFullLODCount: 50
+  m_DetailObjectDistance: 80
+  m_DetailObjectDensity: 1
+  m_HeightmapPixelError: 5
+  m_SplatMapDistance: 1000
+  m_HeightmapMinimumLODSimplification: 0
+  m_HeightmapMaximumLOD: 0
+  m_ShadowCastingMode: 2
+  m_DrawHeightmap: 1
+  m_DrawInstanced: 0
+  m_DrawTreesAndFoliage: 1
+  m_StaticShadowCaster: 0
+  m_IgnoreQualitySettings: 0
+  m_ReflectionProbeUsage: 1
+  m_MaterialTemplate: {fileID: 2100000, guid: 13d7c73c95e42014a9641e6a3337e806, type: 2}
+  m_BakeLightProbesForTrees: 1
+  m_PreserveTreePrototypeLayers: 0
+  m_DeringLightProbesForTrees: 1
+  m_ReceiveGI: 1
+  m_ScaleInLightmap: 0.0256
+  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+  m_GroupingID: 0
+  m_RenderingLayerMask: 1
+  m_AllowAutoConnect: 1
+  m_EnableHeightmapRayTracing: 1
+  m_EnableTreesAndDetailsRayTracing: 0
+  m_TreeMotionVectorModeOverride: 3
+--- !u!154 &5106358119080774021
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7001609771866260398}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_TerrainData: {fileID: 15600000, guid: 260d026d3d4c23545ab0dfd8f714a415, type: 2}
+  m_EnableTreeColliders: 1
 --- !u!1 &7030136047658448122
 GameObject:
   m_ObjectHideFlags: 0
