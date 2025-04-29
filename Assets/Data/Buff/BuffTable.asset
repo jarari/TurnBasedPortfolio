@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839fa84f8c0de46418831b8cb8c25afa, type: 3}
+  m_Name: BuffTable
+  m_EditorClassIdentifier: 
+  entries:
+  - name: ColphneHeal
+    buffData: {fileID: 11400000, guid: c0c1a4db36162f14da1454bed08e2210, type: 2}
+  - name: GroggyDebuff
+    buffData: {fileID: 11400000, guid: 2398299b4b98f8f4e970d7964130cd6f, type: 2}
+  - name: Rampage_Buff
+    buffData: {fileID: 11400000, guid: e0fd096b10fa20544aa68d696936f3c9, type: 2}

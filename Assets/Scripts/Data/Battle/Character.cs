@@ -92,8 +92,12 @@ namespace TurnBased.Battle {
                 }
             }
             // 만약 에너미일때
-            else
+            else 
             {
+                if (CurrentState == CharacterState.Groggy) 
+                {
+                    GroggyReset();
+                }
                 // 다음 본인 턴이왔을 때 취할 상태가 공격 준비라면
                 if (WantState == CharacterState.PrepareAttack)
                 {
@@ -245,8 +249,6 @@ namespace TurnBased.Battle {
             WantCmd = false;
             // 턴 큐에서 캐릭터 제거
             TurnManager.instance.RemoveCharacter(this);
-
-            Debug.Log("Dead 함수 실행");
         }
         /// <summary>
         /// 그로기 준비함수
@@ -267,6 +269,8 @@ namespace TurnBased.Battle {
             WantState = CharacterState.PrepareGroggy;
             // 명령대기를 하지 않음을 반환
             WantCmd = false;
+
+            GroggyDebuff();
         }
 
         /// <summary>
@@ -363,13 +367,7 @@ namespace TurnBased.Battle {
         // 그로기시 속도와 방어력을 절반으로 하는 디버프 함수
         public virtual void GroggyDebuff()
         {
-            // 자신의 현재 속도와 방어력의 절반값을 구하고
-            float speed = (Data.Speed.Current) / 2;
-            float defense = (Data.Defense.Current) / 2;
-            
-            // 자신의 현재 속도와 방어력에 위에서 구한 값을 뺀다
-            Data.Speed.ModifyCurrent(-speed);
-            Data.Defense.ModifyCurrent(-defense);
+            GetComponent<CharacterBuffSystem>().ApplyBuff("GroggyDebuff", this);
 
             // 속도 감소후 반영
             TurnManager.instance.ProcessAVSpeedChange();
@@ -377,10 +375,11 @@ namespace TurnBased.Battle {
 
         // 그로기 시 줄어든 속도와 방어력을 원래대로 돌리는 함수
         public virtual void GroggyReset()
-        { 
-            // 현재 속도와 방어력 만큼 속도와 방어력을 더한다
-            Data.Speed.ModifyCurrent(Data.Speed.Current);
-            Data.Defense.ModifyCurrent(Data.Defense.Current);
+        {
+            GetComponent<CharacterBuffSystem>().RemoveBuff("GroggyDebuff");
+
+            // 현재 강인도를 최대로 한다
+            Data.Toughness.Reset();
 
             // 속도 변경후 반영
             TurnManager.instance.ProcessAVSpeedChange();
