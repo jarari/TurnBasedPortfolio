@@ -10395,7 +10395,7 @@ MonoBehaviour:
   skillAttack: {fileID: 8733486855242412722}
   Groggy_anim: {fileID: 8716776409369228131}
   animator: {fileID: 5506976309218695784}
-  Debuff: {fileID: 0}
+  Debuff: {fileID: 11400000, guid: 2398299b4b98f8f4e970d7964130cd6f, type: 2}
   target: {fileID: 0}
   Damage_factor: 0
   skill_cool: 0

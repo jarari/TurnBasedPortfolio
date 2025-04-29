@@ -395,6 +395,7 @@ namespace TurnBased.Entities.Battle
 
             // 디버프를 등록한다 (버프이름 , 대상, 버프데이터)
             this.GetComponent<CharacterBuffSystem>().ApplyBuff("GroggyDebuff", this , Debuff);
+
         }
 
         /// <summary>
