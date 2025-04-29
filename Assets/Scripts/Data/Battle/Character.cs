@@ -328,6 +328,9 @@ namespace TurnBased.Battle {
                     // 에너미는 최종적으로 받는 데미지를 모두 받는다.
                     Data.HP.ModifyCurrent(-result.FinalDamage);
 
+                    // 그로기 상태이니 그로기 상태를 계속한다
+                    CurrentState = CharacterState.Groggy;
+
                     // 채력이 만약 0이하가 되었다면
                     if (Data.HP.Current <= 0) {
                         // 죽음을 다룰 함수를 실행한다
@@ -356,5 +359,32 @@ namespace TurnBased.Battle {
         public virtual void ProcessCamChanged() { }
 
         public virtual void ProcessCamGain() { }
+
+        // 그로기시 속도와 방어력을 절반으로 하는 디버프 함수
+        public virtual void GroggyDebuff()
+        {
+            // 자신의 현재 속도와 방어력의 절반값을 구하고
+            float speed = (Data.Speed.Current) / 2;
+            float defense = (Data.Defense.Current) / 2;
+            
+            // 자신의 현재 속도와 방어력에 위에서 구한 값을 뺀다
+            Data.Speed.ModifyCurrent(-speed);
+            Data.Defense.ModifyCurrent(-defense);
+
+            // 속도 감소후 반영
+            TurnManager.instance.ProcessAVSpeedChange();
+        }
+
+        // 그로기 시 줄어든 속도와 방어력을 원래대로 돌리는 함수
+        public virtual void GroggyReset()
+        { 
+            // 현재 속도와 방어력 만큼 속도와 방어력을 더한다
+            Data.Speed.ModifyCurrent(Data.Speed.Current);
+            Data.Defense.ModifyCurrent(Data.Defense.Current);
+
+            // 속도 변경후 반영
+            TurnManager.instance.ProcessAVSpeedChange();
+        }
+
     }
 }
