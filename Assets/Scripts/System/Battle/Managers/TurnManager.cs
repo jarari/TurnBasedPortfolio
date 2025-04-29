@@ -70,6 +70,7 @@ namespace TurnBased.Battle.Managers {
             }
             _turnQueue.Insert(idx, new TurnData(character, TurnType.Ult));
             if (idx == 0
+                && CurrentCharacter.Data.Team == Data.CharacterTeam.Player
                 && CurrentCharacter.WantCmd == true 
                 && CurrentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack 
                 && CurrentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {
