@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using TurnBased.Battle.Managers;
 using UnityEngine;
@@ -52,7 +53,12 @@ namespace TurnBased.Battle {
             }
         }
 
-        public void ApplyBuff(string identifier, Character caster, BuffData buffData) {
+        public void ApplyBuff(string identifier, Character caster) {
+            BuffData buffData = BuffTableManager.instance.GetBuffData(identifier);
+            if (buffData == null) {
+                return;
+            }
+
             BuffInstance instance;
             if (_activeBuffs.ContainsKey(identifier)) {
                 instance = _activeBuffs[identifier];

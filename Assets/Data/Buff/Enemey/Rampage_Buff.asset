@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7366220e055c0743a2c620866a3fd23, type: 3}
   m_Name: Rampage_Buff
   m_EditorClassIdentifier: 
-  modifiers: []
+  modifiers:
+  - stat: 2
+    modType: 1
+    value: 1.5
   extraEffects: []
   duration: 0
   stackable: 0

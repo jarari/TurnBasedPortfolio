@@ -24,7 +24,6 @@ namespace TurnBased.Entities.Battle {
         public Transform ultAlly1Pos;
         public Transform ultAlly2Pos;
         public GameObject healEffectPrefab;
-        public BuffData healBuff;
         [Header("Components")]
         public Animator animator;
 
@@ -67,7 +66,7 @@ namespace TurnBased.Entities.Battle {
                     var go = Instantiate(healEffectPrefab, TargetManager.instance.Target.transform.position, Quaternion.identity);
                     go.GetComponent<VisualEffect>().Play();
                     Destroy(go, 3f);
-                    TargetManager.instance.Target.GetComponent<CharacterBuffSystem>().ApplyBuff("ColphneHeal", this, healBuff);
+                    TargetManager.instance.Target.GetComponent<CharacterBuffSystem>().ApplyBuff("ColphneHeal", this);
                 }
                 else if (payload == "Ult") {
                     var targets = TargetManager.instance.GetTargets();
@@ -76,7 +75,7 @@ namespace TurnBased.Entities.Battle {
                         var go = Instantiate(healEffectPrefab, t.transform.position, Quaternion.identity);
                         go.GetComponent<VisualEffect>().Play();
                         Destroy(go, 3f);
-                        t.GetComponent<CharacterBuffSystem>().ApplyBuff("ColphneHeal", this, healBuff);
+                        t.GetComponent<CharacterBuffSystem>().ApplyBuff("ColphneHeal", this);
                     }
                 }
             }
