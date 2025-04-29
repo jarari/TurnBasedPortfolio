@@ -3,112 +3,90 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f; // ±âº» ÀÌµ¿ ¼Óµµ
-    public float runSpeed = 10f; // ´Ş¸®±â ¼Óµµ
-    public Transform cameraTransform; // Ä«¸Ş¶ó Transform
+    public float moveSpeed = 5f; // ê¸°ë³¸ ì´ë™ ì†ë„
+    public float runSpeed = 10f; // ë‹¬ë¦¬ê¸° ì†ë„
+    public Transform cameraTransform; // ì¹´ë©”ë¼ Transform
 
-    public GameObject[] characterPrefabs; // Ä³¸¯ÅÍ ÇÁ¸®ÆÕ ¹è¿­
-    private GameObject currentCharacter; // ÇöÀç È°¼ºÈ­µÈ Ä³¸¯ÅÍ
+    private CharacterController characterController; // ìºë¦­í„° ì»¨íŠ¸ë¡¤ëŸ¬
+    private Animator animator; // Animator ì»´í¬ë„ŒíŠ¸
+    private bool isRunning = false; // ë‹¬ë¦¬ê¸° ìƒíƒœ ì—¬ë¶€
 
-    private CharacterController characterController; // Ä³¸¯ÅÍ ÄÁÆ®·Ñ·¯
-    private Animator animator; // Animator ÄÄÆ÷³ÍÆ®
-    private bool isRunning = false; // ´Ş¸®±â »óÅÂ ¿©ºÎ
+    public GameObject[] characterPrefabs; // ìºë¦­í„° í”„ë¦¬íŒ¹ ë°°ì—´
+    private GameObject currentCharacter; // í˜„ì¬ í™œì„±í™”ëœ ìºë¦­í„°
+    private int currentCharacterIndex = 0; // í˜„ì¬ í™œì„±í™”ëœ ìºë¦­í„° ì¸ë±ìŠ¤
 
     void Start()
     {
-        // ÄÄÆ÷³ÍÆ® °¡Á®¿À±â
+        // ì»´í¬ë„ŒíŠ¸ ê°€ì ¸ì˜¤ê¸°
         characterController = GetComponent<CharacterController>(); // CharacterController
-        animator = GetComponent<Animator>(); // Animator
 
-        // ChangeCharacter(0); // Ã¹ ¹øÂ° Ä³¸¯ÅÍ·Î ÃÊ±âÈ­
+        // ì´ˆê¸° ìºë¦­í„° ìƒì„±
+        ChangeCharacter(currentCharacterIndex);
     }
 
     void Update()
     {
-        KeyboardInput(); // Å°º¸µå ÀÔ·Â Ã³¸®
+        if (Input.GetKeyDown(KeyCode.Alpha1)) ChangeCharacter(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) ChangeCharacter(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) ChangeCharacter(2);
 
-        // ´Ş¸®±â »óÅÂ Åä±Û
-        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetMouseButtonDown(1)) // ½¬ÇÁÆ® Å° ¶Ç´Â ¸¶¿ì½º ¿ìÅ¬¸¯
-        {
+        // ë‹¬ë¦¬ê¸° ìƒíƒœ í† ê¸€
+        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetMouseButtonDown(1)) // ì‰¬í”„íŠ¸ í‚¤ ë˜ëŠ” ë§ˆìš°ìŠ¤ ìš°í´ë¦­
             isRunning = !isRunning;
-        }
 
-        // ÇöÀç ¼Óµµ ¼³Á¤
+        // í˜„ì¬ ì†ë„ ì„¤ì •
         float currentSpeed = isRunning ? runSpeed : moveSpeed;
 
-        // ÀÔ·Â °ª °¡Á®¿À±â
-        float horizontal = Input.GetAxis("Horizontal"); // A, D Å° (¿ŞÂÊ, ¿À¸¥ÂÊ)
-        float vertical = Input.GetAxis("Vertical");     // W, S Å° (¾Õ, µÚ)
+        // ì…ë ¥ ê°’ ê°€ì ¸ì˜¤ê¸°
+        float horizontal = Input.GetAxis("Horizontal"); // A, D í‚¤ (ì™¼ìª½, ì˜¤ë¥¸ìª½)
+        float vertical = Input.GetAxis("Vertical");     // W, S í‚¤ (ì•, ë’¤)
 
-        // Ä«¸Ş¶ó ±âÁØ ÀÌµ¿ ¹æÇâ °è»ê
+        // ì¹´ë©”ë¼ ê¸°ì¤€ ì´ë™ ë°©í–¥ ê³„ì‚°
         Vector3 forward = cameraTransform.forward;
         Vector3 right = cameraTransform.right;
 
-        // yÃà ¹æÇâ Á¦°Å (¼öÆò ÀÌµ¿¸¸ °í·Á)
+        // yì¶• ë°©í–¥ ì œê±° (ìˆ˜í‰ ì´ë™ë§Œ ê³ ë ¤)
         forward.y = 0;
         right.y = 0;
 
         forward.Normalize();
         right.Normalize();
 
-        Vector3 moveDirection = (forward * vertical + right * horizontal) * currentSpeed;
+        Vector3 moveDirection = (forward * vertical + right * horizontal) * currentSpeed; // ì´ë™ ë°©í–¥ ê³„ì‚°
 
-        // ÀÌµ¿ Àû¿ë
-        characterController.Move(moveDirection * Time.deltaTime);
+        // yì¶• ê°’ì„ 0ìœ¼ë¡œ ê³ ì •
+        moveDirection.y = 0;
 
-        // ÀÌµ¿ ¹æÇâÀÌ 0ÀÌ ¾Æ´Ò ¶§¸¸ È¸Àü
+        characterController.Move(moveDirection * Time.deltaTime); // ì´ë™ ì ìš©
+
+        // ì´ë™ ë°©í–¥ì´ 0ì´ ì•„ë‹ ë•Œë§Œ íšŒì „
         if (moveDirection != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f); // ºÎµå·´°Ô È¸Àü
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f); // ë¶€ë“œëŸ½ê²Œ íšŒì „
         }
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç Ã³¸®
+        // ì• ë‹ˆë©”ì´ì…˜ ì²˜ë¦¬
         if (animator != null)
         {
             if (moveDirection != Vector3.zero)
             {
-                animator.SetBool("IsMoving", true); // ÀÌµ¿ Áß
+                if (isRunning)
+                    animator.SetFloat("MoveMotion", 1); // ë‹¬ë¦¬ê¸°
+                else if (!isRunning)
+                    animator.SetFloat("MoveMotion", 0.95f); // ê±·ê¸°
             }
             else
-            {
-                animator.SetBool("IsMoving", false); // ÀÌµ¿ ÁßÁö
-            }
-
-            // ´Ş¸®±â »óÅÂ ¼³Á¤
-            animator.SetBool("IsRunning", isRunning);
+                animator.SetFloat("MoveMotion", 0); // ëŒ€ê¸°
         }
     }
 
-    private void KeyboardInput()
+    private void ChangeCharacter(int newIndex)
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) ChangeCharacter(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) ChangeCharacter(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) ChangeCharacter(2);
-    }
-
-    private void ChangeCharacter(int index)
-    {
-        if (index < 0 || index >= characterPrefabs.Length) return;
-
-        // ±âÁ¸ Ä³¸¯ÅÍ Á¦°Å
-        if (currentCharacter != null)
-        {
-            Destroy(currentCharacter);
-        }
-
-        // »õ·Î¿î Ä³¸¯ÅÍ »ı¼º
-        currentCharacter = Instantiate(characterPrefabs[index], transform.position, transform.rotation);
-
-        // »õ·Î¿î Ä³¸¯ÅÍÀÇ Animator ¼³Á¤
-        animator = currentCharacter.GetComponent<Animator>();
-
-        // ÇöÀç ¿ÀºêÁ§Æ®ÀÇ TransformÀ» »õ·Î¿î Ä³¸¯ÅÍ¿¡ µ¿±âÈ­
-        currentCharacter.transform.parent = transform;
-
-        // »õ Ä³¸¯ÅÍÀÇ CamPos¸¦ Ã£¾Æ Ä«¸Ş¶ó Å¸°ÙÀ¸·Î ¼³Á¤
-        Transform camPos = currentCharacter.transform.GetChild(0); // Ã¹ ¹øÂ° ÀÚ½Ä °¡Á®¿À±â
-        Debug.Log("CamPos: " + camPos);
-        MainCameraController.Instance.SetTarget(camPos);
+        if (currentCharacter != null) Destroy(currentCharacter); // ì´ë¯¸ í™œì„±í™”ëœ ìºë¦­í„°ê°€ ìˆìœ¼ë©´ íŒŒê´´
+        currentCharacter = Instantiate(characterPrefabs[newIndex], transform.position, Quaternion.identity, transform); // ìƒˆ ìºë¦­í„° ìƒì„±
+        currentCharacterIndex = newIndex; // í˜„ì¬ ìºë¦­í„° ì¸ë±ìŠ¤ ì—…ë°ì´íŠ¸
+        currentCharacter.transform.localRotation = Quaternion.Euler(0, 0, 0); // ë¡œí…Œì´ì…˜ ì´ˆê¸°í™”
+        animator = currentCharacter.GetComponent<Animator>(); // Animator ì»´í¬ë„ŒíŠ¸ ê°€ì ¸ì˜¤ê¸°
     }
 }

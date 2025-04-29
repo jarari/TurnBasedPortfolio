@@ -75,10 +75,12 @@ public class MainUIManager : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftAlt) || CurrentWindow != MainUI) // LeftAlt 키를 홀드하고 있거나 현재 열려있는 창이 메인 UI가 아닐 때
         {
             Cursor.visible = true; // 마우스 커서 보이기
+            Cursor.lockState = CursorLockMode.None; // 마우스 커서 잠금 해제
         }
         else // 그 외의 경우
         {
             Cursor.visible = false; // 마우스 커서 숨기기
+            Cursor.lockState = CursorLockMode.Locked; // 마우스 커서를 화면 중앙에 고정
         }
     }
 
