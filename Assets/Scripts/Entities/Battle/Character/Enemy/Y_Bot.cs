@@ -153,6 +153,9 @@ namespace TurnBased.Entities.Battle
         {
             // 부모 클래스에서 TakeTurn 실행 후 실행
             base.TakeTurn();
+            if (IsDead) {
+                return;
+            }
 
             // 이거 순서가 공격 준비를 먼저 시작하고 공격을 시작하면 여기가 실행이 된다
             Debug.Log("턴을 받았다!");
