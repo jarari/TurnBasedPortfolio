@@ -108,10 +108,12 @@ namespace TurnBased.Entities.Field {
                 // 상태를 공격으로 바꾼다
                 f_state = F_EnemyState.Attack;
                 Debug.Log("상태 갱신 : Move -> Attack");
+                // 애니메이션 트리거를 켠다
+                anim.SetTrigger("MoveToAttack");
             }
 
         }
-        public virtual void F_Attack() 
+        public virtual void F_Attack()
         {
             // 플레이어와의 거리를 계산하는 불값을 켜고
             bool A_switch = Move.FE_SwitchMove(target.transform.position, this.gameObject, attDistance);
@@ -122,6 +124,8 @@ namespace TurnBased.Entities.Field {
                 // 에너미의 상태를 이동으로 바꾼다
                 f_state = F_EnemyState.Move;
                 Debug.Log("상태 갱신 : Attack -> Move");
+                // 애니메이션 트리거를 켠다
+                anim.SetTrigger("AttackToMove");
             }
 
             bool battle = hit_signal(A_switch);
@@ -135,6 +139,7 @@ namespace TurnBased.Entities.Field {
             // 히트 하지 못했을 경우
             else
                 return;
+        }
 
         public virtual void findPlayer(GameObject player) 
         {
@@ -145,7 +150,7 @@ namespace TurnBased.Entities.Field {
                 if (Vector3.Distance(transform.position, target.transform.position) < findDistnace) // 타겟과의 거리가 탐지거리보다 작을때
                 {
                     Debug.Log("플레이어 감지: " + target.name);
-                    // f_state = F_EnemyState.Move;
+                    f_state = F_EnemyState.Move;
                 }
             }
             else if (target == null)

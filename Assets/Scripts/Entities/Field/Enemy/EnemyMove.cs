@@ -7,7 +7,7 @@ namespace TurnBased.Entities.Field {
     /// </summary>
     public class EnemyMove
     {
-        float speed = 4.0f;
+        float speed = 3.0f;
         
         /// <summary>
         /// 플레이어를 추적할 함수
