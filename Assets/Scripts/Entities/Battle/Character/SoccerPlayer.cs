@@ -195,6 +195,7 @@ namespace TurnBased.Entities.Battle {
                 ultAttack.Stop();
             }
             meshParent.transform.localPosition = Vector3.zero;
+            _lastAttack = CharacterState.Idle;
         }
     }
 }

@@ -202,6 +202,7 @@ namespace TurnBased.Entities.Battle {
                 ultAttack.Evaluate();
                 ultAttack.Stop();
             }
+            _lastAttack = CharacterState.Idle;
         }
 
         public override void ProcessCamGain() {
