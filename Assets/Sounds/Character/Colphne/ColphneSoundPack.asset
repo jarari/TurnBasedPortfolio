@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df8cc8c012f849e4fbaf13c0183004d6, type: 3}
+  m_Name: ColphneSoundPack
+  m_EditorClassIdentifier: 
+  soundData:
+  - name: ColphneSkill1
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: ac869c1d0fb22b64d89fda6601ddfa13, type: 3}
+  - name: ColphneUltFire
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 162356e3e7936074793915b59b61e0f4, type: 3}
+  - name: ColphneSkillBullet
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 50ac2d6bd163291438d4b77f07cdbdc0, type: 3}
+  - name: ColphneUltHeal
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 2c47d679a0c9e7a45b97feee9c76e022, type: 3}
+  - name: ColphneUltBullet
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: b83a680a1768126428546b9d0d5540cf, type: 3}
+    - {fileID: 8300000, guid: c11baa36d6b1f734e8656eb4c921f23e, type: 3}
+    - {fileID: 8300000, guid: 9525182c3f8ba3745aae41027cbb9b71, type: 3}
+    - {fileID: 8300000, guid: 26502b3b79338234c800117aa8fb827e, type: 3}
+  - name: ColphneSkillFire
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 21223fe3edf43404bac682a278f5808e, type: 3}
+    - {fileID: 8300000, guid: 8decfbeb0ca260545a58363fafeff4fc, type: 3}
+    - {fileID: 8300000, guid: eb3ac127c43ac93418b01d242bdd9101, type: 3}
+    - {fileID: 8300000, guid: d96334d0ac213bd4eb2c13a128c2f27c, type: 3}
+    - {fileID: 8300000, guid: 2eaac3478c9ef6a4fb90420509606c91, type: 3}
+  - name: ColphneUltTimeline
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 502f6802d2917b749b3ec8f016fc91d4, type: 3}
+  - name: ColphneVOHit
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 48b9c59708bcef241bed28ca65301483, type: 3}
+    - {fileID: 8300000, guid: 15413d1aff421fd448f33d8550d19f69, type: 3}
+    - {fileID: 8300000, guid: 8cac5c1f4639d254aa516ab61cebda1d, type: 3}
+    - {fileID: 8300000, guid: 2dd79e3e1e160154889e2b148ea81a25, type: 3}
+    - {fileID: 8300000, guid: 6513ed674892e8e429d04dad8ccb8f94, type: 3}
+  - name: ColphneVOFire
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 17757a69f5f05b64684c166f3c58dac1, type: 3}
+    - {fileID: 8300000, guid: 736ee6b93fb0daa439c404ad51c331f8, type: 3}
+    - {fileID: 8300000, guid: 709ed4d128f818f4daa9e42d30624f47, type: 3}
+    - {fileID: 8300000, guid: 6f8ce897a107d304da4aa1daf5d94f4a, type: 3}
+  - name: ColphneVODie
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 3ed9d202f615a4a4282d5766deaf24c3, type: 3}
+  - name: ColphneVOSkill
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: abe028720cf4de041b23eb3127b8855e, type: 3}
+  - name: ColphneVOUltStandby
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: e6b339399410c7c43aec28d7b9b7ee81, type: 3}
+  - name: ColphneVOUlt
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 1ad85a49de57b9044a3f33d71c4685ce, type: 3}
+  - name: ColphnePistolClick1
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 715ddd79ff1d88142ae527b41a2c71ce, type: 3}
+  - name: ColphnePistolClick2
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 2ea3d9bfa2172e9479bdb6b77e037677, type: 3}
+  - name: ColphneCloth1
+    volume: 0.65
+    audioClips:
+    - {fileID: 8300000, guid: 46bf489055fd42c40983b2da792a0edd, type: 3}
+  - name: ColphneCloth2
+    volume: 0.65
+    audioClips:
+    - {fileID: 8300000, guid: 4a1c885784ef3b14c88734718c5e104b, type: 3}

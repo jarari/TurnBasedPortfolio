@@ -69,7 +69,9 @@ namespace TurnBased.Battle.Managers {
                 enumerator.MoveNext();
             }
             _turnQueue.Insert(idx, new TurnData(character, TurnType.Ult));
-            if (CurrentCharacter.WantCmd == true 
+            if (idx == 0
+                && CurrentCharacter.Data.Team == Data.CharacterTeam.Player
+                && CurrentCharacter.WantCmd == true 
                 && CurrentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack 
                 && CurrentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {
                 var _characterTurn = _turnQueue.Find((t) => t.Character == CurrentCharacter && t.Type == TurnType.Normal);
@@ -88,7 +90,7 @@ namespace TurnBased.Battle.Managers {
         public void AddExtraAtackTurn(Character character, Character target) {
             int idx = 0;
             IEnumerator<TurnData> enumerator = _turnQueue.GetEnumerator();
-            while (enumerator.MoveNext() && enumerator.Current.Type != TurnType.Normal) {
+            while (enumerator.MoveNext() && enumerator.Current.Type == TurnType.ExtraAttack) {
                 idx++;
                 enumerator.MoveNext();
             }

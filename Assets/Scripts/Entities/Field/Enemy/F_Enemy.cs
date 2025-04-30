@@ -136,20 +136,17 @@ namespace TurnBased.Entities.Field {
             else
                 return;
 
-        }
-
-        public virtual void findPlayer() 
+        public virtual void findPlayer(GameObject player) 
         {
-            // 태그가 플레이어인 오브젝트를 탐지 범위 내에 있는지 찾아낸다
-            target = detecter.Detect(transform.position, findDistnace, "Player");
+            target = player; // 플레이어를 타겟으로 설정
 
-            // 있다면
-            if (target != null)
+            if (target != null) // 타겟이 null이 아닐때
             {
-                // 에너미의 상태를 무브로 바꾸고
-                f_state = F_EnemyState.Move;
-
-                Debug.Log("타겟 발견 : " + target.name);                
+                if (Vector3.Distance(transform.position, target.transform.position) < findDistnace) // 타겟과의 거리가 탐지거리보다 작을때
+                {
+                    Debug.Log("플레이어 감지: " + target.name);
+                    // f_state = F_EnemyState.Move;
+                }
             }
             else if (target == null)
             {

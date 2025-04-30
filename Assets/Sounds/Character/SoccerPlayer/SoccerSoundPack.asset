@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df8cc8c012f849e4fbaf13c0183004d6, type: 3}
+  m_Name: SoccerSoundPack
+  m_EditorClassIdentifier: 
+  soundData:
+  - name: SoccerBallKick
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: a49bf3a413346774a91c4a01d8dff381, type: 3}
+  - name: SoccerBallBounce
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: d3ea12f200b7743459bed8c9d6b5a245, type: 3}
+  - name: SoccerUltExplosion
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 90435ac69e7f5df43bf0db2510373957, type: 3}
+  - name: SoccerUltStepL
+    volume: 0.9
+    audioClips:
+    - {fileID: 8300000, guid: 4b8408ca685373848a1d36ca5c342644, type: 3}
+    - {fileID: 8300000, guid: 88c00fffeae21e24bbb07c24e9fa5e87, type: 3}
+    - {fileID: 8300000, guid: 6947b6a633880714f8b706e590016e25, type: 3}
+    - {fileID: 8300000, guid: f74f2e97efc4a6748b9712bbe74a4c51, type: 3}
+    - {fileID: 8300000, guid: d7825d1d559474147b08e6a63c62192a, type: 3}
+    - {fileID: 8300000, guid: bd90b2d93ef7441498a5b3b73ea017dc, type: 3}
+  - name: SoccerUltStepR
+    volume: 0.9
+    audioClips:
+    - {fileID: 8300000, guid: 61ec0fc938f5e9f45904f2be666263b8, type: 3}
+    - {fileID: 8300000, guid: 93601654bce21cc4db4fa32d887091d7, type: 3}
+    - {fileID: 8300000, guid: 41cae0179e1630449b603996d04ba1fc, type: 3}
+    - {fileID: 8300000, guid: 5aa017edad07cef488c1d7d6162f5035, type: 3}
+    - {fileID: 8300000, guid: c44f116d0d8a16640ab81632f8b5026c, type: 3}
+    - {fileID: 8300000, guid: fc6f6e64d425f5f40ba5058a98ad2257, type: 3}
+  - name: SoccerUltFlame
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 661b7a38a9c434747a96ce19d961b4d1, type: 3}
+  - name: SoccerUltWhistle
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 7d2adc298a052624fb9745c0501709d0, type: 3}
+  - name: SoccerUltCheering
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 5319cc0cf0c9cf34180a468d61d81307, type: 3}
+  - name: SoccerUltBreath
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 6c47a5542e5e6e84b966417e5a8565a3, type: 3}
+    - {fileID: 8300000, guid: 7478b09e2afe33344a8fea31cb74c57a, type: 3}
+    - {fileID: 8300000, guid: 9e7d7789f2c7adc45b36204d98a32c35, type: 3}
+    - {fileID: 8300000, guid: b603985c81381954288ff2319b4d6728, type: 3}
+    - {fileID: 8300000, guid: b00d93f405d263843bfedaf10ec6fb97, type: 3}
+    - {fileID: 8300000, guid: cf083b71129ea61458a393b720469409, type: 3}
+  - name: SoccerCloth1
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 1504c49125e8f5e44a130cf38eab56f5, type: 3}
+  - name: SoccerCloth2
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 45af11b7cdb60b043a4e9bb372cec326, type: 3}
+  - name: SoccerCloth3
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: e416e6ce932132a4aad5802a7bd6d30f, type: 3}
+  - name: SoccerCloth4
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: bf9dc36dd0eaa1444899edf032fc08a3, type: 3}
+  - name: SoccerCloth5
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 62e2de3cc6db4664096b43f020ba7178, type: 3}
+  - name: SoccerExplosion
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 5d4da8e109530d7478d742a997a3d2f5, type: 3}
+  - name: SoccerHit
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: f50268a7fa56e49468f1a21b6b4465f3, type: 3}
+    - {fileID: 8300000, guid: 91abc4f0597b43d4a912ae5ff8c4374b, type: 3}
+    - {fileID: 8300000, guid: 080a7f9527bbad941a2a36299255f852, type: 3}
+    - {fileID: 8300000, guid: 3b2022b6e2ff77640936e873804b98bc, type: 3}
+    - {fileID: 8300000, guid: 886a1ad674c6124409eac6910613ae4b, type: 3}
+    - {fileID: 8300000, guid: 462b99792d6189c429915cc207694294, type: 3}
+    - {fileID: 8300000, guid: c3b0bc2755d351d44b86c2de68431c5e, type: 3}
+    - {fileID: 8300000, guid: 9f3e9fd9711ad464f96411bc2aac8f50, type: 3}
+    - {fileID: 8300000, guid: 0e47681ddd021fb4dbe38c5b5d6bbac1, type: 3}
+    - {fileID: 8300000, guid: b15bb285e086d844eba630b82d0fe3d0, type: 3}
+    - {fileID: 8300000, guid: 2fc336718918b2540a373c1aa6b1c011, type: 3}
+    - {fileID: 8300000, guid: 0226074b83b2ad347b0d923f2e7f48ad, type: 3}
+  - name: SoccerDeath
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 91658f28b24c39342815a1e97262ade9, type: 3}
+    - {fileID: 8300000, guid: bc6e72a3c23563944bd8309b959abe01, type: 3}
+    - {fileID: 8300000, guid: db6c938ccadf30a4f85f8b8bf3fce177, type: 3}
+    - {fileID: 8300000, guid: a5c2f7051713a5a4c9f1962f535318b9, type: 3}
+    - {fileID: 8300000, guid: cc2362693e21c9b458232fd505f201b7, type: 3}
+    - {fileID: 8300000, guid: f4aa4b62537cfc94ca993b461cef1e39, type: 3}
+    - {fileID: 8300000, guid: 0d826187ea35def49af0d6b06097eaa3, type: 3}
+    - {fileID: 8300000, guid: 092b96a3b980efe4c8455fae22bc673f, type: 3}
+    - {fileID: 8300000, guid: 5bbc90c9cf1983148989e9925af62dbb, type: 3}

@@ -43623,6 +43623,7 @@ GameObject:
   - component: {fileID: 8947069831177671629}
   - component: {fileID: 8470411005605096192}
   - component: {fileID: 8947069831177671630}
+  - component: {fileID: 8947069831177671632}
   - component: {fileID: 8947069831177671631}
   m_Layer: 0
   m_Name: Mutant
@@ -74972,6 +74973,22 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.5, z: 0}
+--- !u!114 &8947069831177671632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6128344502279493196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fc189d142868c142acfffa1fb96620a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  f_state: 0
+  findDistnace: 4
+  target: {fileID: 0}
+  attDistance: 2
 --- !u!1 &8953585505472744228
 GameObject:
   m_ObjectHideFlags: 0

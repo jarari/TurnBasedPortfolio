@@ -24,10 +24,6 @@ namespace TurnBased.Entities.Battle
         [Header("Components")]
         public Animator animator;   // 캐릭터의 애니메이터
 
-        [Header("Buff")]
-        public BuffData Debuff;     // 디버프
-        public BuffData AttackBuff;     // 공격버프
-
         // 캐릭터의 마지막 공격 상태를 담을 변수
         private CharacterState _lastAttack;
 
@@ -265,11 +261,6 @@ namespace TurnBased.Entities.Battle
             // 타임라인을 현재 시간에 맞게 상태를 업데이트
             Groggy_anim.Evaluate();
 
-            // 속도와 방어력을 원래대로 돌린다
-            GroggyReset();
-            // 디버프를 삭재한다            
-            this.GetComponent<CharacterBuffSystem>().RemoveBuff("GroggyDebuff");
-
             // 스킬 쿨타임이 2이상 이면
             if (skill_cool >= 2)
             {
@@ -432,10 +423,7 @@ namespace TurnBased.Entities.Battle
                     // 상태를 광폭화로 바꾼다
                     b_State = BossState.Rampage;
 
-                    // 공격력을 1.5배로 한다
-                    this.Data.Attack.ModifyCurrent((this.Data.Attack.Current) / 2);
-
-                    this.GetComponent<CharacterBuffSystem>().ApplyBuff("Rampage_Buff", this, AttackBuff);
+                    this.GetComponent<CharacterBuffSystem>().ApplyBuff("Rampage_Buff", this);
                     
                     // 현재 상태가 그로기 상태라면
                     if (this.CurrentState == CharacterState.Groggy)
@@ -445,9 +433,6 @@ namespace TurnBased.Entities.Battle
 
                         // 에너미의 현재 상태를 기본으로 한다
                         this.CurrentState = CharacterState.Idle;
-
-                        // 현재 강인도를 최대치로 한다
-                        this.Data.Toughness.Reset();
 
                         animator.SetBool("GroggyBool", false);
 
@@ -500,12 +485,6 @@ namespace TurnBased.Entities.Battle
             animator.SetBool("GroggyBool", true);
 
             Debug.Log("캐릭터의 현재 상태 : " + this.CurrentState);
-            
-            // 속도와 방어력을 절반으로 한다
-            GroggyDebuff();
-
-            // 디버프를 등록한다 (버프이름 , 대상, 버프데이터)
-            this.GetComponent<CharacterBuffSystem>().ApplyBuff("GroggyDebuff", this , Debuff);
         }
 
         /// <summary>
