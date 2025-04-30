@@ -34,6 +34,8 @@ namespace TurnBased.Battle.Managers {
         private List<TurnData> _turnQueue = new List<TurnData>();
         private TurnType _lastTurnType;
 
+        private int _charactersInDeathSequence;
+
         private void Awake() {
             if (instance != null) {
                 Destroy(this);
@@ -42,16 +44,30 @@ namespace TurnBased.Battle.Managers {
             instance = this;
         }
 
+        private void HandleCharacterDeath(Character c) {
+            _charactersInDeathSequence++;
+        }
+
+        private void HandleCharacterDeathComplete(Character c) {
+            RemoveCharacter(c);
+            _charactersInDeathSequence--;
+        }
+
         /// <summary>
         /// 일반 공격 캐릭터 추가 (호출 할 일 없음)
         /// </summary>
         /// <param name="character"></param>
         public void AddCharacter(Character character) {
             _turnQueue.Add(new TurnData(character, TurnType.Normal));
+            character.OnDeath += HandleCharacterDeath;
+            character.OnDeathComplete += HandleCharacterDeathComplete;
         }
 
         public void RemoveCharacter(Character character) {
             _turnQueue.RemoveAll((data) => data.Character == character);
+            _turnQueue.RemoveAll((data) => data.ExtraAttackTarget == character);
+            character.OnDeath -= HandleCharacterDeath;
+            character.OnDeathComplete -= HandleCharacterDeathComplete;
         }
 
         public void RemoveCharacterUltExtraAttackOnly(Character character) {
@@ -170,7 +186,18 @@ namespace TurnBased.Battle.Managers {
         }
 
         private IEnumerator StartNextTurnDelayed() {
-            yield return null;
+            if (_charactersInDeathSequence == 0) {
+                yield return null;
+            }
+            else {
+                CurrentCharacter.ProcessCamChanged();
+                foreach (var c in CharacterManager.instance.GetAllCharacters()) {
+                    if (c.CurrentMeshLayer != Character.MeshLayer.Hidden) {
+                        c.SetMeshLayer(Character.MeshLayer.Default);
+                    }
+                }
+                yield return new WaitWhile(() => _charactersInDeathSequence > 0);
+            }
             StartNextTurn();
         }
 

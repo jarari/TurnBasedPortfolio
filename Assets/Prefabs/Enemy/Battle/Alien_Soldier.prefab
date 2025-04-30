@@ -2903,13 +2903,13 @@ MonoBehaviour:
   meshParent: {fileID: 1309598406919126701}
   ultIdleOverride: {fileID: 0}
   _baseData: {fileID: 11400000, guid: 235bf0c25abab7f44a63e83ae20afd48, type: 2}
+  _chest: {fileID: 0}
   normalAttack: {fileID: 6683801888433007961}
   skillAttack: {fileID: 6272895803306398692}
   Groggy_anim: {fileID: 6115879666336231422}
   animator: {fileID: 7273819714409786475}
-  Debuff: {fileID: 11400000, guid: 2398299b4b98f8f4e970d7964130cd6f, type: 2}
   target: {fileID: 0}
-  Damage_factor: 0
+  Damage_factor: {fileID: 0}
   skill_cool: 0
 --- !u!82 &7540967982965205952
 AudioSource:
@@ -9079,6 +9079,7 @@ GameObject:
   - component: {fileID: 8928224643486690661}
   - component: {fileID: 7273819714409786475}
   - component: {fileID: 3309868237093405181}
+  - component: {fileID: 3278170682362322257}
   m_Layer: 0
   m_Name: Alien_Soldier
   m_TagString: Untagged
@@ -9144,6 +9145,19 @@ MonoBehaviour:
   meshParent: {fileID: 1309598406919126701}
   ultIdleOverride: {fileID: 0}
   _baseData: {fileID: 11400000, guid: 235bf0c25abab7f44a63e83ae20afd48, type: 2}
+  _chest: {fileID: 0}
+--- !u!114 &3278170682362322257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8430665764238464124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dee05c27b913e641aae5618d4a337fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8627360839876339433
 GameObject:
   m_ObjectHideFlags: 0

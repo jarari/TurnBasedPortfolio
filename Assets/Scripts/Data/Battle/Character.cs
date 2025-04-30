@@ -29,8 +29,7 @@ namespace TurnBased.Battle {
             PrepareDead,
             Dead,
             PrepareGroggy,
-            Groggy,
-            Damage
+            Groggy
         }
 
         public enum MeshLayer {
@@ -159,12 +158,14 @@ namespace TurnBased.Battle {
             if (args.Length >= 2) {
                 payload = args[1];
             }
-
             if (argument == "SoundPlay") {
                 SoundManager.instance.Play2DSound(payload);
             }
             else if (argument == "VOSoundPlay") {
                 SoundManager.instance.PlayVOSound(this, payload);
+            }
+            else if (argument == "DeathComplete") {
+                OnDeathComplete?.Invoke(this);
             }
 
             OnAnimationEvent?.Invoke(this, argument, payload);
@@ -262,8 +263,6 @@ namespace TurnBased.Battle {
             WantState = CharacterState.PrepareDead;
             // 명령대기를 하지 않음을 반환
             WantCmd = false;
-            // 턴 큐에서 캐릭터 제거
-            TurnManager.instance.RemoveCharacter(this);
             OnDeath?.Invoke(this);
         }
         /// <summary>
@@ -315,8 +314,9 @@ namespace TurnBased.Battle {
         /// </summary>
         /// <param name="attacker"></param>
         public virtual void Damage(Character attacker, DamageResult result) {
-            // 캐릭터의 현재 상태를 데미지로 처리
-            CurrentState = CharacterState.Damage;
+            if (IsDead) {
+                return;
+            }
 
             if (Data.Toughness.CurrentMax > 0) {
                 // 만약 강인도가 있다면

@@ -40529,6 +40529,8 @@ GameObject:
   - component: {fileID: 7276288554328146753}
   - component: {fileID: 5385281271499008004}
   - component: {fileID: 254103761128352636}
+  - component: {fileID: 7783051092577471569}
+  - component: {fileID: 1140982757564036967}
   m_Layer: 0
   m_Name: Eber
   m_TagString: Untagged
@@ -40601,6 +40603,48 @@ MonoBehaviour:
   meshParent: {fileID: 4085315414686544788}
   ultIdleOverride: {fileID: 0}
   _baseData: {fileID: 11400000, guid: 424f56a61fb43ec4ebac6a3d451d7df2, type: 2}
+  _chest: {fileID: 0}
+--- !u!114 &7783051092577471569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4079736194908912608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dee05c27b913e641aae5618d4a337fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!205 &1140982757564036967
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4079736194908912608}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: -0.35593224, y: 3.056679, z: 0.79571414}
+  m_Size: 10.472435
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.20126809
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 5719881855297328008}
+    - renderer: {fileID: 7465912398943938959}
+    - renderer: {fileID: 1144541481450076138}
+    - renderer: {fileID: 8703338892868062621}
+  - screenRelativeHeight: 0.028646633
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 3694416812372572498}
+    - renderer: {fileID: 6369778535088171921}
+    - renderer: {fileID: 1623352077821142919}
+    - renderer: {fileID: 2431842249231647248}
+  m_Enabled: 1
 --- !u!1 &4085315414686544788
 GameObject:
   m_ObjectHideFlags: 0
@@ -50797,13 +50841,13 @@ MonoBehaviour:
   meshParent: {fileID: 4085315414686544788}
   ultIdleOverride: {fileID: 0}
   _baseData: {fileID: 11400000, guid: 424f56a61fb43ec4ebac6a3d451d7df2, type: 2}
+  _chest: {fileID: 0}
   normalAttack: {fileID: 3889480754482456968}
   skillAttack: {fileID: 8599737403148063241}
   Groggy_anim: {fileID: 3773982512947758910}
   animator: {fileID: 5385281271499008004}
-  Debuff: {fileID: 11400000, guid: 2398299b4b98f8f4e970d7964130cd6f, type: 2}
   target: {fileID: 0}
-  Damage_factor: 0
+  Damage_factor: {fileID: 0}
   skill_cool: 0
 --- !u!82 &6560273212750809296
 AudioSource:
@@ -55904,7 +55948,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7647360590978268623
 Transform:
   m_ObjectHideFlags: 0
@@ -71762,7 +71806,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8493049205551178765
 Transform:
   m_ObjectHideFlags: 0
@@ -72230,7 +72274,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6377499500594756937
 Transform:
   m_ObjectHideFlags: 0
@@ -91572,7 +91616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6458988542396484957
 Transform:
   m_ObjectHideFlags: 0
