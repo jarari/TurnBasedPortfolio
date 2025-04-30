@@ -25,24 +25,21 @@ public class MainCameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (target == null)
+        if (!Input.GetKey(KeyCode.LeftAlt))
         {
-            Debug.LogWarning("Target is not assigned to MainCameraController.");
-            return;
+            // 마우스 입력으로 카메라 회전
+            currentRotationX += Input.GetAxis("Mouse X") * rotationSpeed;
+            currentRotationY -= Input.GetAxis("Mouse Y") * rotationSpeed;
+            currentRotationY = Mathf.Clamp(currentRotationY, -30f, 60f); // 상하 회전 제한
+
+            // 회전 적용
+            Quaternion rotation = Quaternion.Euler(currentRotationY, currentRotationX, 0);
+            Vector3 desiredPosition = target.position + rotation * offset;
+
+            // 카메라 위치와 회전 설정
+            transform.position = desiredPosition;
+            transform.LookAt(target);
         }
-
-        // 마우스 입력으로 카메라 회전
-        currentRotationX += Input.GetAxis("Mouse X") * rotationSpeed;
-        currentRotationY -= Input.GetAxis("Mouse Y") * rotationSpeed;
-        currentRotationY = Mathf.Clamp(currentRotationY, -30f, 60f); // 상하 회전 제한
-
-        // 회전 적용
-        Quaternion rotation = Quaternion.Euler(currentRotationY, currentRotationX, 0);
-        Vector3 desiredPosition = target.position + rotation * offset;
-
-        // 카메라 위치와 회전 설정
-        transform.position = desiredPosition;
-        transform.LookAt(target);
     }
 
     public void SetTarget(Transform newTarget)
