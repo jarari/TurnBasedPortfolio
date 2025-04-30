@@ -51,6 +51,16 @@ namespace TurnBased.Battle.Managers {
             };
         }
 
+        public static DamageResult CalculateTrueDamage(float damage, float toughnessDamage) {
+            return new DamageResult {
+                BaseDamage = damage,
+                ReducedDamage = 0,
+                FinalDamage = damage,
+                ToughnessDamage = toughnessDamage,
+                IsCrit = false
+            };
+        }
+
         public static bool CheckElementMatch(ElementType type1, ElementType type2) {
             return (type1 & type2) > 0;
         }

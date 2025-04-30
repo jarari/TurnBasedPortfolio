@@ -68,8 +68,9 @@ namespace TurnBased.Battle {
                 }
             }
             else {
-                instance = new BuffInstance(buffData, caster, _owner);
+                instance = new BuffInstance(buffData, caster, _owner, identifier);
                 _activeBuffs.Add(identifier, instance);
+                instance.OnStackDecreased += CheckBuffStack;
             }
             instance.OnApply();
 
@@ -78,11 +79,22 @@ namespace TurnBased.Battle {
 
         public void RemoveBuff(string identifier) {
             if (_activeBuffs.ContainsKey(identifier)) {
-                var buff = _activeBuffs[identifier];
-                buff.OnRemove();
-                _activeBuffs.Remove(identifier);
+                var instance = _activeBuffs[identifier];
+                RemoveBuff(instance);
+            }
+        }
 
-                OnBuffRemoved?.Invoke(buff);
+        public void RemoveBuff(BuffInstance instance) {
+            instance.OnStackDecreased -= CheckBuffStack;
+            instance.OnRemove();
+            _activeBuffs.Remove(instance.Id);
+
+            OnBuffRemoved?.Invoke(instance);
+        }
+
+        public void CheckBuffStack(BuffInstance instance) {
+            if (instance.Stacks <= 0) {
+                RemoveBuff(instance);
             }
         }
     }
