@@ -189,15 +189,18 @@ namespace TurnBased.Entities.Battle {
             if (_lastAttack == CharacterState.DoAttack || _lastAttack == CharacterState.DoExtraAttack) {
                 normalAttack.time = normalAttack.duration;
                 normalAttack.Evaluate();
+                normalAttack.Stop();
                 meshParent.transform.forward = -Vector3.right;
             }
             else if (_lastAttack == CharacterState.CastSkill) {
                 skillAttack.time = skillAttack.duration;
                 skillAttack.Evaluate();
+                skillAttack.Stop();
             }
             else if (_lastAttack == CharacterState.CastUltAttack) {
                 ultAttack.time = ultAttack.duration;
                 ultAttack.Evaluate();
+                ultAttack.Stop();
             }
         }
 
