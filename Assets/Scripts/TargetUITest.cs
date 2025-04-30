@@ -14,11 +14,11 @@ public class TargetUITest : MonoBehaviour {
     }
 
     private void Update() {
-        target.transform.position = Camera.main.WorldToScreenPoint(character.transform.position + Vector3.up * 1.0f);
+        target.transform.position = Camera.main.WorldToScreenPoint(character.meshParent.transform.position + Vector3.up * 1.0f);
     }
 
     private void OnTargetChanged(Character c){
         character = c;
-        target.transform.position = Camera.main.WorldToScreenPoint(c.transform.position + Vector3.up * 1.0f);
+        target.transform.position = Camera.main.WorldToScreenPoint(c.meshParent.transform.position + Vector3.up * 1.0f);
     }
 }
