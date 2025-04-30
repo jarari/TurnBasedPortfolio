@@ -13067,6 +13067,7 @@ MonoBehaviour:
   meshParent: {fileID: 4379421551468649488}
   ultIdleOverride: {fileID: 0}
   _baseData: {fileID: 11400000, guid: cfa15eedc5b865945aec08c04536bc26, type: 2}
+  _chest: {fileID: 7559916802965359188}
   normalAttack: {fileID: 8523944838251556703}
   skillAttack: {fileID: 4626869788174772775}
   ultAttack: {fileID: 7966230476215795154}
@@ -23096,10 +23097,8 @@ Animator:
   m_AnimatePhysics: 0
   m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
     are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tTransform 'mixamorig7:RightUpLeg'\n\tTransform 'mixamorig7:RightFoot'\n\tTransform
-    'mixamorig7:RightLeg'\n\tFrom animation clip 'stall ball'"
+    by Humanoid clips.\n\tTransform 'mixamorig7:RightUpLeg'\n\tFrom animation clip
+    'stall ball'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0

@@ -40600,10 +40600,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1206e9b04fa5c614583c89e5df3a4475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshParent: {fileID: 4085315414686544788}
-  ultIdleOverride: {fileID: 0}
-  _baseData: {fileID: 11400000, guid: 424f56a61fb43ec4ebac6a3d451d7df2, type: 2}
-  _chest: {fileID: 0}
 --- !u!114 &7783051092577471569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50841,7 +50837,7 @@ MonoBehaviour:
   meshParent: {fileID: 4085315414686544788}
   ultIdleOverride: {fileID: 0}
   _baseData: {fileID: 11400000, guid: 424f56a61fb43ec4ebac6a3d451d7df2, type: 2}
-  _chest: {fileID: 0}
+  _chest: {fileID: 7971043110264498939}
   normalAttack: {fileID: 3889480754482456968}
   skillAttack: {fileID: 8599737403148063241}
   Groggy_anim: {fileID: 3773982512947758910}
