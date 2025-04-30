@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using TurnBased.Battle.Managers;
 using UnityEngine;
@@ -96,6 +95,10 @@ namespace TurnBased.Battle {
             if (instance.Stacks <= 0) {
                 RemoveBuff(instance);
             }
+        }
+
+        public bool HasBuff(string identifier) {
+            return _activeBuffs.ContainsKey(identifier);
         }
     }
 }
