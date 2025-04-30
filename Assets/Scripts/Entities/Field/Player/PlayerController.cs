@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
     private GameObject currentCharacter; // 현재 활성화된 캐릭터
     private int currentCharacterIndex = 0; // 현재 활성화된 캐릭터 인덱스
 
-
     public static event Action<GameObject> OnPlayerNearEnemy; // 적 탐지 이벤트
 
     void Start()
@@ -40,6 +39,12 @@ public class PlayerController : MonoBehaviour
         // 달리기 상태 토글
         if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetMouseButtonDown(1)) // 쉬프트 키 또는 마우스 우클릭
             isRunning = !isRunning;
+
+        // 공격
+        if (Input.GetMouseButtonDown(0)) // 마우스 좌클릭
+        {
+            animator.SetTrigger("Attack"); // 공격 애니메이션 트리거
+        }
 
         // 현재 속도 설정
         float currentSpeed = isRunning ? runSpeed : moveSpeed;
@@ -95,6 +100,10 @@ public class PlayerController : MonoBehaviour
         currentCharacterIndex = newIndex; // 현재 캐릭터 인덱스 업데이트
         currentCharacter.transform.localRotation = Quaternion.Euler(0, 0, 0); // 로테이션 초기화
         animator = currentCharacter.GetComponent<Animator>(); // Animator 컴포넌트 가져오기
+
+        Transform cameraPivot = currentCharacter.transform.Find("CameraPivot"); // 캐릭터 프리팹의 자식 오브젝트에서 "CameraPivot" 찾기
+        if (cameraPivot != null) // "CameraPivot"이 존재하는 경우
+            MainCameraController.Instance.SetTarget(cameraPivot); // 카메라 타겟을 CameraPivot으로 설정
     }
 
     private void DetectEnemies()
