@@ -17,3 +17,11 @@ MonoBehaviour:
     volume: 1
     audioClips:
     - {fileID: 8300000, guid: 6830079818c219445be0ce3d475e1082, type: 3}
+  - name: BuffBlastFire
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: bae2b986b9548c942a0b3b74b86e1432, type: 3}
+  - name: BuffCommonFire
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 3d3808206ee6fcf41b40caf2d1c54639, type: 3}
