@@ -17,6 +17,7 @@ namespace TurnBased.Battle.Managers {
         /// </summary>
         public bool HasRound;
         public int CurrentRound { get; private set; } = 1;
+        public int TurnPassed { get; private set; }
         /// <summary>
         /// 현재 행동중인 캐릭터
         /// </summary>
@@ -78,6 +79,7 @@ namespace TurnBased.Battle.Managers {
                 _turnQueue.Remove(_characterTurn);
                 _characterTurn.ModRemainingTime(0);
                 _turnQueue.Insert(1, _characterTurn);
+                TurnPassed--;
                 StartNextTurn();
             }
             SoundManager.instance.Play2DSound("UIUltStandby");
@@ -139,6 +141,7 @@ namespace TurnBased.Battle.Managers {
                 first.Character.TakeExtraAttackTurn();
                 first.Character.DoExtraAttack(first.ExtraAttackTarget);
             }
+            TurnPassed++;
         }
 
         public float GetRemainingTime(Character c) {

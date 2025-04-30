@@ -26,6 +26,10 @@ namespace TurnBased.Battle {
         }
 
         public void OnApply() {
+            if (_data.maxStacks > 0 && Stacks >= _data.maxStacks) {
+                return;
+            }
+
             Stacks++;
 
             foreach (var modData in _data.modifiers)
