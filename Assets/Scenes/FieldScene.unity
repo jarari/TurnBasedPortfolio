@@ -27134,6 +27134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd2e8874f60266498a388d7229a1bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnlyDeactivate: 0
 --- !u!199 &1456943991
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -70110,6 +70111,7 @@ MonoBehaviour:
   moveSpeed: 5
   runSpeed: 10
   cameraTransform: {fileID: 568461261}
+  detectRange: 10
   characterPrefabs:
   - {fileID: 841792319150718950, guid: d5b5dc190a2aad244936a25ac90c15dd, type: 3}
   - {fileID: 2590362884940667194, guid: 900fd73b685a8b2498d8343d73b2952b, type: 3}
