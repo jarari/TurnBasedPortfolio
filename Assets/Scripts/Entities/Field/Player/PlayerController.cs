@@ -1,11 +1,13 @@
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f; // 기본 이동 속도
-    public float runSpeed = 10f; // 달리기 속도
+    public float moveSpeed = 5.0f; // 기본 이동 속도
+    public float runSpeed = 10.0f; // 달리기 속도
     public Transform cameraTransform; // 카메라 Transform
+    public float detectRange = 10.0f; // 탐지 범뤼
 
     private CharacterController characterController; // 캐릭터 컨트롤러
     private Animator animator; // Animator 컴포넌트
@@ -14,6 +16,9 @@ public class PlayerController : MonoBehaviour
     public GameObject[] characterPrefabs; // 캐릭터 프리팹 배열
     private GameObject currentCharacter; // 현재 활성화된 캐릭터
     private int currentCharacterIndex = 0; // 현재 활성화된 캐릭터 인덱스
+
+
+    public static event Action<GameObject> OnPlayerNearEnemy; // 적 탐지 이벤트
 
     void Start()
     {
@@ -26,6 +31,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        DetectEnemies(); // 적 탐지
+
         if (Input.GetKeyDown(KeyCode.Alpha1)) ChangeCharacter(0);
         if (Input.GetKeyDown(KeyCode.Alpha2)) ChangeCharacter(1);
         if (Input.GetKeyDown(KeyCode.Alpha3)) ChangeCharacter(2);
@@ -89,4 +96,19 @@ public class PlayerController : MonoBehaviour
         currentCharacter.transform.localRotation = Quaternion.Euler(0, 0, 0); // 로테이션 초기화
         animator = currentCharacter.GetComponent<Animator>(); // Animator 컴포넌트 가져오기
     }
+
+    private void DetectEnemies()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, detectRange); // 탐지 범위 내의 콜라이더 가져오기
+
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("Enemy")) // 콜라이더 태그가 "Enemy"인 경우
+            {
+                OnPlayerNearEnemy(this.gameObject); // 이벤트 호출
+                Debug.Log("적 감지: " + hitCollider.name);
+            }
+        }
+    }
+
 }
