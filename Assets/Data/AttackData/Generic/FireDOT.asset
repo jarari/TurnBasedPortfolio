@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FireDOT
   m_EditorClassIdentifier: 
   damageMult:
-  - 0.35
+  - 1
   toughnessDamage:
   - 0
   canCrit: 0
