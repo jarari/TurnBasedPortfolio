@@ -10,14 +10,16 @@ namespace TurnBased.Battle.BuffEffects {
         private string _sfxApply;
         private string _sfxDamage;
         private AttackData _damageData;
+        private bool _multiplyByStack;
         private GameObject _vfxInstance;
 
-        public DamageOnTurnStartEffect(BuffInstance instance, GameObject vfxPrefab, string sfxApply, string sfxDamage, AttackData damageData) {
+        public DamageOnTurnStartEffect(BuffInstance instance, GameObject vfxPrefab, string sfxApply, string sfxDamage, AttackData damageData, bool multiplyByStack) {
             Instance = instance;
             _sfxApply = sfxApply;
             _sfxDamage = sfxDamage;
             _vfxPrefab = vfxPrefab;
             _damageData = damageData;
+            _multiplyByStack = multiplyByStack;
         }
 
         public void OnApply(Character caster, Character owner) {
@@ -41,6 +43,12 @@ namespace TurnBased.Battle.BuffEffects {
 
         public void OnTurnStart(Character caster, Character owner, TurnType type) {
             var result = CombatManager.CalculateDamage(caster, owner, _damageData);
+
+            if (_multiplyByStack) {
+                result.BaseDamage *= Instance.Stacks;
+                result.ReducedDamage *= Instance.Stacks;
+                result.FinalDamage *= Instance.Stacks;
+            }
 
             owner.Damage(caster, result);
 
@@ -69,7 +77,8 @@ namespace TurnBased.Battle.BuffEffects {
         public string sfxApply;
         public string sfxDamage;
         public AttackData damageData;
+        public bool multiplyByStack;
         public override IBuffEffect Create(BuffInstance instance)
-            => new DamageOnTurnStartEffect(instance, vfxPrefab, sfxApply, sfxDamage, damageData);
+            => new DamageOnTurnStartEffect(instance, vfxPrefab, sfxApply, sfxDamage, damageData, multiplyByStack);
     }
 }
