@@ -21,7 +21,7 @@ namespace TurnBased.Battle.BuffEffects {
         }
 
         public void OnApply(Character caster, Character owner) {
-            if (_vfxPrefab != null) {
+            if (_vfxPrefab != null && _vfxInstance == null) {
                 _vfxInstance = Object.Instantiate(_vfxPrefab);
                 _vfxInstance.transform.SetParent(owner.Chest);
                 _vfxInstance.transform.position = owner.Chest.position;
