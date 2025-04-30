@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: FireDOT
   m_EditorClassIdentifier: 
   vfxPrefab: {fileID: 6726266824923621998, guid: 9b42a1fa26594d94f9dcbdc787b5f6a4, type: 3}
-  sfxName: 
+  sfxApply: BuffBlastFire
+  sfxDamage: BuffCommonFire
   damageData: {fileID: 11400000, guid: 155e0cd31be14a446a68534ba1c78b3b, type: 2}
