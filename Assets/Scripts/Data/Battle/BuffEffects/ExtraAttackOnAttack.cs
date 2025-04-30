@@ -4,8 +4,14 @@ using UnityEngine;
 namespace TurnBased.Battle.BuffEffects {
 
     public class ExtraAttackOnAttackEffect : IBuffEffect {
+        public BuffInstance Instance { get; }
+
         private Character _caster;
         private Character _owner;
+
+        public ExtraAttackOnAttackEffect(BuffInstance instance) {
+            Instance = instance;
+        }
 
         public void OnApply(Character caster, Character owner) {
             _caster = caster;
@@ -30,7 +36,7 @@ namespace TurnBased.Battle.BuffEffects {
 
     [CreateAssetMenu(menuName = "ScriptableObjects/BuffEffects/ExtraAttackOnAttack")]
     public class ExtraAttackOnAttack : BuffEffectDefinition {
-        public override IBuffEffect Create()
-            => new ExtraAttackOnAttackEffect();
+        public override IBuffEffect Create(BuffInstance instance)
+            => new ExtraAttackOnAttackEffect(instance);
     }
 }

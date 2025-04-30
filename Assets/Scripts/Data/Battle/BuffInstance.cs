@@ -17,7 +17,7 @@ namespace TurnBased.Battle {
             _owner = owner;
 
             foreach (var def in data.extraEffects)
-                _effects.Add(def.Create());
+                _effects.Add(def.Create(this));
         }
 
         public void OnApply() {
