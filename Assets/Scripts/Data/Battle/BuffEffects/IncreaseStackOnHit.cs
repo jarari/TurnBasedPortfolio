@@ -6,9 +6,11 @@ namespace TurnBased.Battle.BuffEffects {
     public class IncreaseStackOnHitEffect : IBuffEffect {
         public BuffInstance Instance { get; }
         private int _lastAttackTurn = -1;
+        private string _sfxOnIncrease;
 
-        public IncreaseStackOnHitEffect(BuffInstance instance) {
+        public IncreaseStackOnHitEffect(BuffInstance instance, string sfxOnIncrease) {
             Instance = instance;
+            _sfxOnIncrease = sfxOnIncrease;
         }
 
         public void OnApply(Character caster, Character owner) {
@@ -22,6 +24,10 @@ namespace TurnBased.Battle.BuffEffects {
             }
             Instance.OnApply();
             _lastAttackTurn = currentTurn;
+
+            if (_sfxOnIncrease.Length > 0) {
+                SoundManager.instance.Play2DSound(_sfxOnIncrease);
+            }
         }
 
         public void OnRemove(Character caster, Character owner) { }
@@ -33,7 +39,8 @@ namespace TurnBased.Battle.BuffEffects {
 
     [CreateAssetMenu(menuName = "ScriptableObjects/BuffEffects/IncreaseStackOnHit")]
     public class IncreaseStackOnHit : BuffEffectDefinition {
+        public string sfxOnIncrease;
         public override IBuffEffect Create(BuffInstance instance)
-            => new IncreaseStackOnHitEffect(instance);
+            => new IncreaseStackOnHitEffect(instance, sfxOnIncrease);
     }
 }

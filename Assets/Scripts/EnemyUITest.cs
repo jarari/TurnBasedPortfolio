@@ -45,6 +45,7 @@ public class EnemyUITest : MonoBehaviour {
     private void Update() {
         transform.LookAt(Camera.main.transform.position);
         transform.forward = -transform.forward;
+        transform.position = _character.meshParent.transform.position;
     }
 
     private void UpdateWeakness() {

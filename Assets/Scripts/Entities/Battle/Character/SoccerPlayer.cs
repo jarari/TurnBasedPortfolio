@@ -154,14 +154,12 @@ namespace TurnBased.Entities.Battle {
 
         public override void PrepareUltAttack() {
             base.PrepareUltAttack();
-            Debug.Log("Prepare Ult Attack");
             animator.SetInteger("State", 2);
             TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
         }
 
         public override void PrepareUltSkill() {
             base.PrepareUltSkill();
-            Debug.Log("Prepare Ult Skill");
             animator.SetInteger("State", 2);
             TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
         }
@@ -180,10 +178,12 @@ namespace TurnBased.Entities.Battle {
             if (_lastAttack == CharacterState.DoAttack) {
                 normalAttack.time = normalAttack.duration;
                 normalAttack.Evaluate();
+                normalAttack.Stop();
             }
             else if (_lastAttack == CharacterState.CastSkill) {
                 skillAttack.time = skillAttack.duration;
                 skillAttack.Evaluate();
+                skillAttack.Stop();
                 var targets = TargetManager.instance.GetTargets();
                 foreach (var t in targets) {
                     t.meshParent.transform.localPosition = Vector3.zero;
@@ -192,8 +192,10 @@ namespace TurnBased.Entities.Battle {
             else if (_lastAttack == CharacterState.CastUltAttack) {
                 ultAttack.time = ultAttack.duration;
                 ultAttack.Evaluate();
+                ultAttack.Stop();
             }
             meshParent.transform.localPosition = Vector3.zero;
+            _lastAttack = CharacterState.Idle;
         }
     }
 }

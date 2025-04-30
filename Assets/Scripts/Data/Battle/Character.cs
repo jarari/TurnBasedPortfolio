@@ -29,8 +29,7 @@ namespace TurnBased.Battle {
             PrepareDead,
             Dead,
             PrepareGroggy,
-            Groggy,
-            Damage
+            Groggy
         }
 
         public enum MeshLayer {
@@ -49,6 +48,8 @@ namespace TurnBased.Battle {
         public Action<Character, Character, DamageResult> OnInflictedDamage;
         public Action<Character, Character, DamageResult> OnDamage;
         public Action<Character, Character, float> OnRestoreHealth;
+        public Action<Character> OnDeath;
+        public Action<Character> OnDeathComplete;
 
         public CharacterDataInstance Data { get; private set; }
 
@@ -86,6 +87,12 @@ namespace TurnBased.Battle {
         /// 턴 시작 시 실행
         /// </summary>
         public virtual void TakeTurn() {
+            if (IsDead) {
+                TurnManager.instance.EndTurn();
+                OnTurnEnd?.Invoke(this);
+                return;
+            }
+
             WantCmd = true;
             if (Data.Team == CharacterTeam.Player)
             {
@@ -151,12 +158,14 @@ namespace TurnBased.Battle {
             if (args.Length >= 2) {
                 payload = args[1];
             }
-
             if (argument == "SoundPlay") {
                 SoundManager.instance.Play2DSound(payload);
             }
             else if (argument == "VOSoundPlay") {
                 SoundManager.instance.PlayVOSound(this, payload);
+            }
+            else if (argument == "DeathComplete") {
+                OnDeathComplete?.Invoke(this);
             }
 
             OnAnimationEvent?.Invoke(this, argument, payload);
@@ -254,8 +263,7 @@ namespace TurnBased.Battle {
             WantState = CharacterState.PrepareDead;
             // 명령대기를 하지 않음을 반환
             WantCmd = false;
-            // 턴 큐에서 캐릭터 제거
-            TurnManager.instance.RemoveCharacter(this);
+            OnDeath?.Invoke(this);
         }
         /// <summary>
         /// 그로기 준비함수
@@ -306,16 +314,13 @@ namespace TurnBased.Battle {
         /// </summary>
         /// <param name="attacker"></param>
         public virtual void Damage(Character attacker, DamageResult result) {
-            // 캐릭터의 현재 상태를 데미지로 처리
-            CurrentState = CharacterState.Damage;
+            if (IsDead) {
+                return;
+            }
 
             if (Data.Toughness.CurrentMax > 0) {
                 // 만약 강인도가 있다면
                 if (Data.Toughness.Current > 0) {
-
-                    // 채력을 최종적으로 받는 데미지의 반으로 받고
-                    Data.HP.ModifyCurrent(-result.FinalDamage / 2);
-
                     // 플레이어가 약점 속성으로 때린다면
                     if (CombatManager.CheckElementMatch(attacker.Data.ElementType, Data.Weakness)) {
                         // 에너미의 강인도는 플레이어의 공격력만큼 깎인다
@@ -326,44 +331,32 @@ namespace TurnBased.Battle {
                             // 그로기를 다룰 함수를 실행한다
                             Groggy();
 
-                            if (attacker.Data.ElementType == ElementType.Fire) {
-                                GetComponent<CharacterBuffSystem>().ApplyBuff("FireDOT", attacker);
+                            switch (attacker.Data.ElementType) {
+                                case ElementType.Fire:
+                                    GetComponent<CharacterBuffSystem>().ApplyBuff("FireDOT", attacker);
+                                    break;
+                                case ElementType.Quantum:
+                                    GetComponent<CharacterBuffSystem>().ApplyBuff("QuantumDOT", attacker);
+                                    break;
                             }
                         }
-                    }
-
-                    // 채력이 만약 0이하가 되었다면
-                    if (Data.HP.Current <= 0) {
-                        // 죽음을 다룰 함수를 실행한다
-                        Dead();
                     }
                 }
                 // 만약 강인도가 없다면
                 else {
-                    // 에너미는 최종적으로 받는 데미지를 모두 받는다.
-                    Data.HP.ModifyCurrent(-result.FinalDamage);
-
                     // 그로기 상태이니 그로기 상태를 계속한다
                     CurrentState = CharacterState.Groggy;
-
-                    // 채력이 만약 0이하가 되었다면
-                    if (Data.HP.Current <= 0) {
-                        // 죽음을 다룰 함수를 실행한다
-                        Dead();
-                    }
                 }
             }
-            else {
-                // 캐릭터는 최종적으로 받는 데미지를 모두 받는다.
-                Data.HP.ModifyCurrent(-result.FinalDamage);
-
-                // 채력이 만약 0이하가 되었다면
-                if (Data.HP.Current <= 0) {
-                    // 죽음을 다룰 함수를 실행한다
-                    Dead();
-                }
-            }
+            // 캐릭터는 최종적으로 받는 데미지를 모두 받는다.
+            Data.HP.ModifyCurrent(-result.FinalDamage);
             OnDamage?.Invoke(this, attacker, result);
+
+            // 채력이 만약 0이하가 되었다면
+            if (Data.HP.Current <= 0) {
+                // 죽음을 다룰 함수를 실행한다
+                Dead();
+            }
         }
 
         public virtual void RestoreHealth(Character healer, float value) {

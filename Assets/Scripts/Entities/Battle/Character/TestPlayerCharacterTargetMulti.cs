@@ -36,5 +36,10 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareUltAttack() {
             base.PrepareUltAttack();
         }
+
+        public override void Dead() {
+            base.Dead();
+            OnDeathComplete?.Invoke(this);
+        }
     }
 }

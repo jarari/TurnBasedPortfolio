@@ -23374,6 +23374,7 @@ MonoBehaviour:
   meshParent: {fileID: 5166647311182754226}
   ultIdleOverride: {fileID: 8669003295193655434}
   _baseData: {fileID: 11400000, guid: 7d544508d0b770f4a804eff122759f1d, type: 2}
+  _chest: {fileID: 8980450968109524818}
   normalAttack: {fileID: 2405664413557686434}
   skillAttack: {fileID: 3298615781845216248}
   ultAttack: {fileID: 157670626782726105}
@@ -23387,7 +23388,6 @@ MonoBehaviour:
   ultAlly1Pos: {fileID: 3307422460647882444}
   ultAlly2Pos: {fileID: 3464622659901256163}
   healEffectPrefab: {fileID: 6787294579408483678, guid: 7f57c58fc9066054d97701b2dfcfba03, type: 3}
-  healBuff: {fileID: 11400000, guid: c0c1a4db36162f14da1454bed08e2210, type: 2}
   animator: {fileID: 4460558245622183283}
 --- !u!114 &2139441091253502864
 MonoBehaviour:
