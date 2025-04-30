@@ -15,13 +15,12 @@ namespace TurnBased.Entities.Field {
         // ↑로 만든 변수
         public F_EnemyState f_state;
 
+        Animator anim;
+
         #endregion
 
         #region 에너미 추적 관련
         
-        // 에너미 스피드
-        public float speed = 4.0f;
-
         // 에너미 탐지 거리
         public float findDistnace = 4.0f;
 
@@ -31,12 +30,18 @@ namespace TurnBased.Entities.Field {
         // 플레이어 공격가능 범위
         public float attDistance = 2.0f;
 
+        // 에너미의 캐릭터 컨트롤러를 담을 변수
+        CharacterController cc;
+
         #endregion
 
-        #region 인스턴스를 생성할 친구들
+        #region 인스턴스를 생성할 친구들 (클래스)
 
         // 플레이어를 탐지할 클래스
         protected EnemyDetector detecter;
+        protected EnemyMove Move;
+        protected EnemyAttack attack;
+        protected EnemySignal signal;
 
         #endregion
 
@@ -57,14 +62,21 @@ namespace TurnBased.Entities.Field {
             // 시작시 에너미의 상태를 기본으로 한다
             f_state = F_EnemyState.Idle;
 
-            // 탐지기의 인스턴스를 생성한다
+            // 캐릭터 컨트롤러를 가져온다
+            cc = this.GetComponent<CharacterController>();
+
+            // 캐릭터의 에니메이터를 가져온다
+            anim = this.GetComponent<Animator>();
+
+            // 각 클래스들의 인스턴스를 생성한다
             detecter = new EnemyDetector();
+            Move = new EnemyMove();
+            attack = new EnemyAttack();
+            signal = new EnemySignal();
         }
 
         private void Update()
         {
-            //findPlayer();
-
             switch (f_state)
             {
                 case F_EnemyState.Idle:
@@ -80,9 +92,51 @@ namespace TurnBased.Entities.Field {
         }
 
 
-        public virtual void F_Idle()  { }
-        public virtual void F_Move() { }
-        public virtual void F_Attack() { }
+        public virtual void F_Idle()  { }   // 얜 뭐넣지...?
+
+        public virtual void F_Move() 
+        {
+            // 에너미를 플레이어를 향해 움직인다
+            Move.FE_Move(target.transform.position, cc, this.gameObject);
+            
+            // 플레이어와의 거리를 계산하는 불값을 켜고
+            bool A_switch = Move.FE_SwitchMove(target.transform.position, this.gameObject, attDistance);
+            
+            // 에너미가 플레이어 근처에 온다면
+            if (A_switch == true)
+            {
+                // 상태를 공격으로 바꾼다
+                f_state = F_EnemyState.Attack;
+                Debug.Log("상태 갱신 : Move -> Attack");
+            }
+
+        }
+        public virtual void F_Attack() 
+        {
+            // 플레이어와의 거리를 계산하는 불값을 켜고
+            bool A_switch = Move.FE_SwitchMove(target.transform.position, this.gameObject, attDistance);
+
+            // 플레이어가 공격 범위에서 멀어졌다면
+            if (A_switch == false)
+            {
+                // 에너미의 상태를 이동으로 바꾼다
+                f_state = F_EnemyState.Move;
+                Debug.Log("상태 갱신 : Attack -> Move");
+            }
+
+            bool battle = hit_signal(A_switch);
+
+            // 만약 에너미의 공격이 플레이어에게 히트 했을 경우
+            if (battle == true)
+            {
+                // 전투 씬으로 전환할 함수를 실행한다
+                attack.ChangeScene();
+            }
+            // 히트 하지 못했을 경우
+            else
+                return;
+
+        }
 
         public virtual void findPlayer() 
         {
@@ -92,10 +146,22 @@ namespace TurnBased.Entities.Field {
             // 있다면
             if (target != null)
             {
-                Debug.Log("타겟 발견 : " + target.name);
+                // 에너미의 상태를 무브로 바꾸고
+                f_state = F_EnemyState.Move;
+
+                Debug.Log("타겟 발견 : " + target.name);                
+            }
+            else if (target == null)
+            {
+                // 에너미상태를 전환 한다
+                f_state = F_EnemyState.Idle;
+                
             }
         
         }
+
+        // 공격 애니메이션 진행시 시그널을 받을 함수
+        public virtual bool hit_signal(bool a) { return false;}
 
     }
 
