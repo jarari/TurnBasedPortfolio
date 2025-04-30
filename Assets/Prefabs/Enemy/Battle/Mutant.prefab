@@ -10029,12 +10029,13 @@ MonoBehaviour:
   meshParent: {fileID: 2399595729354791449}
   ultIdleOverride: {fileID: 0}
   _baseData: {fileID: 11400000, guid: 5cecd060d06d57d428c5cfe1dcd5167f, type: 2}
+  _chest: {fileID: 5366588840632481366}
   normalAttack: {fileID: 3136297271027889090}
   skillAttack: {fileID: 8733486855242412722}
   Groggy_anim: {fileID: 8716776409369228131}
   animator: {fileID: 5506976309218695784}
   target: {fileID: 0}
-  Damage_factor: 0
+  Damage_factor: {fileID: 0}
   skill_cool: 0
 --- !u!82 &3931580264333479864
 AudioSource:
@@ -31616,6 +31617,7 @@ MonoBehaviour:
   meshParent: {fileID: 2399595729354791449}
   ultIdleOverride: {fileID: 0}
   _baseData: {fileID: 11400000, guid: 5cecd060d06d57d428c5cfe1dcd5167f, type: 2}
+  _chest: {fileID: 0}
 --- !u!1 &7892945434073207007
 GameObject:
   m_ObjectHideFlags: 0

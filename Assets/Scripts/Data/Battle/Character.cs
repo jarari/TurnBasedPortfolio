@@ -12,6 +12,8 @@ namespace TurnBased.Battle {
         [Header("Character Data")]
         [SerializeField]
         protected CharacterData _baseData;
+        [SerializeField]
+        protected Transform _chest;
 
         public enum CharacterState {
             Idle,
@@ -61,6 +63,11 @@ namespace TurnBased.Battle {
             }
         }
         public AudioSource VOAudioSource { get; private set; }
+        public Transform Chest {
+            get {
+                return _chest != null ? _chest : transform;
+            }
+        }
 
 
         protected virtual void Awake() {
@@ -318,6 +325,10 @@ namespace TurnBased.Battle {
                         if (Data.Toughness.Current <= 0) {
                             // 그로기를 다룰 함수를 실행한다
                             Groggy();
+
+                            if (attacker.Data.ElementType == ElementType.Fire) {
+                                GetComponent<CharacterBuffSystem>().ApplyBuff("FireDOT", attacker);
+                            }
                         }
                     }
 

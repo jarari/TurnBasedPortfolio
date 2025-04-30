@@ -19,3 +19,5 @@ MonoBehaviour:
     buffData: {fileID: 11400000, guid: 2398299b4b98f8f4e970d7964130cd6f, type: 2}
   - name: Rampage_Buff
     buffData: {fileID: 11400000, guid: e0fd096b10fa20544aa68d696936f3c9, type: 2}
+  - name: FireDOT
+    buffData: {fileID: 11400000, guid: 4c3efd8bedb07b747adea17419580d0b, type: 2}
