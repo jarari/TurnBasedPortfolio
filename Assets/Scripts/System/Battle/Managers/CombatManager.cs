@@ -22,17 +22,17 @@ namespace TurnBased.Battle.Managers {
     public class CombatManager {
      
         // 데미지 피해를 계산할 함수 (때린 놈과 맞은 놈을 가져온다)
-        public static DamageResult CalculateDamage(Character attacker, Character defender, float attackMult = 1f)
+        public static DamageResult CalculateDamage(Character attacker, Character defender, AttackData attackData, int attackNum = 0)
         {
             // 때린 놈의 공격력을 가져온다
-            float baseDamage = attacker.Data.Attack.Current * attackMult;
+            float baseDamage = attacker.Data.Attack.Current * attackData.damageMult[attackNum];
 
             float reducedPercentage = defender.Data.Defense.Current / (defender.Data.Defense.Current + 1000);
 
             float victimDef = defender.Data.Defense.Current;
 
             bool isCrit = false;
-            if (Random.Range(float.Epsilon, 1f) <= attacker.Data.CritChance.Current) {
+            if (attackData.canCrit && Random.Range(float.Epsilon, 1f) <= attacker.Data.CritChance.Current) {
                 baseDamage *= attacker.Data.CritMult.Current;
                 isCrit = true;
             }
@@ -46,7 +46,7 @@ namespace TurnBased.Battle.Managers {
                 BaseDamage = baseDamage,
                 ReducedDamage = damageReduced,
                 FinalDamage = baseDamage - damageReduced,
-                ToughnessDamage = baseDamage,
+                ToughnessDamage = attackData.toughnessDamage[attackNum],
                 IsCrit = isCrit
             };
         }
