@@ -26,16 +26,16 @@ namespace TurnBased.Entities.Battle {
                 EndTurn();
             }
             else if (animEvent == "DoDamage") {
-                float attackMult = 1.0f;
+                var attackData = Data.AttackTable.normalAttack;
                 if (payload == "Skill") {
-                    attackMult = 2.2f;
+                    attackData = Data.AttackTable.skillAttack;
                 }
                 else if (payload == "Ult") {
-                    attackMult = 6.4f;
+                    attackData = Data.AttackTable.ultAttack;
                 }
                 var targets = TargetManager.instance.GetTargets();
                 foreach (var t in targets) {
-                    DamageResult result = CombatManager.CalculateDamage(c, t, attackMult);
+                    DamageResult result = CombatManager.CalculateDamage(c, t, attackData);
                     t.Damage(c, result);
                     if (_lastAttack != CharacterState.CastUltAttack) {
                         var go = Instantiate(hitEffectPrefab, t.transform.position + Vector3.up * 1.2f, Quaternion.identity);

@@ -13,12 +13,21 @@ MonoBehaviour:
   m_Name: Y_Bot
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 1000
-    <MaxToughness>k__BackingField: 100
+    <MaxHP>k__BackingField: 1542
+    <MaxToughness>k__BackingField: 80
     <UseUltThreshold>k__BackingField: 0
-    <Attack>k__BackingField: 0
-    <Defense>k__BackingField: 0
-    <Speed>k__BackingField: 80
+    <MaxUltPts>k__BackingField: 0
+    <Attack>k__BackingField: 578
+    <Defense>k__BackingField: 318
+    <Speed>k__BackingField: 100
+    <CritChance>k__BackingField: 0
+    <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 0
     <Weakness>k__BackingField: 12
   team: 1
+  attackTable:
+    normalAttack: {fileID: 11400000, guid: 37746e1529e574c4ebc2951e22e59da2, type: 2}
+    skillAttack: {fileID: 11400000, guid: 68e27a7423b009c4aab4f6971a5d77f5, type: 2}
+    ultAttack: {fileID: 0}
+    extraAttack: {fileID: 0}
+    additionalData: []

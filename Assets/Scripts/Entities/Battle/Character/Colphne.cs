@@ -42,13 +42,13 @@ namespace TurnBased.Entities.Battle {
                 muzzleflash.Play();
                 impulseSource.GenerateImpulse();
                 if (_lastAttack == CharacterState.DoExtraAttack) {
-                    DamageResult result = CombatManager.CalculateDamage(c, _extraAttackTarget, 0.25f);
+                    DamageResult result = CombatManager.CalculateDamage(c, _extraAttackTarget, Data.AttackTable.normalAttack, int.Parse(payload));
                     _extraAttackTarget.Damage(c, result);
                 }
                 else {
                     var targets = TargetManager.instance.GetTargets();
                     foreach (var t in targets) {
-                        DamageResult result = CombatManager.CalculateDamage(c, t, 0.25f);
+                        DamageResult result = CombatManager.CalculateDamage(c, t, Data.AttackTable.normalAttack, int.Parse(payload));
                         t.Damage(c, result);
                         if (!_damageEventFired) {
                             OnInflictedDamage?.Invoke(this, t, result);
@@ -62,7 +62,7 @@ namespace TurnBased.Entities.Battle {
             }
             else if (animEvent == "Heal") {
                 if (payload == "Skill") {
-                    TargetManager.instance.Target.RestoreHealth(this, Data.Attack.Current);
+                    TargetManager.instance.Target.RestoreHealth(this, Data.Attack.Current * Data.AttackTable.skillAttack.damageMult[0]);
                     var go = Instantiate(healEffectPrefab, TargetManager.instance.Target.transform.position, Quaternion.identity);
                     go.GetComponent<VisualEffect>().Play();
                     Destroy(go, 3f);
@@ -71,7 +71,7 @@ namespace TurnBased.Entities.Battle {
                 else if (payload == "Ult") {
                     var targets = TargetManager.instance.GetTargets();
                     foreach (var t in targets) {
-                        t.RestoreHealth(this, Data.Attack.Current * 4.2f);
+                        t.RestoreHealth(this, Data.Attack.Current * Data.AttackTable.ultAttack.damageMult[0]);
                         var go = Instantiate(healEffectPrefab, t.transform.position, Quaternion.identity);
                         go.GetComponent<VisualEffect>().Play();
                         Destroy(go, 3f);

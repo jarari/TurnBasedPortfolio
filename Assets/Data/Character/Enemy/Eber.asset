@@ -13,12 +13,21 @@ MonoBehaviour:
   m_Name: Eber
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 1000
-    <MaxToughness>k__BackingField: 100
+    <MaxHP>k__BackingField: 3284
+    <MaxToughness>k__BackingField: 120
     <UseUltThreshold>k__BackingField: 0
-    <Attack>k__BackingField: 0
-    <Defense>k__BackingField: 0
-    <Speed>k__BackingField: 300
+    <MaxUltPts>k__BackingField: 0
+    <Attack>k__BackingField: 932
+    <Defense>k__BackingField: 484
+    <Speed>k__BackingField: 94
+    <CritChance>k__BackingField: 0
+    <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 0
     <Weakness>k__BackingField: 6
   team: 1
+  attackTable:
+    normalAttack: {fileID: 11400000, guid: 9c3b4e74d3c0cb349b03e889207a5252, type: 2}
+    skillAttack: {fileID: 11400000, guid: 7d4ecd81ce5e7e2449781ae2ae267b94, type: 2}
+    ultAttack: {fileID: 0}
+    extraAttack: {fileID: 0}
+    additionalData: []

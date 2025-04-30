@@ -13,12 +13,21 @@ MonoBehaviour:
   m_Name: Alien_Soldier
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 1000
-    <MaxToughness>k__BackingField: 100
+    <MaxHP>k__BackingField: 1433
+    <MaxToughness>k__BackingField: 80
     <UseUltThreshold>k__BackingField: 0
-    <Attack>k__BackingField: 0
-    <Defense>k__BackingField: 0
-    <Speed>k__BackingField: 80
+    <MaxUltPts>k__BackingField: 0
+    <Attack>k__BackingField: 643
+    <Defense>k__BackingField: 300
+    <Speed>k__BackingField: 104
+    <CritChance>k__BackingField: 0
+    <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 0
     <Weakness>k__BackingField: 65
   team: 1
+  attackTable:
+    normalAttack: {fileID: 11400000, guid: 50050958cabe07f40992e3aa12a2560a, type: 2}
+    skillAttack: {fileID: 11400000, guid: d69ba3a4d25366849bbb5e188ddb6ecb, type: 2}
+    ultAttack: {fileID: 0}
+    extraAttack: {fileID: 0}
+    additionalData: []
