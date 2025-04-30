@@ -49,6 +49,8 @@ namespace TurnBased.Battle {
         public Action<Character, Character, DamageResult> OnInflictedDamage;
         public Action<Character, Character, DamageResult> OnDamage;
         public Action<Character, Character, float> OnRestoreHealth;
+        public Action<Character> OnDeath;
+        public Action<Character> OnDeathComplete;
 
         public CharacterDataInstance Data { get; private set; }
 
@@ -86,6 +88,12 @@ namespace TurnBased.Battle {
         /// 턴 시작 시 실행
         /// </summary>
         public virtual void TakeTurn() {
+            if (IsDead) {
+                TurnManager.instance.EndTurn();
+                OnTurnEnd?.Invoke(this);
+                return;
+            }
+
             WantCmd = true;
             if (Data.Team == CharacterTeam.Player)
             {
@@ -256,6 +264,7 @@ namespace TurnBased.Battle {
             WantCmd = false;
             // 턴 큐에서 캐릭터 제거
             TurnManager.instance.RemoveCharacter(this);
+            OnDeath?.Invoke(this);
         }
         /// <summary>
         /// 그로기 준비함수
