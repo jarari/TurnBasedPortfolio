@@ -52,7 +52,7 @@ namespace TurnBased.Battle.Managers {
         }
 
         public static bool CheckElementMatch(ElementType type1, ElementType type2) {
-            return (type1 | type2) > 0;
+            return (type1 & type2) > 0;
         }
     }
 
