@@ -26,9 +26,6 @@ namespace TurnBased.Entities.Battle
         // 공격할 에너미를 담을 함수
         public Character e_target;
 
-        // 가할 데미지의 계수
-        float attackMult = 0f;
-
         // 마지막 공격 상태를 담을 변수
         private CharacterState _lastAttack;
         
@@ -43,28 +40,66 @@ namespace TurnBased.Entities.Battle
             // 타임라인에서 데미지 시그널을 받게 된다면
             else if (animEvent == "Damage")
             {
-                // 일반공격의 데미지 계수를 1.0으로 한다
-                attackMult = 1.0f;
-                
-                // 공격이 필살기라면 3.0으로 계수를 맞춘다
-                if (payload == "Ult")
+                Debug.Log("데미지를 입히다.");
+
+                // 기본적으로 일반공격으로 해놓는다
+                var attackData = Data.AttackTable.normalAttack;
+
+                if (payload == "Skill")
                 {
-                    attackMult = 3.0f;
+                    attackData = Data.AttackTable.skillAttack;
+                    Debug.Log("스킬 데미지");
+                }
+                else if (payload == "Ult")
+                {
+                    attackData = Data.AttackTable.ultAttack;
+                    Debug.Log("필살기 데미지");
+                }
+                // 타겟정보를 가져온다
+                var targets = TargetManager.instance.GetTargets();
+                // 타겟 정보를 순회 하면서
+                foreach (var t in targets)
+                {
+                    // 때린놈 맞은놈 계수를 보내 데미지를 계산한다
+                    DamageResult result = CombatManager.CalculateDamage(c, t, attackData);
+                    // 에너미에게 대미지를 입힌다
+                    t.Damage(c, result);                    
+
+                    // 이벤트를 실행시킨다
+                    OnInflictedDamage?.Invoke(this,t,result);
                 }
 
-                // 데미지를 계산하는 함수를 호출하고
-                DamageResult result = CombatManager.CalculateDamage(c, e_target, attackMult);
-
-                // 플레이어의 데미지 함수에 때린놈을 자신으로 하고 호출
-                e_target.Damage(this, result);
             }
             
         }
 
         private void CastUlt()
         {
+            // 레이어를 필살리 타임라인으로 맞춘다
+            SetMeshLayer(MeshLayer.UltTimeline);
+            // 타임라인을 실행한다
             ultAttack.Play();
-           
+            var enemyCenter = TargetManager.instance.Target;
+            meshParent.transform.position = enemyCenter.transform.position + new Vector3(11.207f, 0f);
+            // 마지막 공격이 필살기로 잡는다
+            _lastAttack = CharacterState.CastUltAttack;
+
+            //  모든 에너미를 순회하면서
+            foreach (var c in CharacterManager.instance.GetEnemyCharacters())
+            {                
+                // 레이어를 변경한다
+                c.SetMeshLayer(MeshLayer.UltTimeline);
+            }
+            // 아군 캐릭터는 자신을 제외하고 모두 비활성화 한다
+            foreach (var c in CharacterManager.instance.GetAllAllyCharacters())
+            {
+                if (c != this)
+                {
+                    c.SetVisible(false);
+                }
+            }
+
+
         }
 
         protected override void Awake()
@@ -79,17 +114,41 @@ namespace TurnBased.Entities.Battle
             
         }
 
-        public override void TakeUltTurn()
-        {
-            base.TakeUltTurn();
-           
-        }
-
         #region 공격하는 함수
 
         public override void CastSkill()
         {
             base.CastSkill();
+            // 타겟을 가져온다
+            var enemyCenter = TargetManager.instance.Target;
+            // 플레이어를 타겟으로 하는 에너미의 중심을 기준으로 위치를 잡고
+            meshParent.transform.position = enemyCenter.transform.position + new Vector3(11.207f, 0f);
+            // 그 에너미 주변의 타겟을 가져온다
+            var targets = TargetManager.instance.GetTargets();
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                // 에너미의 레이어를 스킬 타임라인으로 맞춘다
+                targets[i].SetMeshLayer(MeshLayer.SkillTimeine);
+                // 첫번째 에너미가 센터가 아니라면
+                if (i == 0 && targets[i] != enemyCenter)
+                {
+                    // 위치를 잡는다
+                    targets[i].meshParent.transform.position = enemyCenter.meshParent.transform.position - new Vector3(0, 0, 4f);
+                }
+                // 예들도 센터가 아니라면
+                else if (i == 1 && targets[i] != enemyCenter || i == 2)
+                {
+                    // 위치를 잡는다
+                    targets[i].meshParent.transform.position = enemyCenter.meshParent.transform.position + new Vector3(0, 0, 4f);
+                }
+                // 레이어를 스킬 타임라인으로 맞춘다
+                SetMeshLayer(MeshLayer.SkillTimeine);
+                // 타임라인을 실행한다
+                skillAttack.Play();
+                // 마지막 공격을 castskill로 잡는다
+                _lastAttack = CharacterState.CastSkill;
+            }
             
         }
 
@@ -108,32 +167,41 @@ namespace TurnBased.Entities.Battle
         public override void DoAttack()
         {
             base.DoAttack();
-         
+            
+            // 타겟을 가져와서
             var enemy = TargetManager.instance.Target;
-            Vector3 diff = enemy.transform.position - transform.position;
-            diff.y = 0;
-            diff.Normalize();
-            meshParent.transform.forward = diff;
+            // 자신의 위치를 에너미 앞으로 잡고
+            meshParent.transform.position = enemy.transform.position + new Vector3(11.207f, 0f);
+            // 일반공격 타임라인을 실행한다
             normalAttack.Play();
+            foreach (var c in CharacterManager.instance.GetEnemyCharacters())
+            {
+                // 에너미의 레이어를 스킬 타임라인으로 잡는다
+                c.SetMeshLayer(MeshLayer.SkillTimeine);
+            }
+            // 자신의 레이어를 스킬 타임라인 레이어로 잡는다
+            SetMeshLayer(MeshLayer.SkillTimeine);
+            // 마지막 공격을 doattack으로 잡는다
             _lastAttack = CharacterState.DoAttack;
         }
-
-        #endregion
-
-        /* 생각해볼 엑스트라어택
+                
         public override void DoExtraAttack(Character target)
         {
             base.DoExtraAttack(target);
-
-            _lastAttack = CharacterState.DoExtraAttack;
         }
-        */
+
+        #endregion
 
         #region 준비하는 함수
 
         public override void PrepareAttack()
         {
             base.PrepareAttack();
+
+            Debug.Log("일반 공격 준비");
+
+            // 애니메이터의 int 파라미터를 변경한다
+            animator.SetInteger("State", 0);
             // 에너미 하나를 타겟으로 잡는다
             TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, TurnBased.Data.CharacterTeam.Enemy);
         }
@@ -141,18 +209,37 @@ namespace TurnBased.Entities.Battle
         public override void PrepareSkill()
         {
             base.PrepareSkill();
+
+            // 애니메이터의 int 파라미터를 변경한다
+            animator.SetInteger("State", 1);
+
+            Debug.Log("스킬 공격 준비");
+            // 에너미 세명을 타겟으로 삼는다
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Triple, TurnBased.Data.CharacterTeam.Enemy);
        
         }
 
         public override void PrepareUltAttack()
         {
             base.PrepareUltAttack();
-           
+
+            // 애니메이터의 int 파라미터를 변경한다
+            animator.SetInteger("State", 2);
+
+            Debug.Log("필살기 준비");
+            // 모든 에너미를 타겟으로 삼는다
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.All, TurnBased.Data.CharacterTeam.Enemy);
         }
 
         public override void PrepareUltSkill()
         {
             base.PrepareUltSkill();
+
+            // 애니메이터의 int 파라미터를 변경한다
+            animator.SetInteger("State", 2);
+
+            // 모든 에너미를 타겟으로 삼는다
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.All, TurnBased.Data.CharacterTeam.Enemy);
         }
 
         #endregion
@@ -160,15 +247,19 @@ namespace TurnBased.Entities.Battle
         public override void Damage(Character attacker, DamageResult result)
         {
             base.Damage(attacker, result);
-          
+
+            // 애니메이션의 트리거를 켠다
+            animator.SetTrigger("Damage");
         }
 
         public override void Dead()
         {
             base.Dead();
-          
+            // 애니메이션의 트리거를 켠다
+            animator.SetTrigger("Dead");
         }
 
+        // 카메라 체인지
         public override void ProcessCamChanged()
         {
             if (_lastAttack == CharacterState.DoAttack || _lastAttack == CharacterState.DoExtraAttack)
@@ -186,11 +277,9 @@ namespace TurnBased.Entities.Battle
                 ultAttack.time = ultAttack.duration;
                 ultAttack.Evaluate();
             }
+            // 자신의 위치를 바로 잡는다
+            meshParent.transform.localPosition = Vector3.zero;
         }
 
-        public override void ProcessCamGain()
-        {
-            
-        }
     }
 }

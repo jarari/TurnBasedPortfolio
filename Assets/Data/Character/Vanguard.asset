@@ -13,13 +13,21 @@ MonoBehaviour:
   m_Name: Vanguard
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 1000
+    <MaxHP>k__BackingField: 5000
     <MaxToughness>k__BackingField: 0
     <UseUltThreshold>k__BackingField: 100
     <MaxUltPts>k__BackingField: 100
     <Attack>k__BackingField: 100
     <Defense>k__BackingField: 0
-    <Speed>k__BackingField: 120
+    <Speed>k__BackingField: 140
+    <CritChance>k__BackingField: 0
+    <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 16
     <Weakness>k__BackingField: 0
   team: 0
+  attackTable:
+    normalAttack: {fileID: 11400000, guid: 09ab6d53b6df3514caff3ba934ff4916, type: 2}
+    skillAttack: {fileID: 11400000, guid: 6e5066f9f13feb94f9cda442f1bd71d4, type: 2}
+    ultAttack: {fileID: 11400000, guid: 7c649478183f9c74188a7f3e2710a01c, type: 2}
+    extraAttack: {fileID: 0}
+    additionalData: []

@@ -18,7 +18,7 @@ namespace TurnBased.Battle.UI
             Character currentCharacter = TurnManager.instance.CurrentCharacter; // 현재 캐릭터 가져오기
             List<Character> turnOrder = TurnManager.instance.GetActionOrder(); // 행동 서열 가져오기
 
-            Debug.Log("Current Character: " + currentCharacter.name); // 현재 캐릭터 이름 출력
+            //Debug.Log("Current Character: " + currentCharacter.name); // 현재 캐릭터 이름 출력
 
             // 현재 캐릭터를 가장 위에 표시
             GameObject currentCharacterUI = actionOrderUIObjects.Find(obj => obj.name == currentCharacter.name); // 현재 캐릭터 UI 오브젝트 찾기
