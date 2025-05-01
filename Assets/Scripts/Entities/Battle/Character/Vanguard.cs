@@ -63,14 +63,26 @@ namespace TurnBased.Entities.Battle
                     // 때린놈 맞은놈 계수를 보내 데미지를 계산한다
                     DamageResult result = CombatManager.CalculateDamage(c, t, attackData);
                     // 에너미에게 대미지를 입힌다
-                    t.Damage(c, result);                    
+                    t.Damage(c, result);
 
                     // 이벤트를 실행시킨다
-                    OnInflictedDamage?.Invoke(this,t,result);
+                    OnInflictedDamage?.Invoke(this, t, result);
                 }
 
             }
-            
+
+            else if (animEvent == "Radioactivity")
+            { 
+                // 타겟인 에너미와 주변의 에너미도 가져온다
+                var targets = TargetManager.instance.GetTargets();
+
+                // 타겟들을 순회하면서
+                foreach (var t in targets)
+                {
+                    // 시전자를 자신으로 하고 에너미에게 디버프를 건다
+                    t.GetComponent<CharacterBuffSystem>().ApplyBuff("Radioactivity", this);
+                }
+            }
         }
 
         private void CastUlt()
@@ -123,7 +135,7 @@ namespace TurnBased.Entities.Battle
             var enemyCenter = TargetManager.instance.Target;
             // 플레이어를 타겟으로 하는 에너미의 중심을 기준으로 위치를 잡고
             meshParent.transform.position = enemyCenter.transform.position + new Vector3(11.207f, 0f);
-            // 그 에너미 주변의 타겟을 가져온다
+            // 그 에너미와 주변의 타겟들도 가져온다
             var targets = TargetManager.instance.GetTargets();
 
             for (int i = 0; i < targets.Count; i++)

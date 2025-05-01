@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7366220e055c0743a2c620866a3fd23, type: 3}
-  m_Name: FireDOT
+  m_Name: RadioactivityDOT
   m_EditorClassIdentifier: 
   modifiers: []
   extraEffects:
-  - {fileID: 11400000, guid: 58cbdc6286a650540b4e750d5d7c17ee, type: 2}
-  duration: 2
+  - {fileID: 11400000, guid: 31db6ca5835661849935bf2bcddf6dd9, type: 2}
+  duration: 3
   stackable: 0
   maxStacks: 0
   icon: {fileID: 0}
