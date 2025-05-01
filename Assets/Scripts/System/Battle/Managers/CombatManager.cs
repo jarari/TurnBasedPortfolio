@@ -4,43 +4,65 @@ using System.Collections.Generic;
 using System.Linq;
 using TurnBased.Data;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 
 namespace TurnBased.Battle.Managers {
 
     // 데미지를 정의 하는 클래스
     public class  DamageResult {
-        public float NormalAttack;  // 그냥 공격 데미지
-        public float AfterDamage;   // 방어력 으로 한번 억제된 데미지
-         public float FinalDamage;   // 최종적으로 받는 데미지
+        public float BaseDamage;        // 그냥 공격 데미지
+        public float ReducedDamage;     // 방어력으로 감소한 데미지
+        public float FinalDamage;       // 최종적으로 받는 데미지
+        public float ToughnessDamage;   // 강인도 데미지
+        public bool IsCrit;            // 치명타 여부
     }
 
     // 데미지를 계산하는 클래스
     public class CombatManager {
      
         // 데미지 피해를 계산할 함수 (때린 놈과 맞은 놈을 가져온다)
-        public static DamageResult CalculateDamage(Character attacker, Character defender, float attackMult = 1f)
+        public static DamageResult CalculateDamage(Character attacker, Character defender, AttackData attackData, int attackNum = 0)
         {
             // 때린 놈의 공격력을 가져온다
-            float normalAttack = attacker.Data.Attack.Current * attackMult;
+            float baseDamage = attacker.Data.Attack.Current * attackData.damageMult[attackNum];
 
-            // 맞은 놈의 방어력 만큼 때린 놈의 공격력을 내리고 그거와 0중 더 큰값을 반환한다
-            float afterDamage = Mathf.Max(0, normalAttack - defender.Data.Defense.Current);
+            float reducedPercentage = defender.Data.Defense.Current / (defender.Data.Defense.Current + 1000);
 
-            // 최종적으로 받을 데미지를 가져온다
-            float finalDamage = afterDamage;
+            float victimDef = defender.Data.Defense.Current;
+
+            bool isCrit = false;
+            if (attackData.canCrit && Random.Range(float.Epsilon, 1f) <= attacker.Data.CritChance.Current) {
+                baseDamage *= attacker.Data.CritMult.Current;
+                isCrit = true;
+            }
+            float damageReduction = victimDef / (victimDef + 1000f);
+
+            float damageReduced = baseDamage * damageReduction;
 
             // DamageResult를 반환한다
             return new DamageResult
             {
-                NormalAttack = normalAttack,
-                AfterDamage = afterDamage,
-                FinalDamage = finalDamage
+                BaseDamage = baseDamage,
+                ReducedDamage = damageReduced,
+                FinalDamage = baseDamage - damageReduced,
+                ToughnessDamage = attackData.toughnessDamage[attackNum],
+                IsCrit = isCrit
+            };
+        }
+
+        public static DamageResult CalculateTrueDamage(float damage, float toughnessDamage) {
+            return new DamageResult {
+                BaseDamage = damage,
+                ReducedDamage = 0,
+                FinalDamage = damage,
+                ToughnessDamage = toughnessDamage,
+                IsCrit = false
             };
         }
 
         public static bool CheckElementMatch(ElementType type1, ElementType type2) {
-            return (type1 | type2) > 0;
+            return (type1 & type2) > 0;
         }
     }
 

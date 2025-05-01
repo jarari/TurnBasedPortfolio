@@ -13,13 +13,21 @@ MonoBehaviour:
   m_Name: SoccerPlayer
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 1000
+    <MaxHP>k__BackingField: 3285
     <MaxToughness>k__BackingField: 0
     <UseUltThreshold>k__BackingField: 100
     <MaxUltPts>k__BackingField: 100
-    <Attack>k__BackingField: 100
-    <Defense>k__BackingField: 0
+    <Attack>k__BackingField: 1742
+    <Defense>k__BackingField: 529
     <Speed>k__BackingField: 113
+    <CritChance>k__BackingField: 0
+    <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 2
     <Weakness>k__BackingField: 0
   team: 0
+  attackTable:
+    normalAttack: {fileID: 11400000, guid: a5a52791b27b7f741b257fd6136e8380, type: 2}
+    skillAttack: {fileID: 11400000, guid: e0bac121076e160438d55f6e72e4f90b, type: 2}
+    ultAttack: {fileID: 11400000, guid: 3ee1859e167c8ae4f80553d333733f6f, type: 2}
+    extraAttack: {fileID: 0}
+    additionalData: []

@@ -2,6 +2,10 @@ using UnityEngine;
 
 namespace TurnBased.Battle {
     public interface IBuffEffect {
+        /// <summary>
+        /// 해당 효과를 생성한 BuffInstance
+        /// </summary>
+        BuffInstance Instance { get; }
         void OnApply(Character caster, Character owner);
         void OnRemove(Character caster, Character owner);
 
@@ -11,6 +15,6 @@ namespace TurnBased.Battle {
     }
 
     public abstract class BuffEffectDefinition : ScriptableObject {
-        public abstract IBuffEffect Create();
+        public abstract IBuffEffect Create(BuffInstance instance);
     }
 }

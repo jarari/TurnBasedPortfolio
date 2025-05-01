@@ -61,11 +61,14 @@ namespace TurnBased.Data {
         public Stat Attack { get; }
         public Stat Defense { get; }
         public Stat Speed { get; }
+        public Stat CritChance { get; }
+        public Stat CritMult { get; }
         public float UltThreshold { get; }
         public float MaxUltPts { get; }
         public ElementType ElementType { get; }
         public ElementType Weakness { get; }
         public CharacterTeam Team { get; }
+        public CharacterAttackTable AttackTable { get; }
 
         private readonly List<StatModifier> _modifiers = new List<StatModifier>();
 
@@ -75,11 +78,14 @@ namespace TurnBased.Data {
             Attack = new Stat(data.stats.Attack);
             Defense = new Stat(data.stats.Defense);
             Speed = new Stat(data.stats.Speed);
+            CritChance = new Stat(data.stats.CritChance);
+            CritMult = new Stat(data.stats.CritMult);
             UltThreshold = data.stats.UseUltThreshold;
             MaxUltPts = data.stats.MaxUltPts;
             ElementType = data.stats.ElementType;
             Weakness = data.stats.Weakness;
             Team = data.team;
+            AttackTable = data.attackTable;
         }
 
         public void AddModifier(StatModifier mod) {

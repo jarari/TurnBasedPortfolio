@@ -12,6 +12,8 @@ namespace TurnBased.Battle {
         [Header("Character Data")]
         [SerializeField]
         protected CharacterData _baseData;
+        [SerializeField]
+        protected Transform _chest;
 
         public enum CharacterState {
             Idle,
@@ -61,6 +63,11 @@ namespace TurnBased.Battle {
             }
         }
         public AudioSource VOAudioSource { get; private set; }
+        public Transform Chest {
+            get {
+                return _chest != null ? _chest : transform;
+            }
+        }
 
 
         protected virtual void Awake() {
@@ -312,12 +319,16 @@ namespace TurnBased.Battle {
                     // 플레이어가 약점 속성으로 때린다면
                     if (CombatManager.CheckElementMatch(attacker.Data.ElementType, Data.Weakness)) {
                         // 에너미의 강인도는 플레이어의 공격력만큼 깎인다
-                        Data.Toughness.ModifyCurrent(-result.NormalAttack);
+                        Data.Toughness.ModifyCurrent(-result.ToughnessDamage);
 
                         // 강인도가 만약 0이하가 되었다면
                         if (Data.Toughness.Current <= 0) {
                             // 그로기를 다룰 함수를 실행한다
                             Groggy();
+
+                            if (attacker.Data.ElementType == ElementType.Fire) {
+                                GetComponent<CharacterBuffSystem>().ApplyBuff("FireDOT", attacker);
+                            }
                         }
                     }
 

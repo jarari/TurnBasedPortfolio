@@ -200,7 +200,7 @@ namespace TurnBased.Entities.Battle {
             // 자기자신의 캐릭터를 가져온다
             Character ch = GetComponent<Character>();
             // 데미지를 계산하는 함수를 호출하고
-            DamageResult result = CombatManager.CalculateDamage(ch, player);
+            DamageResult result = CombatManager.CalculateDamage(ch, player, Data.AttackTable.normalAttack);
 
             Debug.Log(player.name + " 에게 " + result.FinalDamage + " 데미지");
             // ( 플레이어의 데미지함수를 호출 또는 여기서 계산)

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using TurnBased.Battle.Managers;
 using UnityEngine;
@@ -68,8 +67,9 @@ namespace TurnBased.Battle {
                 }
             }
             else {
-                instance = new BuffInstance(buffData, caster, _owner);
+                instance = new BuffInstance(buffData, caster, _owner, identifier);
                 _activeBuffs.Add(identifier, instance);
+                instance.OnStackDecreased += CheckBuffStack;
             }
             instance.OnApply();
 
@@ -78,12 +78,27 @@ namespace TurnBased.Battle {
 
         public void RemoveBuff(string identifier) {
             if (_activeBuffs.ContainsKey(identifier)) {
-                var buff = _activeBuffs[identifier];
-                buff.OnRemove();
-                _activeBuffs.Remove(identifier);
-
-                OnBuffRemoved?.Invoke(buff);
+                var instance = _activeBuffs[identifier];
+                RemoveBuff(instance);
             }
+        }
+
+        public void RemoveBuff(BuffInstance instance) {
+            instance.OnStackDecreased -= CheckBuffStack;
+            instance.OnRemove();
+            _activeBuffs.Remove(instance.Id);
+
+            OnBuffRemoved?.Invoke(instance);
+        }
+
+        public void CheckBuffStack(BuffInstance instance) {
+            if (instance.Stacks <= 0) {
+                RemoveBuff(instance);
+            }
+        }
+
+        public bool HasBuff(string identifier) {
+            return _activeBuffs.ContainsKey(identifier);
         }
     }
 }

@@ -13,12 +13,21 @@ MonoBehaviour:
   m_Name: Mutant
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 1000
+    <MaxHP>k__BackingField: 1972
     <MaxToughness>k__BackingField: 100
     <UseUltThreshold>k__BackingField: 0
-    <Attack>k__BackingField: 0
-    <Defense>k__BackingField: 0
-    <Speed>k__BackingField: 80
+    <MaxUltPts>k__BackingField: 0
+    <Attack>k__BackingField: 718
+    <Defense>k__BackingField: 420
+    <Speed>k__BackingField: 98
+    <CritChance>k__BackingField: 0
+    <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 0
     <Weakness>k__BackingField: 3
   team: 1
+  attackTable:
+    normalAttack: {fileID: 11400000, guid: 388530930314dcc48b95fd9930aa6efe, type: 2}
+    skillAttack: {fileID: 11400000, guid: 34c32498811864e4190e78c3c83371d2, type: 2}
+    ultAttack: {fileID: 0}
+    extraAttack: {fileID: 0}
+    additionalData: []

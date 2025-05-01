@@ -13,12 +13,21 @@ MonoBehaviour:
   m_Name: Machine
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 1000
-    <MaxToughness>k__BackingField: 100
+    <MaxHP>k__BackingField: 4128
+    <MaxToughness>k__BackingField: 140
     <UseUltThreshold>k__BackingField: 0
-    <Attack>k__BackingField: 0
-    <Defense>k__BackingField: 0
-    <Speed>k__BackingField: 80
+    <MaxUltPts>k__BackingField: 0
+    <Attack>k__BackingField: 1012
+    <Defense>k__BackingField: 472
+    <Speed>k__BackingField: 88
+    <CritChance>k__BackingField: 0
+    <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 0
     <Weakness>k__BackingField: 65
   team: 1
+  attackTable:
+    normalAttack: {fileID: 11400000, guid: e5be4e1caa85df640b0c8fa4cae12995, type: 2}
+    skillAttack: {fileID: 11400000, guid: 1be3cb8400260ad4fae58bfb8b55e2af, type: 2}
+    ultAttack: {fileID: 0}
+    extraAttack: {fileID: 0}
+    additionalData: []

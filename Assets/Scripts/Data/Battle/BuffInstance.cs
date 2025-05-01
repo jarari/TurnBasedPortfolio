@@ -1,9 +1,13 @@
+using System;
 using System.Collections.Generic;
 
 namespace TurnBased.Battle {
     public class BuffInstance : IBuff {
         public bool IsExpired => _data.duration > 0 ? _elapsed >= _data.duration : false;
+        public string Id { get; }
         public int Stacks { get; private set; }
+
+        public Action<BuffInstance> OnStackDecreased;
 
         private readonly BuffData _data;
         private readonly List<IBuffEffect> _effects = new();
@@ -11,16 +15,21 @@ namespace TurnBased.Battle {
         private readonly Character _owner;
         private float _elapsed;
 
-        public BuffInstance(BuffData data, Character caster, Character owner) {
+        public BuffInstance(BuffData data, Character caster, Character owner, string id) {
             _data = data;
             _caster = caster;
             _owner = owner;
+            Id = id;
 
             foreach (var def in data.extraEffects)
-                _effects.Add(def.Create());
+                _effects.Add(def.Create(this));
         }
 
         public void OnApply() {
+            if (_data.maxStacks > 0 && Stacks >= _data.maxStacks) {
+                return;
+            }
+
             Stacks++;
 
             foreach (var modData in _data.modifiers)
@@ -54,6 +63,11 @@ namespace TurnBased.Battle {
         public void ResetDuration() {
             if (_data.duration > 0)
                 _elapsed = 0;
+        }
+
+        public void DecreaseStack(int count) {
+            Stacks -= count;
+            OnStackDecreased?.Invoke(this);
         }
     }
 }

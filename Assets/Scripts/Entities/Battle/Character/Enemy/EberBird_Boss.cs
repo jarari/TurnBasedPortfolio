@@ -35,7 +35,7 @@ namespace TurnBased.Entities.Battle
         Vector3 Center;
 
         // 데미지 피해를 가할시 일반공격과 스킬 데미지 계수를 담을 변수
-        public float Damage_factor = 0f;
+        public AttackData Damage_factor;
 
         public float skill_cool = 0f;
 
@@ -292,7 +292,7 @@ namespace TurnBased.Entities.Battle
             animator.gameObject.transform.position = Center - new Vector3(8.47f, 0f);
 
             // 스킬 공격 대미지 계수
-            Damage_factor = 0.25f;
+            Damage_factor = Data.AttackTable.skillAttack;
 
             // 스킬 공격 애니메이션을 멈춘뒤
             skillAttack.Stop();
@@ -318,7 +318,7 @@ namespace TurnBased.Entities.Battle
 
             // 일반 공격 대미지 계수
             // (나중에 버프라던가 디버프가 생기면 이곳을 더하거나 빼는 방식도 생각해보자)
-            Damage_factor = 0.45f;
+            Damage_factor = Data.AttackTable.normalAttack;
 
             // 일반공격 애니메이션을 멈춘뒤
             normalAttack.Stop();

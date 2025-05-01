@@ -22,6 +22,7 @@ namespace TurnBased.Battle {
         public List<BuffEffectDefinition> extraEffects;
         public float duration;
         public bool stackable;
+        public int maxStacks;
         public Sprite icon;
     }
 }
