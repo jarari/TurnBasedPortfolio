@@ -87,17 +87,6 @@ Assets/Plugins/**       linguist-vendored
 *.stl                   lfs
 *.ztl                   lfs
 
-# Audio
-*.aif                   lfs
-*.aiff                  lfs
-*.it                    lfs
-*.mod                   lfs
-*.mp3                   lfs
-*.ogg                   lfs
-*.s3m                   lfs
-*.wav                   lfs
-*.xm                    lfs
-
 # Video
 *.asf                   lfs
 *.avi                   lfs
