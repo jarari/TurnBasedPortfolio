@@ -51,10 +51,19 @@ namespace TurnBased.Battle {
         public Action<Character, Character, float> OnRestoreHealth;
         public Action<Character> OnDeath;
         public Action<Character> OnDeathComplete;
+        public Action<Character, CharacterState> OnCharacterStateChanged;
 
         public CharacterDataInstance Data { get; private set; }
 
-        public CharacterState CurrentState { get; protected set; }
+        public CharacterState CurrentState {
+            get {
+                return _currentState;
+            }
+            protected set {
+                _currentState = value;
+                OnCharacterStateChanged?.Invoke(this, value);
+            }
+        }
         public bool WantCmd { get; set; }
         public CharacterState WantState { get; protected set; } = CharacterState.PrepareAttack;
         public bool IsVisible { get; set; }
@@ -70,6 +79,8 @@ namespace TurnBased.Battle {
                 return _chest != null ? _chest : transform;
             }
         }
+
+        private CharacterState _currentState;
 
 
         protected virtual void Awake() {
