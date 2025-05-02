@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TurnBased.Data;
 using UnityEngine;
 
 namespace TurnBased.Battle.Managers {
@@ -11,11 +12,21 @@ namespace TurnBased.Battle.Managers {
         public List<GameObject> allySpawnPoints = new List<GameObject>();
         public List<GameObject> enemySpawnPoints = new List<GameObject>();
 
+        [SerializeField]
+        private CharacterTable _characterTable;
+
+        public CharacterTable CharacterTable {
+            get { 
+                return _characterTable;
+            }
+        }
+
         private List<Character> _characters = new List<Character>();
         private Dictionary<Character, int> _allyIdxDict = new Dictionary<Character, int>();
         private Dictionary<int, Character> _idxAllyDict = new Dictionary<int, Character>();
         private Dictionary<Character, int> _enemyIdxDict = new Dictionary<Character, int>();
         private Dictionary<int, Character> _idxEnemyDict = new Dictionary<int, Character>();
+        private Dictionary<string, CharacterData> _characterDict = new Dictionary<string, CharacterData>();
         private void Awake() {
             if (instance != null) {
                 Destroy(this);
@@ -25,43 +36,56 @@ namespace TurnBased.Battle.Managers {
         }
 
         private void Start() {
-            // 임시 코드
-            for (int i = 0; i < allySpawnPoints.Count; ++i) {
-                var c = allySpawnPoints[i].GetComponentInChildren<Character>();
-                if (c != null) {
-                    TurnManager.instance.AddCharacter(c);
-                    var contextCam = c.GetComponentInParent<ContextualIdleCamera>();
-                    if (contextCam != null) {
-                        contextCam.InitializeCamera();
-                    }
-                    _characters.Add(c);
-                    _allyIdxDict.Add(c, i);
-                    _idxAllyDict.Add(i, c);
+            foreach (var entry in _characterTable.entries) {
+                if (!_characterDict.ContainsKey(entry.name)) {
+                    _characterDict.Add(entry.name, entry.characterData);
                 }
             }
-            for (int i = 0; i < enemySpawnPoints.Count; ++i) {
-                var c = enemySpawnPoints[i].GetComponentInChildren<Character>();
-                if (c != null) {
-                    TurnManager.instance.AddCharacter(c);
-                    var contextCam = c.GetComponentInParent<ContextualIdleCamera>();
-                    if (contextCam != null) {
-                        contextCam.InitializeEnemyCamera();
-                    }
-                    _characters.Add(c);
-                    _enemyIdxDict.Add(c, i);
-                    _idxEnemyDict.Add(i, c);
-                }
+            //TurnManager.instance.InitializeTurnQueue();
+            //TargetManager.instance.InitializeTarget();
+        }
+
+        public Character SpawnCharacter(string name, int spawnIdx) {
+            if (!_characterDict.ContainsKey(name)) {
+                return null;
             }
-            TurnManager.instance.InitializeTurnQueue();
-            TargetManager.instance.InitializeTarget();
-        }
 
-        public void SpawnCharacter(GameObject prefab, int spawnPoint) {
+            var data = _characterDict[name];
+            var go = Instantiate(data.battlePrefab);
+            Character c = go.GetComponentInParent<Character>();
+            GameObject spawnPoint;
+            if (data.team == CharacterTeam.Player) {
+                if (spawnIdx >= allySpawnPoints.Count) {
+                    return null;
+                }
+                spawnPoint = allySpawnPoints[spawnIdx];
 
-        }
+                TurnManager.instance.AddCharacter(c);
+                var contextCam = c.GetComponentInParent<ContextualIdleCamera>();
+                if (contextCam != null) {
+                    contextCam.InitializeCamera();
+                }
+                _characters.Add(c);
+                _allyIdxDict.Add(c, spawnIdx);
+                _idxAllyDict.Add(spawnIdx, c);
+            }
+            else {
+                spawnPoint = enemySpawnPoints[spawnIdx];
+                if (spawnIdx >= enemySpawnPoints.Count) {
+                    return null;
+                }
 
-        public void AddCharacter(Character c, int idx) {
-
+                TurnManager.instance.AddCharacter(c);
+                var contextCam = c.GetComponentInParent<ContextualIdleCamera>();
+                if (contextCam != null) {
+                    contextCam.InitializeEnemyCamera();
+                }
+                _characters.Add(c);
+                _enemyIdxDict.Add(c, spawnIdx);
+                _idxEnemyDict.Add(spawnIdx, c);
+            }
+            go.transform.position = spawnPoint.transform.position;
+            return c;
         }
 
         public int GetMaxAllyCount() {
@@ -103,7 +127,7 @@ namespace TurnBased.Battle.Managers {
         public List<Character> GetAllyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
-                if (!c.IsDead && c.Data.Team == Data.CharacterTeam.Player) {
+                if (!c.IsDead && c.Data.Team == CharacterTeam.Player) {
                     list.Add(c);
                 }
             }
@@ -113,7 +137,7 @@ namespace TurnBased.Battle.Managers {
         public List<Character> GetAllAllyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
-                if (c.Data.Team == Data.CharacterTeam.Player) {
+                if (c.Data.Team == CharacterTeam.Player) {
                     list.Add(c);
                 }
             }
@@ -123,7 +147,7 @@ namespace TurnBased.Battle.Managers {
         public List<Character> GetEnemyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
-                if (!c.IsDead && c.Data.Team == Data.CharacterTeam.Enemy) {
+                if (!c.IsDead && c.Data.Team == CharacterTeam.Enemy) {
                     list.Add(c);
                 }
             }
@@ -133,7 +157,7 @@ namespace TurnBased.Battle.Managers {
         public List<Character> GetAllEnemyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
-                if (c.Data.Team == Data.CharacterTeam.Enemy) {
+                if (c.Data.Team == CharacterTeam.Enemy) {
                     list.Add(c);
                 }
             }

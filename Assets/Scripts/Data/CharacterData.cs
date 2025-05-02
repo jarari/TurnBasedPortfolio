@@ -91,5 +91,7 @@ namespace TurnBased.Data {
         public BaseStats stats;
         public CharacterTeam team;
         public CharacterAttackTable attackTable;
+        public GameObject battlePrefab;
+        public GameObject fieldPrefab;
     }
 }
