@@ -51,7 +51,7 @@ namespace TurnBased.Entities.Battle {
                         DamageResult result = CombatManager.CalculateDamage(c, t, Data.AttackTable.normalAttack, int.Parse(payload));
                         t.Damage(c, result);
                         if (!_damageEventFired) {
-                            OnInflictedDamage?.Invoke(this, t, result);
+                            CombatManager.instance.NotifyCharacterInflictedDamage(this, t, result);
                         }
                     }
                 }

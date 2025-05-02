@@ -42,7 +42,7 @@ namespace TurnBased.Entities.Battle {
                         go.GetComponent<ParticleSystem>().Play();
                         Destroy(go, 3f);
                     }
-                    OnInflictedDamage?.Invoke(this, t, result);
+                    CombatManager.instance.NotifyCharacterInflictedDamage(this, t, result);
                 }
 
                 if (_lastAttack != CharacterState.CastUltAttack) {

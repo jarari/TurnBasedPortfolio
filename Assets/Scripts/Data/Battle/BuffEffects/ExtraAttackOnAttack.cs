@@ -16,17 +16,17 @@ namespace TurnBased.Battle.BuffEffects {
         public void OnApply(Character caster, Character owner) {
             _caster = caster;
             _owner = owner;
-            _owner.OnInflictedDamage += HandleOwnerAttack;
+            CombatManager.instance.OnCharacterInflictedDamage += HandleOwnerAttack;
         }
 
         private void HandleOwnerAttack(Character attacker, Character victim, DamageResult result) {
-            if (_owner != _caster) {
+            if (attacker == _owner && _owner != _caster) {
                 TurnManager.instance.AddExtraAtackTurn(_caster, victim);
             }
         }
 
         public void OnRemove(Character caster, Character owner) {
-            _owner.OnInflictedDamage -= HandleOwnerAttack;
+            CombatManager.instance.OnCharacterInflictedDamage -= HandleOwnerAttack;
         }
 
         public void OnTurnStart(Character caster, Character owner, TurnContext ctx) { }

@@ -23,7 +23,7 @@ MonoBehaviour:
     <CritChance>k__BackingField: 0
     <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 0
-    <Weakness>k__BackingField: 3
+    <Weakness>k__BackingField: 34
   team: 1
   attackTable:
     normalAttack: {fileID: 11400000, guid: 388530930314dcc48b95fd9930aa6efe, type: 2}
@@ -31,3 +31,16 @@ MonoBehaviour:
     ultAttack: {fileID: 0}
     extraAttack: {fileID: 0}
     additionalData: []
+  battlePrefab: {fileID: 1286197017674165834, guid: dcac95d6a9c722d47ba0f560c2d9dbc6, type: 3}
+  fieldPrefab: {fileID: 0}
+  Name: 
+  Attribute: 
+  BreakEffect: 0
+  CharacterImagePath: 
+  CharacterRenderTexturePath: 
+  AttributeImagePath: 
+  BasicAttackImagePath: 
+  SkillImagePath: 
+  UltimateImagePath: 
+  TalentImagePath: 
+  TechniqueImagePath: 

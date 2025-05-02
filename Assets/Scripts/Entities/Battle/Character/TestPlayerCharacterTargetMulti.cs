@@ -39,7 +39,7 @@ namespace TurnBased.Entities.Battle {
 
         public override void Dead() {
             base.Dead();
-            OnDeathComplete?.Invoke(this);
+            CombatManager.instance.NotifyCharacterDeathComplete(this);
         }
     }
 }
