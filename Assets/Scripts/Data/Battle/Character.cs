@@ -242,6 +242,10 @@ namespace TurnBased.Battle {
         public virtual void CastUltAttack() {
             CurrentState = CharacterState.CastUltAttack;
             WantCmd = false;
+            // 궁극기 발동 시 궁극기 5 포인트 회복
+            if (Data.Team == CharacterTeam.Player) {
+                Data.UltPts.ModifyCurrent(5);
+            }
         }
         /// <summary>
         /// 궁극기 E 준비자세
@@ -255,6 +259,10 @@ namespace TurnBased.Battle {
         public virtual void CastUltSkill() {
             CurrentState = CharacterState.CastUltSkill;
             WantCmd = false;
+            // 궁극기 발동 시 궁극기 5 포인트 회복
+            if (Data.Team == CharacterTeam.Player) {
+                Data.UltPts.ModifyCurrent(5);
+            }
         }
         /// <summary>
         /// 캐릭터 모델 활성화/비활성화
@@ -288,7 +296,6 @@ namespace TurnBased.Battle {
             WantState = CharacterState.PrepareDead;
             // 명령대기를 하지 않음을 반환
             WantCmd = false;
-            CombatManager.instance.NotifyCharacterDeath(this);
         }
         /// <summary>
         /// 그로기 준비함수
@@ -343,6 +350,11 @@ namespace TurnBased.Battle {
                 return;
             }
 
+            // 피격 시 궁극기 10 포인트 회복
+            if (Data.Team == CharacterTeam.Player) {
+                Data.UltPts.ModifyCurrent(10);
+            }
+
             if (Data.Toughness.CurrentMax > 0) {
                 // 만약 강인도가 있다면
                 if (Data.Toughness.Current > 0) {
@@ -381,6 +393,7 @@ namespace TurnBased.Battle {
             if (Data.HP.Current <= 0) {
                 // 죽음을 다룰 함수를 실행한다
                 Dead();
+                CombatManager.instance.NotifyCharacterDeath(this, attacker);
             }
         }
 

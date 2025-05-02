@@ -53,6 +53,9 @@ namespace TurnBased.Battle.Managers {
         }
 
         public void NotifyCharacterDeath(Character victim, Character killer) {
+            if (killer.Data.Team == CharacterTeam.Player) {
+                killer.Data.UltPts.ModifyCurrent(10);
+            }
             OnCharacterDeath?.Invoke(victim, killer);
         }
 
@@ -61,6 +64,25 @@ namespace TurnBased.Battle.Managers {
         }
 
         public void NotifyCharacterInflictedDamage(Character attacker, Character victim, DamageResult result) {
+            if (attacker.Data.Team == CharacterTeam.Player) {
+                switch (attacker.CurrentState) {
+                    case Character.CharacterState.DoAttack:
+                        attacker.Data.UltPts.ModifyCurrent(20);
+                        break;
+                    case Character.CharacterState.CastSkill:
+                        attacker.Data.UltPts.ModifyCurrent(30);
+                        break;
+                    case Character.CharacterState.CastUltAttack:
+                        attacker.Data.UltPts.ModifyCurrent(30);
+                        break;
+                    case Character.CharacterState.CastUltSkill:
+                        attacker.Data.UltPts.ModifyCurrent(30);
+                        break;
+                    case Character.CharacterState.DoExtraAttack:
+                        attacker.Data.UltPts.ModifyCurrent(10);
+                        break;
+                }
+            }
             OnCharacterInflictedDamage?.Invoke(attacker, victim, result);
         }
      
