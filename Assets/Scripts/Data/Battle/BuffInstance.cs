@@ -47,14 +47,14 @@ namespace TurnBased.Battle {
                 e.OnRemove(_caster, _owner);
         }
 
-        public void OnTurnStart(TurnType type) {
+        public void OnTurnStart(TurnContext ctx) {
             foreach (var e in _effects)
-                e.OnTurnStart(_caster, _owner, type);
+                e.OnTurnStart(_caster, _owner, ctx);
         }
 
-        public void OnTurnEnd(TurnType type) {
+        public void OnTurnEnd(TurnContext ctx) {
             foreach (var e in _effects)
-                e.OnTurnEnd(_caster, _owner, type);
+                e.OnTurnEnd(_caster, _owner, ctx);
 
             if (_data.duration > 0)
                 _elapsed += 1;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace TurnBased.Battle {
@@ -74,4 +75,37 @@ namespace TurnBased.Battle {
         }
     }
 
+
+    public class TurnContext {
+        public Character Character { get; }
+        public TurnType Type { get; }
+
+        public int PauseCount { get; private set; }
+
+        public bool IsPaused {
+            get {
+                return PauseCount > 0;
+            }
+        }
+
+        private bool _hasContinued;
+        private readonly Action _continueCallback;
+
+        public TurnContext(Character ch, TurnType t, Action continueCallback) {
+            Character = ch;
+            Type = t;
+            _continueCallback = continueCallback;
+        }
+
+        public void Pause() {
+            PauseCount++;
+        }
+
+        public void Continue() {
+            PauseCount--;
+            if (_hasContinued || PauseCount > 0) return;
+            _hasContinued = true;
+            _continueCallback();
+        }
+    }
 }

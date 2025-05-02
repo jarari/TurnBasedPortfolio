@@ -26,22 +26,22 @@ namespace TurnBased.Battle {
             TurnManager.instance.OnTurnEnd -= HandleTurnEnd;
         }
 
-        private void HandleBeforeTurnStart(Character character, TurnType type) {
-            if (type != TurnType.Normal || character != GetComponent<Character>()) {
+        private void HandleBeforeTurnStart(TurnContext ctx) {
+            if (ctx.Type != TurnType.Normal || ctx.Character != GetComponent<Character>()) {
                 return;
             }
 
             foreach (var buff in _activeBuffs)
-                buff.Value.OnTurnStart(type);
+                buff.Value.OnTurnStart(ctx);
         }
 
-        private void HandleTurnEnd(Character character, TurnType type) {
-            if (type != TurnType.Normal || character != GetComponent<Character>()) {
+        private void HandleTurnEnd(TurnContext ctx) {
+            if (ctx.Type != TurnType.Normal || ctx.Character != GetComponent<Character>()) {
                 return;
             }
 
             foreach (var buff in _activeBuffs)
-                buff.Value.OnTurnEnd(type);
+                buff.Value.OnTurnEnd(ctx);
 
             var keys = _activeBuffs.Keys.ToList();
             foreach (var key in keys) {

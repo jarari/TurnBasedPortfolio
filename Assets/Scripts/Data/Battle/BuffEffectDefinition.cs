@@ -9,9 +9,9 @@ namespace TurnBased.Battle {
         void OnApply(Character caster, Character owner);
         void OnRemove(Character caster, Character owner);
 
-        void OnTurnStart(Character caster, Character owner, TurnType type);
+        void OnTurnStart(Character caster, Character owner, TurnContext ctx);
 
-        void OnTurnEnd(Character caster, Character owner, TurnType type);
+        void OnTurnEnd(Character caster, Character owner, TurnContext ctx);
     }
 
     public abstract class BuffEffectDefinition : ScriptableObject {
