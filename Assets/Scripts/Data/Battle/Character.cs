@@ -114,7 +114,13 @@ namespace TurnBased.Battle {
                 }
                 else if (WantState == CharacterState.PrepareSkill)
                 {
-                    PrepareSkill();
+                    if (CombatManager.SkillPoint > 0) {
+                        PrepareSkill();
+                    }
+                    else {
+                        WantState = CharacterState.PrepareAttack;
+                        PrepareAttack();
+                    }
                 }
             }
             // 만약 에너미일때
@@ -200,6 +206,9 @@ namespace TurnBased.Battle {
             CurrentState = CharacterState.DoAttack;
             WantState = CharacterState.PrepareAttack;
             WantCmd = false;
+            if (Data.Team == CharacterTeam.Player) {
+                CombatManager.ModifySkillPoint(1);
+            }
         }
         /// <summary>
         /// 추가 공격 발동
@@ -220,6 +229,9 @@ namespace TurnBased.Battle {
             CurrentState = CharacterState.CastSkill;
             WantState = CharacterState.PrepareSkill;
             WantCmd = false;
+            if (Data.Team == CharacterTeam.Player) {
+                CombatManager.ModifySkillPoint(-1);
+            }
         }
         /// <summary>
         /// 궁극기 Q 준비자세
