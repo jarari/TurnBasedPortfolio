@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using TurnBased.Data;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 
@@ -20,6 +16,22 @@ namespace TurnBased.Battle.Managers {
 
     // 데미지를 계산하는 클래스
     public class CombatManager {
+
+        public static int SkillPoint { get; private set; } = 3;
+
+        public static int SkillPointMax { get; private set; } = 5;
+
+        public static void SetSkillPoint(int p) {
+            SkillPoint = Math.Clamp(p, 0, SkillPointMax);
+        }
+
+        public static void SetSkillPointMax(int pMax) {
+            SkillPointMax = pMax;
+        }
+
+        public static void ModifySkillPoint(int delta) {
+            SkillPoint = Math.Clamp(SkillPoint + delta, 0, SkillPointMax);
+        }
      
         // 데미지 피해를 계산할 함수 (때린 놈과 맞은 놈을 가져온다)
         public static DamageResult CalculateDamage(Character attacker, Character defender, AttackData attackData, int attackNum = 0)
