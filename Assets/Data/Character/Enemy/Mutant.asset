@@ -23,7 +23,7 @@ MonoBehaviour:
     <CritChance>k__BackingField: 0
     <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 0
-    <Weakness>k__BackingField: 3
+    <Weakness>k__BackingField: 19
   team: 1
   attackTable:
     normalAttack: {fileID: 11400000, guid: 388530930314dcc48b95fd9930aa6efe, type: 2}

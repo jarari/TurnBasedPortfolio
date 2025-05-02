@@ -15,6 +15,6 @@ MonoBehaviour:
   damageMult:
   - 0.75
   toughnessDamage:
-  - 30
+  - 100
   canCrit: 1
-  _totalToughnessDamage: 30
+  _totalToughnessDamage: 100

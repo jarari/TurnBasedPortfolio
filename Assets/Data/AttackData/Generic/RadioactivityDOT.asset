@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RadioactivityDOT
   m_EditorClassIdentifier: 
   damageMult:
-  - 0.25
+  - 0.5
   toughnessDamage:
   - 0
   canCrit: 0
