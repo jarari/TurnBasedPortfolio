@@ -31,3 +31,5 @@ MonoBehaviour:
     ultAttack: {fileID: 0}
     extraAttack: {fileID: 0}
     additionalData: []
+  battlePrefab: {fileID: 6179733450111935287, guid: 352dea3dffce427489ca9ec4945af16b, type: 3}
+  fieldPrefab: {fileID: 0}
