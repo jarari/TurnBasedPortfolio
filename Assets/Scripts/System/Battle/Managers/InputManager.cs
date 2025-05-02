@@ -92,34 +92,29 @@ namespace TurnBased.Battle.Managers {
             //TODO: Send notification on no sp
         }
 
-        private void OnUlt1(InputValue inputValue) {
-            var character = CharacterManager.instance.GetAllyCharacters()[0];
-            if (character != null && 
-                CombatManager.CanCharacterUseUlt(character) &&
+        private void TryCastUlt(Character character) {
+            if (character != null &&
                 character.CurrentState != Character.CharacterState.PrepareUltAttack &&
                 character.CurrentState != Character.CharacterState.PrepareUltSkill) {
-                TurnManager.instance.AddUltTurn(character);
+                if (CombatManager.CanCharacterUseUlt(character)) {
+                    TurnManager.instance.AddUltTurn(character);
+                }
+                else {
+                    SoundManager.instance.Play2DSound("UIUltNotReady");
+                }
             }
+        }
+
+        private void OnUlt1(InputValue inputValue) {
+            TryCastUlt(CharacterManager.instance.GetAllyCharacters()[0]);
         }
 
         private void OnUlt2(InputValue inputValue) {
-            var character = CharacterManager.instance.GetAllyCharacters()[1];
-            if (character != null &&
-                CombatManager.CanCharacterUseUlt(character) &&
-                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
-                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
-                TurnManager.instance.AddUltTurn(character);
-            }
+            TryCastUlt(CharacterManager.instance.GetAllyCharacters()[1]);
         }
 
         private void OnUlt3(InputValue inputValue) {
-            var character = CharacterManager.instance.GetAllyCharacters()[2];
-            if (character != null &&
-                CombatManager.CanCharacterUseUlt(character) &&
-                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
-                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
-                TurnManager.instance.AddUltTurn(character);
-            }
+            TryCastUlt(CharacterManager.instance.GetAllyCharacters()[2]);
         }
     }
 }
