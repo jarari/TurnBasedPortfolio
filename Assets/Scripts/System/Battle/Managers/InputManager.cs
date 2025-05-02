@@ -68,7 +68,7 @@ namespace TurnBased.Battle.Managers {
         /// <param name="inputValue"></param>
         private void OnSkill(InputValue inputValue) {
             var currentCharacter = TurnManager.instance.CurrentCharacter;
-            if (CombatManager.SkillPoint > 0) {
+            if (CombatManager.instance.SkillPoint > 0) {
                 if (CanCharacterTakeInput()) {
                     if (currentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack &&
                         currentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {

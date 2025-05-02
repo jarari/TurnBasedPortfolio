@@ -1,5 +1,6 @@
 using System;
 using TurnBased.Data;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 
@@ -15,33 +16,37 @@ namespace TurnBased.Battle.Managers {
     }
 
     // 데미지를 계산하는 클래스
-    public class CombatManager {
+    public class CombatManager : MonoBehaviour {
+        public static CombatManager instance;
 
-        public static event Action<int> OnSkillPointChanged;
-        public static event Action<int> OnSkillPointMaxChanged;
+        public event Action<int> OnSkillPointChanged;
+        public event Action<int> OnSkillPointMaxChanged;
 
-        public static int SkillPoint { get; private set; } = 3;
+        public int SkillPoint { get; private set; } = 3;
 
-        public static int SkillPointMax { get; private set; } = 5;
+        public int SkillPointMax { get; private set; } = 5;
 
-        public static void SetSkillPoint(int p) {
+        private void Awake() {
+            if (instance != null) {
+                Destroy(this);
+                return;
+            }
+            instance = this;
+        }
+
+        public void SetSkillPoint(int p) {
             SkillPoint = Math.Clamp(p, 0, SkillPointMax);
             OnSkillPointChanged?.Invoke(SkillPoint);
         }
 
-        public static void SetSkillPointMax(int pMax) {
+        public void SetSkillPointMax(int pMax) {
             SkillPointMax = pMax;
             OnSkillPointMaxChanged?.Invoke(pMax);
         }
 
-        public static void ModifySkillPoint(int delta) {
+        public void ModifySkillPoint(int delta) {
             SkillPoint = Math.Clamp(SkillPoint + delta, 0, SkillPointMax);
             OnSkillPointChanged?.Invoke(SkillPoint);
-        }
-
-        public static void CleanSkillPointEvents() {
-            OnSkillPointChanged = null;
-            OnSkillPointMaxChanged = null;
         }
      
         // 데미지 피해를 계산할 함수 (때린 놈과 맞은 놈을 가져온다)

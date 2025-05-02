@@ -114,7 +114,7 @@ namespace TurnBased.Battle {
                 }
                 else if (WantState == CharacterState.PrepareSkill)
                 {
-                    if (CombatManager.SkillPoint > 0) {
+                    if (CombatManager.instance.SkillPoint > 0) {
                         PrepareSkill();
                     }
                     else {
@@ -207,7 +207,7 @@ namespace TurnBased.Battle {
             WantState = CharacterState.PrepareAttack;
             WantCmd = false;
             if (Data.Team == CharacterTeam.Player) {
-                CombatManager.ModifySkillPoint(1);
+                CombatManager.instance.ModifySkillPoint(1);
             }
         }
         /// <summary>
@@ -230,7 +230,7 @@ namespace TurnBased.Battle {
             WantState = CharacterState.PrepareSkill;
             WantCmd = false;
             if (Data.Team == CharacterTeam.Player) {
-                CombatManager.ModifySkillPoint(-1);
+                CombatManager.instance.ModifySkillPoint(-1);
             }
         }
         /// <summary>
