@@ -42,6 +42,13 @@ namespace TurnBased.Battle.Managers {
                 return;
             }
             instance = this;
+
+            _roundRemaining = Round1Time;
+        }
+
+        private void Start() {
+            CombatManager.instance.OnCharacterDeath += HandleCharacterDeath;
+            CombatManager.instance.OnCharacterDeathComplete += HandleCharacterDeathComplete;
         }
 
         private void HandleCharacterDeath(Character c, Character killer) {
@@ -59,15 +66,11 @@ namespace TurnBased.Battle.Managers {
         /// <param name="character"></param>
         public void AddCharacter(Character character) {
             _turnQueue.Add(new TurnData(character, TurnType.Normal));
-            CombatManager.instance.OnCharacterDeath += HandleCharacterDeath;
-            CombatManager.instance.OnCharacterDeathComplete += HandleCharacterDeathComplete;
         }
 
         public void RemoveCharacter(Character character) {
             _turnQueue.RemoveAll((data) => data.Character == character);
             _turnQueue.RemoveAll((data) => data.ExtraAttackTarget == character);
-            CombatManager.instance.OnCharacterDeath -= HandleCharacterDeath;
-            CombatManager.instance.OnCharacterDeathComplete -= HandleCharacterDeathComplete;
         }
 
         public void RemoveCharacterUltExtraAttackOnly(Character character) {
@@ -117,7 +120,6 @@ namespace TurnBased.Battle.Managers {
 
         public void InitializeTurnQueue() {
             _turnQueue = _turnQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
-            _roundRemaining = Round1Time;
             StartNextTurn();
         }
 
