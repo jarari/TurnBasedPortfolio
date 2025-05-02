@@ -93,5 +93,16 @@ namespace TurnBased.Data {
         public CharacterAttackTable attackTable;
         public GameObject battlePrefab;
         public GameObject fieldPrefab;
+        public string Name; // 캐릭터 이름
+        public string Attribute; // 캐릭터 속성
+        public int BreakEffect; // 격파 특수효과
+        public string CharacterImagePath; // 캐릭터 이미지 경로
+        public string CharacterRenderTexturePath; // 캐릭터 렌더 텍스쳐 경로
+        public string AttributeImagePath; // 속성 이미지 경로
+        public string BasicAttackImagePath; // 일반 공격 이미지 경로
+        public string SkillImagePath; // 전투 스킬 이미지 경로
+        public string UltimateImagePath; // 필살기 이미지 경로
+        public string TalentImagePath; // 특성 이미지 경로
+        public string TechniqueImagePath; // 비술 이미지 경로
     }
 }

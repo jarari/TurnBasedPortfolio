@@ -118,13 +118,13 @@ public class CharacterUIManager : MonoBehaviour
         // 스탯 데이터 매핑
         var stats = new Dictionary<string, string>
         {
-            { "HP", character.Health.ToString() },
-            { "ATK", character.Attack.ToString() },
-            { "DEF", character.Defense.ToString() },
-            { "속도", character.Speed.ToString() },
+            { "HP", character.stats.MaxHP.ToString() },
+            { "ATK", character.stats.Attack.ToString() },
+            { "DEF", character.stats.Defense.ToString() },
+            { "속도", character.stats.Speed.ToString() },
             { "격파 특수효과", $"{character.BreakEffect}%" },
-            { "치명타 확률", $"{character.CriticalRate}%" },
-            { "치명타 피해", $"{character.CriticalDamage}%" }            
+            { "치명타 확률", $"{character.stats.CritChance}%" },
+            { "치명타 피해", $"{character.stats.CritMult}%" }            
         };
 
         // 스탯 UI 업데이트
