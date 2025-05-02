@@ -13,11 +13,11 @@ namespace TurnBased.Battle.BuffEffects {
 
         public void OnRemove(Character caster, Character owner) { }
 
-        public void OnTurnStart(Character caster, Character owner, TurnType type) {
+        public void OnTurnStart(Character caster, Character owner, TurnContext ctx) {
             Instance.DecreaseStack(1);
         }
 
-        public void OnTurnEnd(Character caster, Character owner, TurnType type) { }
+        public void OnTurnEnd(Character caster, Character owner, TurnContext ctx) { }
     }
 
     [CreateAssetMenu(menuName = "ScriptableObjects/BuffEffects/DecreaseStackOnTurnStart")]

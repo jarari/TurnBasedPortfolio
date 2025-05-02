@@ -144,6 +144,16 @@ namespace TurnBased.Battle {
             _currentContext = Context.TurnStart;
         }
 
+        private void OnCharacterTransitionTurn(Character c) {
+            Priority = 4;
+            if (CinemachineCore.IsLive(this)) {
+                _character.ProcessCamChanged();
+                _character.ProcessCamGain();
+            }
+            ResetAllCharacterLayers();
+            _currentContext = Context.TargetSelf;
+        }
+
         private void OnCamTargetUpdate(float pos) {
             // 타겟 매니저와 카메라 돌리 위치 동기화
             if (TargetManager.instance.TargetTeam == CharacterTeam.Enemy) {
@@ -178,6 +188,7 @@ namespace TurnBased.Battle {
             _character.OnTurnEnd += OnCharacterTurnEnd;
             _character.OnUltTurn += OnCharacterUltTurn;
             _character.OnExtraAttackTurn += OnCharacterExtraAttackTurn;
+            _character.OnTransitionTurn += OnCharacterTransitionTurn;
             if (_character.ultIdleOverride != null) {
                 cmUltIdleCam = _character.ultIdleOverride;
                 _ultIdleSplineDolly = cmUltIdleCam.GetComponent<CinemachineSplineDolly>();
@@ -193,6 +204,7 @@ namespace TurnBased.Battle {
             _character.OnTurnEnd += OnCharacterTurnEnd;
             _character.OnUltTurn += OnCharacterTurnStart;
             _character.OnExtraAttackTurn += OnCharacterTurnStart;
+            _character.OnTransitionTurn += OnCharacterTransitionTurn;
             Initialized = true;
         }
 

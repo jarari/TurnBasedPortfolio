@@ -29,9 +29,9 @@ namespace TurnBased.Battle.BuffEffects {
             _owner.OnInflictedDamage -= HandleOwnerAttack;
         }
 
-        public void OnTurnStart(Character caster, Character owner, TurnType type) { }
+        public void OnTurnStart(Character caster, Character owner, TurnContext ctx) { }
 
-        public void OnTurnEnd(Character caster, Character owner, TurnType type) { }
+        public void OnTurnEnd(Character caster, Character owner, TurnContext ctx) { }
     }
 
     [CreateAssetMenu(menuName = "ScriptableObjects/BuffEffects/ExtraAttackOnAttack")]
