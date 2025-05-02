@@ -31,20 +31,32 @@ namespace TurnBased.Battle.Managers {
             //TargetManager.instance.InitializeTarget();
         }
 
-        public Character SpawnCharacter(string name, int spawnIdx) {
+        private void HandleCharacterDeathComplete(Character c) {
+            RemoveCharacter(c);
+        }
+
+        public Character SpawnCharacter(string name) {
             var data = CharacterDataManager.Instance.GetCharacterData(name);
             if (data == null) {
                 return null;
             }
 
-            var go = Instantiate(data.battlePrefab);
-            Character c = go.GetComponentInParent<Character>();
-            GameObject spawnPoint;
+            GameObject go, spawnPoint;
+            Character c;
             if (data.team == CharacterTeam.Player) {
-                if (spawnIdx >= allySpawnPoints.Count) {
+                int[] idxToTry = { 1, 0, 2 };
+                int tryIdx = 0;
+                while (GetAllyAtIndex(idxToTry[tryIdx]) != null && tryIdx < idxToTry.Length) {
+                    tryIdx++;
+                }
+                if (tryIdx == idxToTry.Length) {
                     return null;
                 }
+                int spawnIdx = idxToTry[tryIdx];
                 spawnPoint = allySpawnPoints[spawnIdx];
+
+                go = Instantiate(data.battlePrefab);
+                c = go.GetComponentInParent<Character>();
 
                 TurnManager.instance.AddCharacter(c);
                 var contextCam = c.GetComponentInParent<ContextualIdleCamera>();
@@ -56,10 +68,19 @@ namespace TurnBased.Battle.Managers {
                 _idxAllyDict.Add(spawnIdx, c);
             }
             else {
-                spawnPoint = enemySpawnPoints[spawnIdx];
-                if (spawnIdx >= enemySpawnPoints.Count) {
+                int[] idxToTry = { 2, 1, 3, 0, 4 };
+                int tryIdx = 0;
+                while (GetEnemyAtIndex(idxToTry[tryIdx]) != null && tryIdx < idxToTry.Length) {
+                    tryIdx++;
+                }
+                if (tryIdx == idxToTry.Length) {
                     return null;
                 }
+                int spawnIdx = idxToTry[tryIdx];
+                spawnPoint = enemySpawnPoints[spawnIdx];
+
+                go = Instantiate(data.battlePrefab);
+                c = go.GetComponentInParent<Character>();
 
                 TurnManager.instance.AddCharacter(c);
                 var contextCam = c.GetComponentInParent<ContextualIdleCamera>();
@@ -71,6 +92,7 @@ namespace TurnBased.Battle.Managers {
                 _idxEnemyDict.Add(spawnIdx, c);
             }
             go.transform.position = spawnPoint.transform.position;
+            c.OnDeathComplete += HandleCharacterDeathComplete;
             return c;
         }
 
@@ -83,7 +105,7 @@ namespace TurnBased.Battle.Managers {
         }
 
         public void RemoveCharacter(Character c) {
-            if (c.Data.Team == Data.CharacterTeam.Player) {
+            if (c.Data.Team == CharacterTeam.Player) {
                 int idx = GetAllyIndex(c);
                 _allyIdxDict.Remove(c);
                 _idxAllyDict.Remove(idx);
@@ -94,6 +116,8 @@ namespace TurnBased.Battle.Managers {
                 _idxEnemyDict.Remove(idx);
             }
             _characters.Remove(c);
+            c.transform.SetParent(null);
+            c.gameObject.SetActive(false);
         }
 
         public List<Character> GetCharacters() {
