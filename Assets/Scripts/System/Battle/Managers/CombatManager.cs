@@ -87,6 +87,10 @@ namespace TurnBased.Battle.Managers {
         public static bool CheckElementMatch(ElementType type1, ElementType type2) {
             return (type1 & type2) > 0;
         }
+
+        public static bool CanCharacterUseUlt(Character c) {
+            return c.Data.UltPts.Current >= c.Data.UltThreshold;
+        }
     }
 
 }

@@ -95,6 +95,7 @@ namespace TurnBased.Battle.Managers {
         private void OnUlt1(InputValue inputValue) {
             var character = CharacterManager.instance.GetAllyCharacters()[0];
             if (character != null && 
+                CombatManager.CanCharacterUseUlt(character) &&
                 character.CurrentState != Character.CharacterState.PrepareUltAttack &&
                 character.CurrentState != Character.CharacterState.PrepareUltSkill) {
                 TurnManager.instance.AddUltTurn(character);
@@ -104,6 +105,7 @@ namespace TurnBased.Battle.Managers {
         private void OnUlt2(InputValue inputValue) {
             var character = CharacterManager.instance.GetAllyCharacters()[1];
             if (character != null &&
+                CombatManager.CanCharacterUseUlt(character) &&
                 character.CurrentState != Character.CharacterState.PrepareUltAttack &&
                 character.CurrentState != Character.CharacterState.PrepareUltSkill) {
                 TurnManager.instance.AddUltTurn(character);
@@ -113,6 +115,7 @@ namespace TurnBased.Battle.Managers {
         private void OnUlt3(InputValue inputValue) {
             var character = CharacterManager.instance.GetAllyCharacters()[2];
             if (character != null &&
+                CombatManager.CanCharacterUseUlt(character) &&
                 character.CurrentState != Character.CharacterState.PrepareUltAttack &&
                 character.CurrentState != Character.CharacterState.PrepareUltSkill) {
                 TurnManager.instance.AddUltTurn(character);
