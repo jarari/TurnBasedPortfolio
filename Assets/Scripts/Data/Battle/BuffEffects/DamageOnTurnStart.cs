@@ -1,3 +1,4 @@
+using System.Collections;
 using TurnBased.Battle.Managers;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -12,6 +13,8 @@ namespace TurnBased.Battle.BuffEffects {
         private AttackData _damageData;
         private bool _multiplyByStack;
         private GameObject _vfxInstance;
+        private WaitForSeconds _cachedWaitForSeconds = new WaitForSeconds(2f);
+        private Coroutine _pauseTurnCoroutine;
 
         public DamageOnTurnStartEffect(BuffInstance instance, GameObject vfxPrefab, string sfxApply, string sfxDamage, AttackData damageData, bool multiplyByStack) {
             Instance = instance;
@@ -41,7 +44,7 @@ namespace TurnBased.Battle.BuffEffects {
             }
         }
 
-        public void OnTurnStart(Character caster, Character owner, TurnType type) {
+        public void OnTurnStart(Character caster, Character owner, TurnContext ctx) {
             var result = CombatManager.CalculateDamage(caster, owner, _damageData);
 
             if (_multiplyByStack) {
@@ -66,9 +69,20 @@ namespace TurnBased.Battle.BuffEffects {
             if (_sfxDamage.Length > 0) {
                 SoundManager.instance.Play2DSound(_sfxDamage);
             }
+
+            if (_pauseTurnCoroutine == null) {
+                ctx.Pause();
+                _pauseTurnCoroutine = owner.StartCoroutine(ContinueTurn(ctx));
+            }
         }
 
-        public void OnTurnEnd(Character caster, Character owner, TurnType type) { }
+        public void OnTurnEnd(Character caster, Character owner, TurnContext ctx) { }
+
+        private IEnumerator ContinueTurn(TurnContext ctx) {
+            yield return _cachedWaitForSeconds;
+            ctx.Continue();
+            _pauseTurnCoroutine = null;
+        }
     }
 
     [CreateAssetMenu(menuName = "ScriptableObjects/BuffEffects/DamageOnTurnStart")]

@@ -9,9 +9,9 @@ namespace TurnBased.Battle {
         void OnRemove();
         bool IsExpired { get; }
 
-        void OnTurnStart(TurnType type);
+        void OnTurnStart(TurnContext ctx);
 
-        void OnTurnEnd(TurnType type);
+        void OnTurnEnd(TurnContext ctx);
         void ResetDuration();
     }
 

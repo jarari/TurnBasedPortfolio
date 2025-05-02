@@ -25,9 +25,9 @@ namespace TurnBased.Battle.Managers {
         /// <summary>
         /// 라운드 변경 시 이벤트
         /// </summary>
-        public Action OnRoundChanged;
-        public Action<Character, TurnType> OnBeforeTurnStart;
-        public Action<Character, TurnType> OnTurnEnd;
+        public event Action OnRoundChanged;
+        public event Action<TurnContext> OnBeforeTurnStart;
+        public event Action<TurnContext> OnTurnEnd;
 
         private float _roundRemaining;
 
@@ -129,35 +129,44 @@ namespace TurnBased.Battle.Managers {
             _turnQueue.Remove(first);
             CurrentCharacter = first.Character;
             _lastTurnType = first.Type;
-            OnBeforeTurnStart?.Invoke(first.Character, first.Type);
-            if (first.Type == TurnType.Normal) {
-                _roundRemaining = _roundRemaining - first.RemainingTimeToAct;
-                foreach (var turnData in _turnQueue) {
-                    turnData.AdvanceTurn(first.RemainingTimeToAct);
-                }
-                first.Character.TakeTurn();
-                first.ResetAV();
-                bool inserted = false;
-                for (int i = 0; i < _turnQueue.Count; ++i) {
-                    if (_turnQueue[i].RemainingTimeToAct > first.RemainingTimeToAct) {
-                        _turnQueue.Insert(i, new TurnData(first));
-                        inserted = true;
-                        break;
+            void ProgressTurn() {
+                if (first.Type == TurnType.Normal) {
+                    _roundRemaining = _roundRemaining - first.RemainingTimeToAct;
+                    foreach (var turnData in _turnQueue) {
+                        turnData.AdvanceTurn(first.RemainingTimeToAct);
                     }
+                    first.Character.TakeTurn();
+                    first.ResetAV();
+                    bool inserted = false;
+                    for (int i = 0; i < _turnQueue.Count; ++i) {
+                        if (_turnQueue[i].RemainingTimeToAct > first.RemainingTimeToAct) {
+                            _turnQueue.Insert(i, new TurnData(first));
+                            inserted = true;
+                            break;
+                        }
+                    }
+                    if (!inserted) {
+                        _turnQueue.Add(first);
+                    }
+                    _turnQueue = _turnQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
                 }
-                if (!inserted) {
-                    _turnQueue.Add(first);
+                else if (first.Type == TurnType.Ult) {
+                    first.Character.TakeUltTurn();
                 }
-                _turnQueue = _turnQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
+                else if (first.Type == TurnType.ExtraAttack) {
+                    first.Character.TakeExtraAttackTurn();
+                    first.Character.DoExtraAttack(first.ExtraAttackTarget);
+                }
             }
-            else if (first.Type == TurnType.Ult) {
-                first.Character.TakeUltTurn();
+            var ctx = new TurnContext(first.Character, first.Type, ProgressTurn);
+            OnBeforeTurnStart?.Invoke(ctx);
+
+            if (!ctx.IsPaused) {
+                ctx.Continue();
             }
-            else if (first.Type == TurnType.ExtraAttack) {
-                first.Character.TakeExtraAttackTurn();
-                first.Character.DoExtraAttack(first.ExtraAttackTarget);
+            else {
+                first.Character.TakeTransitionTurn();
             }
-            TurnPassed++;
         }
 
         public float GetRemainingTime(Character c) {
@@ -212,8 +221,18 @@ namespace TurnBased.Battle.Managers {
                     OnRoundChanged?.Invoke();
                 }
             }
-            OnTurnEnd?.Invoke(CurrentCharacter, _lastTurnType);
-            StartCoroutine(StartNextTurnDelayed());
+            var ctx = new TurnContext(CurrentCharacter, _lastTurnType, () => {
+                StartCoroutine(StartNextTurnDelayed());
+                TurnPassed++;
+            });
+            OnTurnEnd?.Invoke(ctx);
+
+            if (!ctx.IsPaused) {
+                ctx.Continue();
+            }
+            else {
+                CurrentCharacter.TakeTransitionTurn();
+            }
         }
 
         /// <summary>

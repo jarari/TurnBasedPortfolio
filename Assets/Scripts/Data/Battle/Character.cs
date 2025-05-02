@@ -43,6 +43,7 @@ namespace TurnBased.Battle {
         public Action<Character> OnTurnEnd;
         public Action<Character> OnUltTurn;
         public Action<Character> OnExtraAttackTurn;
+        public Action<Character> OnTransitionTurn;
         public Action<Character, string, string> OnAnimationEvent;
         public Action<Character, bool> OnVisibilityChange;
         public Action<Character, Character, DamageResult> OnInflictedDamage;
@@ -137,6 +138,10 @@ namespace TurnBased.Battle {
 
         public virtual void TakeExtraAttackTurn() {
             OnExtraAttackTurn?.Invoke(this);
+        }
+
+        public virtual void TakeTransitionTurn() {
+            OnTransitionTurn?.Invoke(this);
         }
 
         /// <summary>
