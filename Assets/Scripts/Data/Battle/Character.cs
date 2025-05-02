@@ -172,7 +172,7 @@ namespace TurnBased.Battle {
             else if (argument == "DeathComplete") {
                 OnDeathComplete?.Invoke(this);
             }
-
+            Debug.Log("사운드호출");
             OnAnimationEvent?.Invoke(this, argument, payload);
         }
 

@@ -71,8 +71,9 @@ namespace TurnBased.Entities.Battle
 
             }
 
+            // 타임라인에서 디버프 시그널을 받게 된다면
             else if (animEvent == "Radioactivity")
-            { 
+            {
                 // 타겟인 에너미와 주변의 에너미도 가져온다
                 var targets = TargetManager.instance.GetTargets();
 
@@ -83,6 +84,20 @@ namespace TurnBased.Entities.Battle
                     t.GetComponent<CharacterBuffSystem>().ApplyBuff("Radioactivity", this);
                 }
             }
+
+            #region 사운드
+
+            else if (animEvent == "PlaySound1")
+            {
+                SoundManager.instance.PlayVOSound(this,"VanguardNormalAttack1");
+            }
+            else if (animEvent == "PlaySound2")
+            {
+                SoundManager.instance.PlayVOSound(this, "VanguardNormalAttack2");
+            }
+
+            #endregion
+
         }
 
         private void CastUlt()
