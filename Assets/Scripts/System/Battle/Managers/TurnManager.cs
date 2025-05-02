@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TurnBased.Battle.UI;
 using UnityEngine;
 
 namespace TurnBased.Battle.Managers {
@@ -25,10 +26,13 @@ namespace TurnBased.Battle.Managers {
         /// 라운드 변경 시 이벤트
         /// </summary>
         public Action OnRoundChanged;
+        public Action<Character, TurnType> OnBeforeTurnStart;
+        public Action<Character, TurnType> OnTurnEnd;
 
         private float _roundRemaining;
 
         private List<TurnData> _turnQueue = new List<TurnData>();
+        private TurnType _lastTurnType;
 
         private void Awake() {
             if (instance != null) {
@@ -46,27 +50,50 @@ namespace TurnBased.Battle.Managers {
             _turnQueue.Add(new TurnData(character, TurnType.Normal));
         }
 
+        public void RemoveCharacter(Character character) {
+            _turnQueue.RemoveAll((data) => data.Character == character);
+        }
+
+        public void RemoveCharacterUltExtraAttackOnly(Character character) {
+            _turnQueue.RemoveAll((data) => data.Character == character && (data.Type == TurnType.Ult || data.Type == TurnType.ExtraAttack));
+        }
+
         /// <summary>
         /// 궁극기 턴 추가 (궁극기 발동시 호출)
         /// </summary>
         /// <param name="character"></param>
         public void AddUltTurn(Character character) {
-            _turnQueue.Insert(0, new TurnData(character, TurnType.Ult));
-            if (CurrentCharacter.WantCmd == true) {
+            int idx = 0;
+            IEnumerator<TurnData> enumerator = _turnQueue.GetEnumerator();
+            while (enumerator.MoveNext() && enumerator.Current.Type != TurnType.Normal) {
+                idx++;
+                enumerator.MoveNext();
+            }
+            _turnQueue.Insert(idx, new TurnData(character, TurnType.Ult));
+            if (CurrentCharacter.WantCmd == true 
+                && CurrentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack 
+                && CurrentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {
                 var _characterTurn = _turnQueue.Find((t) => t.Character == CurrentCharacter && t.Type == TurnType.Normal);
                 _turnQueue.Remove(_characterTurn);
                 _characterTurn.ModRemainingTime(0);
                 _turnQueue.Insert(1, _characterTurn);
                 StartNextTurn();
             }
+            SoundManager.instance.Play2DSound("UIUltStandby");
         }
 
         /// <summary>
         /// 추가 공격 턴 추가 (추가 공격 발동시 호출)
         /// </summary>
         /// <param name="character"></param>
-        public void AddExtraAtackTurn(Character character) {
-            _turnQueue.Insert(0, new TurnData(character, TurnType.ExtraAttack));
+        public void AddExtraAtackTurn(Character character, Character target) {
+            int idx = 0;
+            IEnumerator<TurnData> enumerator = _turnQueue.GetEnumerator();
+            while (enumerator.MoveNext() && enumerator.Current.Type != TurnType.Normal) {
+                idx++;
+                enumerator.MoveNext();
+            }
+            _turnQueue.Insert(idx, new TurnData(character, TurnType.ExtraAttack, target));
         }
 
         public void InitializeTurnQueue() {
@@ -82,6 +109,8 @@ namespace TurnBased.Battle.Managers {
             var first = _turnQueue.First();
             _turnQueue.Remove(first);
             CurrentCharacter = first.Character;
+            _lastTurnType = first.Type;
+            OnBeforeTurnStart?.Invoke(first.Character, first.Type);
             if (first.Type == TurnType.Normal) {
                 _roundRemaining = _roundRemaining - first.RemainingTimeToAct;
                 foreach (var turnData in _turnQueue) {
@@ -103,10 +132,11 @@ namespace TurnBased.Battle.Managers {
                 _turnQueue = _turnQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
             }
             else if (first.Type == TurnType.Ult) {
-                first.Character.PrepareUltAttack();
+                first.Character.TakeUltTurn();
             }
             else if (first.Type == TurnType.ExtraAttack) {
-                first.Character.DoExtraAttack();
+                first.Character.TakeExtraAttackTurn();
+                first.Character.DoExtraAttack(first.ExtraAttackTarget);
             }
         }
 
@@ -138,6 +168,7 @@ namespace TurnBased.Battle.Managers {
         private IEnumerator StartNextTurnDelayed() {
             yield return null;
             StartNextTurn();
+            ActionOrderUIManager.instance.UpdateActionOrderUI(); // 턴이 끝나고 다음 턴 시작 시 ActionOrderUI에서 행동 서열 UI 업데이트
         }
 
         /// <summary>
@@ -151,6 +182,7 @@ namespace TurnBased.Battle.Managers {
                     OnRoundChanged?.Invoke();
                 }
             }
+            OnTurnEnd?.Invoke(CurrentCharacter, _lastTurnType);
             StartCoroutine(StartNextTurnDelayed());
         }
 
@@ -164,17 +196,19 @@ namespace TurnBased.Battle.Managers {
                 predictedQueue.Add(new TurnData(data));
             }
             var first = predictedQueue.First();
-            first.ResetAV();
-            bool inserted = false;
-            for (int i = 1; i < predictedQueue.Count; ++i) {
-                if (predictedQueue[i].RemainingTimeToAct > first.RemainingTimeToAct) {
-                    predictedQueue.Insert(i, new TurnData(first));
-                    inserted = true;
-                    break;
+            if (first.Type == TurnType.Normal) {
+                first.ResetAV();
+                bool inserted = false;
+                for (int i = 1; i < predictedQueue.Count; ++i) {
+                    if (predictedQueue[i].RemainingTimeToAct > first.RemainingTimeToAct) {
+                        predictedQueue.Insert(i, new TurnData(first));
+                        inserted = true;
+                        break;
+                    }
                 }
-            }
-            if (!inserted) {
-                _turnQueue.Add(first);
+                if (!inserted) {
+                    _turnQueue.Add(first);
+                }
             }
             predictedQueue.Remove(first);
             predictedQueue = predictedQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
@@ -183,7 +217,7 @@ namespace TurnBased.Battle.Managers {
 
         public List<Character> GetActionOrder()
         {
-            return _turnQueue.Select(td => td.Character).ToList(); // 행동 서열읗 리스트로 반환
+            return _turnQueue.Select(td => td.Character).ToList(); // 행동 서열을 리스트로 반환
         }
 
         public void PrintTurnQueue() {

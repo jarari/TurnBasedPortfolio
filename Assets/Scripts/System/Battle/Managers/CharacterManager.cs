@@ -30,9 +30,9 @@ namespace TurnBased.Battle.Managers {
                 var c = allySpawnPoints[i].GetComponentInChildren<Character>();
                 if (c != null) {
                     TurnManager.instance.AddCharacter(c);
-                    var camCon = c.GetComponentInParent<IdleCamController>();
-                    if (camCon != null) {
-                        camCon.InitializeController();
+                    var contextCam = c.GetComponentInParent<ContextualIdleCamera>();
+                    if (contextCam != null) {
+                        contextCam.InitializeCamera();
                     }
                     _characters.Add(c);
                     _allyIdxDict.Add(c, i);
@@ -43,9 +43,9 @@ namespace TurnBased.Battle.Managers {
                 var c = enemySpawnPoints[i].GetComponentInChildren<Character>();
                 if (c != null) {
                     TurnManager.instance.AddCharacter(c);
-                    var camCon = c.GetComponentInParent<IdleCamController>();
-                    if (camCon != null) {
-                        camCon.InitializeController();
+                    var contextCam = c.GetComponentInParent<ContextualIdleCamera>();
+                    if (contextCam != null) {
+                        contextCam.InitializeEnemyCamera();
                     }
                     _characters.Add(c);
                     _enemyIdxDict.Add(c, i);
@@ -60,14 +60,60 @@ namespace TurnBased.Battle.Managers {
 
         }
 
+        public void AddCharacter(Character c, int idx) {
+
+        }
+
+        public int GetMaxAllyCount() {
+            return allySpawnPoints.Count;
+        }
+
+        public int GetMaxEnemyCount() {
+            return enemySpawnPoints.Count;
+        }
+
+        public void RemoveCharacter(Character c) {
+            if (c.Data.Team == Data.CharacterTeam.Player) {
+                int idx = GetAllyIndex(c);
+                _allyIdxDict.Remove(c);
+                _idxAllyDict.Remove(idx);
+            }
+            else {
+                int idx = GetEnemyIndex(c);
+                _enemyIdxDict.Remove(c);
+                _idxEnemyDict.Remove(idx);
+            }
+            _characters.Remove(c);
+        }
+
         public List<Character> GetCharacters() {
+            List<Character> list = new List<Character>();
+            foreach (Character c in _characters) {
+                if (!c.IsDead) {
+                    list.Add(c);
+                }
+            }
+            return list;
+        }
+
+        public List<Character> GetAllCharacters() {
             return _characters;
         }
 
         public List<Character> GetAllyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
-                if (c.Data.team == Data.CharacterTeam.Player) {
+                if (!c.IsDead && c.Data.Team == Data.CharacterTeam.Player) {
+                    list.Add(c);
+                }
+            }
+            return list;
+        }
+
+        public List<Character> GetAllAllyCharacters() {
+            List<Character> list = new List<Character>();
+            foreach (Character c in _characters) {
+                if (c.Data.Team == Data.CharacterTeam.Player) {
                     list.Add(c);
                 }
             }
@@ -77,7 +123,17 @@ namespace TurnBased.Battle.Managers {
         public List<Character> GetEnemyCharacters() {
             List<Character> list = new List<Character>();
             foreach (Character c in _characters) {
-                if (c.Data.team == Data.CharacterTeam.Enemy) {
+                if (!c.IsDead && c.Data.Team == Data.CharacterTeam.Enemy) {
+                    list.Add(c);
+                }
+            }
+            return list;
+        }
+
+        public List<Character> GetAllEnemyCharacters() {
+            List<Character> list = new List<Character>();
+            foreach (Character c in _characters) {
+                if (c.Data.Team == Data.CharacterTeam.Enemy) {
                     list.Add(c);
                 }
             }

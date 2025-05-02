@@ -3,47 +3,68 @@ using TurnBased.Battle;
 using TurnBased.Battle.Managers;
 using TurnBased.Data;
 using UnityEngine.Playables;
-using System.Collections;
-using Unity.Cinemachine;
 
 namespace TurnBased.Entities.Battle {
     public class SoccerPlayer : Character {
         [Header("Timelines")]
         public PlayableDirector normalAttack;
         public PlayableDirector skillAttack;
+        public PlayableDirector ultAttack;
         [Header("Skill Objects")]
         public GameObject skillBallLeft;
         public GameObject skillBallRight;
+        public GameObject ultGoalPost;
+        public GameObject hitEffectPrefab;
         [Header("Components")]
         public Animator animator;
 
         private CharacterState _lastAttack;
-        private IEnumerator DelayedReturnFromAttack() {
-            yield return null;
-            if (_lastAttack == CharacterState.DoAttack) {
-                normalAttack.time = normalAttack.duration;
-                normalAttack.Evaluate();
-            }
-            else if (_lastAttack == CharacterState.CastSkill) {
-                skillAttack.time = skillAttack.duration;
-                skillAttack.Evaluate();
-                var targets = TargetManager.instance.GetTargets();
-                foreach (var t in targets) {
-                    t.meshParent.transform.localPosition = Vector3.zero;
-                }
-            }
-            animator.SetInteger("State", 0);
-            meshParent.transform.localPosition = Vector3.zero;
-            foreach (var c in CharacterManager.instance.GetEnemyCharacters()) {
-                c.SetMeshLayer(MeshLayer.Default);
-            }
-            SetMeshLayer(MeshLayer.Default);
-        }
 
         private void OnAnimationEvent_Impl(Character c, string animEvent, string payload) {
-            if (animEvent == "NormalAttackEnd" || animEvent == "SkillAttackEnd") {
-                StartCoroutine(DelayedReturnFromAttack());
+            if (animEvent == "AttackEnd") {
+                animator.SetInteger("State", 0);
                 EndTurn();
+            }
+            else if (animEvent == "DoDamage") {
+                float attackMult = 1.0f;
+                if (payload == "Skill") {
+                    attackMult = 2.2f;
+                }
+                else if (payload == "Ult") {
+                    attackMult = 6.4f;
+                }
+                var targets = TargetManager.instance.GetTargets();
+                foreach (var t in targets) {
+                    DamageResult result = CombatManager.CalculateDamage(c, t, attackMult);
+                    t.Damage(c, result);
+                    if (_lastAttack != CharacterState.CastUltAttack) {
+                        var go = Instantiate(hitEffectPrefab, t.transform.position + Vector3.up * 1.2f, Quaternion.identity);
+                        go.GetComponent<ParticleSystem>().Play();
+                        Destroy(go, 3f);
+                    }
+                    OnInflictedDamage?.Invoke(this, t, result);
+                }
+
+                if (_lastAttack != CharacterState.CastUltAttack) {
+                    SoundManager.instance.Play2DSound("SoccerExplosion");
+                }
+            }
+        }
+
+        private void CastUlt() {
+            SetMeshLayer(MeshLayer.UltTimeline);
+            ultAttack.Play();
+            var enemyCenter = TargetManager.instance.Target;
+            meshParent.transform.position = enemyCenter.transform.position + new Vector3(10.65f, 0f);
+            ultGoalPost.transform.position = Vector3.zero;
+            _lastAttack = CharacterState.CastUltAttack;
+            foreach (var c in CharacterManager.instance.GetEnemyCharacters()) {
+                c.SetMeshLayer(MeshLayer.UltTimeline);
+            }
+            foreach (var c in CharacterManager.instance.GetAllAllyCharacters()) {
+                if (c != this) {
+                    c.SetVisible(false);
+                }
             }
         }
 
@@ -95,10 +116,12 @@ namespace TurnBased.Entities.Battle {
 
         public override void CastUltAttack() {
             base.CastUltAttack();
+            CastUlt();
         }
 
         public override void CastUltSkill() {
             base.CastUltSkill();
+            CastUlt();
         }
 
         public override void DoAttack() {
@@ -113,8 +136,8 @@ namespace TurnBased.Entities.Battle {
             _lastAttack = CharacterState.DoAttack;
         }
 
-        public override void DoExtraAttack() {
-            base.DoExtraAttack();
+        public override void DoExtraAttack(Character target) {
+            base.DoExtraAttack(target);
         }
 
         public override void PrepareAttack() {
@@ -132,10 +155,45 @@ namespace TurnBased.Entities.Battle {
         public override void PrepareUltAttack() {
             base.PrepareUltAttack();
             Debug.Log("Prepare Ult Attack");
+            animator.SetInteger("State", 2);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
         }
 
         public override void PrepareUltSkill() {
             base.PrepareUltSkill();
+            Debug.Log("Prepare Ult Skill");
+            animator.SetInteger("State", 2);
+            TargetManager.instance.ChangeTargetSetting(TargetManager.TargetMode.Single, CharacterTeam.Enemy);
+        }
+
+        public override void Damage(Character attacker, DamageResult result) {
+            base.Damage(attacker, result);
+            animator.SetTrigger("Hit");
+        }
+
+        public override void Dead() {
+            base.Dead();
+            animator.SetTrigger("Die");
+        }
+
+        public override void ProcessCamChanged() {
+            if (_lastAttack == CharacterState.DoAttack) {
+                normalAttack.time = normalAttack.duration;
+                normalAttack.Evaluate();
+            }
+            else if (_lastAttack == CharacterState.CastSkill) {
+                skillAttack.time = skillAttack.duration;
+                skillAttack.Evaluate();
+                var targets = TargetManager.instance.GetTargets();
+                foreach (var t in targets) {
+                    t.meshParent.transform.localPosition = Vector3.zero;
+                }
+            }
+            else if (_lastAttack == CharacterState.CastUltAttack) {
+                ultAttack.time = ultAttack.duration;
+                ultAttack.Evaluate();
+            }
+            meshParent.transform.localPosition = Vector3.zero;
         }
     }
 }

@@ -18,8 +18,8 @@ namespace TurnBased.Entities.Battle {
             EndTurn();
         }
 
-        public override void DoExtraAttack() {
-            base.DoExtraAttack();
+        public override void DoExtraAttack(Character target) {
+            base.DoExtraAttack(target);
         }
 
         public override void PrepareAttack() {
@@ -34,6 +34,13 @@ namespace TurnBased.Entities.Battle {
 
         public override void PrepareUltAttack() {
             base.PrepareUltAttack();
+        }
+
+        // 구동 확인 태스트용
+        public override void Damage(Character attacker, DamageResult result)
+        {
+            base.Damage(attacker, result);
+            Debug.Log("때린놈 : " + attacker.name);
         }
     }
 }

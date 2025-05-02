@@ -19,8 +19,8 @@ namespace TurnBased.Entities.Battle {
             EndTurn();
         }
 
-        public override void DoExtraAttack() {
-            base.DoExtraAttack();
+        public override void DoExtraAttack(Character target) {
+            base.DoExtraAttack(target);
         }
 
         public override void PrepareAttack() {

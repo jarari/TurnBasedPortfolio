@@ -18,6 +18,12 @@ namespace TurnBased.Battle.Managers {
             All
         }
 
+        public enum TargetFilter {
+            AliveOnly,
+            DeadOnly,
+            All
+        }
+
         public class SearchResult {
             public Character Character { get; set; }
             public int Index { get; set; }
@@ -46,6 +52,7 @@ namespace TurnBased.Battle.Managers {
         public int TargetIndex { get; private set; }
         public CharacterTeam TargetTeam { get; private set; }
         public TargetMode Mode { get; private set; }
+        public TargetFilter Filter { get; private set; }
         /// <summary>
         /// 선형보간된 칸 포지션
         /// </summary>
@@ -58,6 +65,8 @@ namespace TurnBased.Battle.Managers {
         private float _targetAllDollyClampMin = 1.5f;
         private float _targetAllDollyClampMax = 2.5f;
         private Coroutine _targetCoroutine;
+
+        private Func<Character, bool> _targetFilter;
 
         private enum SearchDirection {
             Left,
@@ -128,14 +137,24 @@ namespace TurnBased.Battle.Managers {
             OnTargetChanged?.Invoke(Target);
         }
 
-        public void ChangeTargetSetting(TargetMode mode, CharacterTeam team = CharacterTeam.Player) {
-            bool shouldInit = Target == null || mode == TargetMode.Self || team != TargetTeam ? true : false;
+        public void ChangeTargetSetting(TargetMode mode, CharacterTeam team = CharacterTeam.Player, TargetFilter filter = TargetFilter.AliveOnly) {
+            bool shouldInit = Target == null || Target.IsDead || mode == TargetMode.Self || team != TargetTeam || Filter != filter ? true : false;
             Mode = mode;
             if (mode == TargetMode.Self) {
                 TargetTeam = CharacterTeam.Player;
             }
             else {
                 TargetTeam = team;
+            }
+            Filter = filter;
+            if (filter == TargetFilter.AliveOnly) {
+                _targetFilter = c => !c.IsDead;
+            }
+            else if (filter == TargetFilter.DeadOnly) {
+                _targetFilter = c => c.IsDead;
+            }
+            else {
+                _targetFilter = null;
             }
             OnTargetSettingChanged?.Invoke();
             if (shouldInit) {
@@ -158,7 +177,8 @@ namespace TurnBased.Battle.Managers {
                     int tryIdx = 0;
                     do {
                         enemy = CharacterManager.instance.GetEnemyAtIndex(idxToTry[tryIdx]);
-                        if (enemy == null) {
+                        if (enemy == null || (_targetFilter != null && !_targetFilter(enemy))) {
+                            enemy = null;
                             tryIdx++;
                         }
                     } while (enemy == null && tryIdx < idxToTry.Length);
@@ -173,7 +193,8 @@ namespace TurnBased.Battle.Managers {
                     int tryIdx = 0;
                     do {
                         ally = CharacterManager.instance.GetAllyAtIndex(idxToTry[tryIdx]);
-                        if (ally == null) {
+                        if (ally == null || (_targetFilter != null && !_targetFilter(ally))) {
+                            ally = null;
                             tryIdx++;
                         }
                     } while (ally == null && tryIdx < idxToTry.Length);
@@ -187,7 +208,40 @@ namespace TurnBased.Battle.Managers {
 
         public List<Character> GetTargets() {
             if (Mode == TargetMode.All) {
-                return CharacterManager.instance.GetEnemyCharacters();
+                if (TargetTeam == CharacterTeam.Enemy) {
+                    if (Filter == TargetFilter.AliveOnly) {
+                        return CharacterManager.instance.GetEnemyCharacters();
+                    }
+                    else if (Filter == TargetFilter.DeadOnly) {
+                        List<Character> targets = new List<Character>();
+                        foreach (var c in CharacterManager.instance.GetAllEnemyCharacters()) {
+                            if (c.IsDead) {
+                                targets.Add(c);
+                            }
+                        }
+                        return targets;
+                    }
+                    else {
+                        return CharacterManager.instance.GetAllEnemyCharacters();
+                    }
+                }
+                else {
+                    if (Filter == TargetFilter.AliveOnly) {
+                        return CharacterManager.instance.GetAllyCharacters();
+                    }
+                    else if (Filter == TargetFilter.DeadOnly) {
+                        List<Character> targets = new List<Character>();
+                        foreach (var c in CharacterManager.instance.GetAllAllyCharacters()) {
+                            if (c.IsDead) {
+                                targets.Add(c);
+                            }
+                        }
+                        return targets;
+                    }
+                    else {
+                        return CharacterManager.instance.GetAllAllyCharacters();
+                    }
+                }
             }
             else if (Mode == TargetMode.Self || Mode == TargetMode.Single) {
                 return new List<Character>() { Target };
@@ -208,14 +262,15 @@ namespace TurnBased.Battle.Managers {
         }
 
         private SearchResult GetCharacterOn_Internal(Character c, SearchDirection dir) {
-            if (c.Data.team == CharacterTeam.Enemy) {
+            if (c.Data.Team == CharacterTeam.Enemy) {
                 int d = dir == SearchDirection.Left ? -1 : 1;
                 int idxToTry = CharacterManager.instance.GetEnemyIndex(c) + d;
-                int enemyCount = CharacterManager.instance.GetEnemyCharacters().Count;
+                int enemyCount = CharacterManager.instance.GetMaxEnemyCount();
                 Character enemy = null;
                 while (enemy == null && idxToTry >= 0 && idxToTry < enemyCount) {
                     enemy = CharacterManager.instance.GetEnemyAtIndex(idxToTry);
-                    if (enemy == null) {
+                    if (enemy == null || (_targetFilter != null && !_targetFilter(enemy))) {
+                        enemy = null;
                         idxToTry += d;
                     }
                 }
@@ -224,11 +279,12 @@ namespace TurnBased.Battle.Managers {
             else {
                 int d = dir == SearchDirection.Left ? 1 : -1;
                 int idxToTry = CharacterManager.instance.GetAllyIndex(c) + d;
-                int allyCount = CharacterManager.instance.GetAllyCharacters().Count;
+                int allyCount = CharacterManager.instance.GetMaxAllyCount();
                 Character ally = null;
                 while (ally == null && idxToTry >= 0 && idxToTry < allyCount) {
                     ally = CharacterManager.instance.GetAllyAtIndex(idxToTry);
-                    if (ally == null) {
+                    if (ally == null || (_targetFilter != null && !_targetFilter(ally))) {
+                        ally = null;
                         idxToTry += d;
                     }
                 }
@@ -267,5 +323,28 @@ namespace TurnBased.Battle.Managers {
             }
             return false;
         }
+
+        /// <summary>
+        /// 무작위 플레이어 하나를 타겟으로 설정하는 함수
+        /// </summary>
+        public Character SetPlayerTarget()
+        { 
+            // 살아 있는 플레이어 리스트를 가져오고
+            List<Character> player_list = CharacterManager.instance.GetAllyCharacters();
+            // 만약 그런 플레이어가 없다면
+            if (player_list == null || player_list.Count == 0)
+            {
+                // null을 반환 한다
+                return null;
+            }
+            // 유니티의 랜덤 클래스를 사용해서 0부터 살아있는 플레이어 숫자까지 랜덤한 숫자를 고른다
+            int rand = UnityEngine.Random.Range(0, player_list.Count);
+            // 랜덤하게 선택된 플레이어를 하나 가져오고
+            Character player_target = player_list[rand];            
+            
+            // 살아있는 캐릭터를 반환한다
+            return player_target;
+        }
+
     }
 }

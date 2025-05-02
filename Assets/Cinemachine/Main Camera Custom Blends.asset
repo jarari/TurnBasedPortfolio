@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Main Camera Custom Blends
   m_EditorClassIdentifier: 
   CustomBlends:
-  - From: CM Cam Turn Changed
-    To: CM Cam Idle
+  - From: '**ANY CAMERA**'
+    To: Ally1
     Blend:
-      Style: 1
-      Time: 0.3
+      Style: 0
+      Time: 5
       CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -25,10 +25,10 @@ MonoBehaviour:
         m_PostInfinity: 0
         m_RotationOrder: 4
   - From: '**ANY CAMERA**'
-    To: CM Cam Turn Changed
+    To: Ally2
     Blend:
       Style: 0
-      Time: 0.15
+      Time: 5
       CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -36,10 +36,10 @@ MonoBehaviour:
         m_PostInfinity: 0
         m_RotationOrder: 4
   - From: '**ANY CAMERA**'
-    To: CM Cam Self
+    To: Ally3
     Blend:
       Style: 0
-      Time: 0.15
+      Time: 5
       CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -47,54 +47,65 @@ MonoBehaviour:
         m_PostInfinity: 0
         m_RotationOrder: 4
   - From: '**ANY CAMERA**'
-    To: CM Cam All
+    To: CM Cam Top View
     Blend:
       Style: 0
-      Time: 0.15
+      Time: 5
       CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
         m_RotationOrder: 4
-  - From: CM Cam Self
-    To: CM Cam All
-    Blend:
-      Style: 1
-      Time: 0.15
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 4
-  - From: CM Cam Self
-    To: '**ANY CAMERA**'
+  - From: '**ANY CAMERA**'
+    To: Enemy1
     Blend:
       Style: 0
-      Time: 0.15
+      Time: 5
       CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
         m_RotationOrder: 4
-  - From: CM Cam All
-    To: CM Cam Self
-    Blend:
-      Style: 1
-      Time: 0.15
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 4
-  - From: CM Cam All
-    To: '**ANY CAMERA**'
+  - From: '**ANY CAMERA**'
+    To: Enemy2
     Blend:
       Style: 0
-      Time: 0.15
+      Time: 5
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: Enemy3
+    Blend:
+      Style: 0
+      Time: 5
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: Enemy4
+    Blend:
+      Style: 0
+      Time: 5
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: Enemy5
+    Blend:
+      Style: 0
+      Time: 5
       CustomCurve:
         serializedVersion: 2
         m_Curve: []

@@ -15,10 +15,11 @@ MonoBehaviour:
   stats:
     <MaxHP>k__BackingField: 1000
     <MaxToughness>k__BackingField: 0
-    <UseUltThreshold>k__BackingField: 0
+    <UseUltThreshold>k__BackingField: 100
+    <MaxUltPts>k__BackingField: 100
     <Attack>k__BackingField: 100
     <Defense>k__BackingField: 0
     <Speed>k__BackingField: 113
-    <ElementType>k__BackingField: 0
-    <Weakness>k__BackingField: 
+    <ElementType>k__BackingField: 2
+    <Weakness>k__BackingField: 0
   team: 0

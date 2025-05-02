@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using TurnBased.Data;
 using UnityEngine;
 
 public class CharacterDataManager : MonoBehaviour
