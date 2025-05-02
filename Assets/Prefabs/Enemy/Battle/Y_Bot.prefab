@@ -2008,13 +2008,13 @@ MonoBehaviour:
   meshParent: {fileID: 4432375526522624078}
   ultIdleOverride: {fileID: 0}
   _baseData: {fileID: 11400000, guid: abe9a663dd050de47aa9cd5ad36e57af, type: 2}
+  _chest: {fileID: 7870496535097398124}
   normalAttack: {fileID: 3617906570165967933}
   skillAttack: {fileID: 1677092721901557790}
   Groggy_anim: {fileID: 7269514284098113365}
   animator: {fileID: 7719417677941967950}
-  Debuff: {fileID: 11400000, guid: 2398299b4b98f8f4e970d7964130cd6f, type: 2}
   target: {fileID: 0}
-  Damage_factor: 0
+  Damage_factor: {fileID: 0}
   skill_cool: 0
 --- !u!82 &5450080849823943735
 AudioSource:
@@ -3426,6 +3426,7 @@ GameObject:
   - component: {fileID: 325763860441603931}
   - component: {fileID: 7719417677941967950}
   - component: {fileID: 4068174658410216926}
+  - component: {fileID: 2428867348035363345}
   m_Layer: 0
   m_Name: Y_Bot
   m_TagString: Untagged
@@ -3488,9 +3489,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1206e9b04fa5c614583c89e5df3a4475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshParent: {fileID: 4432375526522624078}
-  ultIdleOverride: {fileID: 0}
-  _baseData: {fileID: 11400000, guid: abe9a663dd050de47aa9cd5ad36e57af, type: 2}
+--- !u!114 &2428867348035363345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6638070908478562295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dee05c27b913e641aae5618d4a337fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6693702674817866765
 GameObject:
   m_ObjectHideFlags: 0

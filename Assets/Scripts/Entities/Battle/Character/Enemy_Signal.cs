@@ -7,7 +7,7 @@ namespace TurnBased.Entities.Battle {
     /// <summary>
     /// Dead 애니메이션 실행후 마지막의 이벤트를 실행할때 실행될 클래스
     /// </summary>
-    public class Enemy_Signal : Character
+    public class Enemy_Signal : MonoBehaviour
     {
         public void SignalDead()
         {

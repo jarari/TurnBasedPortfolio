@@ -7,23 +7,31 @@ namespace TurnBased.Battle.BuffEffects {
     public class DamageOnTurnStartEffect : IBuffEffect {
         public BuffInstance Instance { get; }
         private GameObject _vfxPrefab;
-        private string _sfxName;
+        private string _sfxApply;
+        private string _sfxDamage;
         private AttackData _damageData;
+        private bool _multiplyByStack;
         private GameObject _vfxInstance;
 
-        public DamageOnTurnStartEffect(BuffInstance instance, GameObject vfxPrefab, string sfxName, AttackData damageData) {
+        public DamageOnTurnStartEffect(BuffInstance instance, GameObject vfxPrefab, string sfxApply, string sfxDamage, AttackData damageData, bool multiplyByStack) {
             Instance = instance;
-            _sfxName = sfxName;
+            _sfxApply = sfxApply;
+            _sfxDamage = sfxDamage;
             _vfxPrefab = vfxPrefab;
             _damageData = damageData;
+            _multiplyByStack = multiplyByStack;
         }
 
         public void OnApply(Character caster, Character owner) {
-            if (_vfxPrefab != null) {
+            if (_vfxPrefab != null && _vfxInstance == null) {
                 _vfxInstance = Object.Instantiate(_vfxPrefab);
                 _vfxInstance.transform.SetParent(owner.Chest);
                 _vfxInstance.transform.position = owner.Chest.position;
                 _vfxInstance.transform.rotation = owner.transform.rotation;
+            }
+
+            if (_sfxApply.Length > 0) {
+                SoundManager.instance.Play2DSound(_sfxApply);
             }
         }
 
@@ -35,6 +43,12 @@ namespace TurnBased.Battle.BuffEffects {
 
         public void OnTurnStart(Character caster, Character owner, TurnType type) {
             var result = CombatManager.CalculateDamage(caster, owner, _damageData);
+
+            if (_multiplyByStack) {
+                result.BaseDamage *= Instance.Stacks;
+                result.ReducedDamage *= Instance.Stacks;
+                result.FinalDamage *= Instance.Stacks;
+            }
 
             owner.Damage(caster, result);
 
@@ -49,8 +63,8 @@ namespace TurnBased.Battle.BuffEffects {
                 }
             }
 
-            if (_sfxName.Length > 0) {
-                SoundManager.instance.Play2DSound(_sfxName);
+            if (_sfxDamage.Length > 0) {
+                SoundManager.instance.Play2DSound(_sfxDamage);
             }
         }
 
@@ -60,9 +74,11 @@ namespace TurnBased.Battle.BuffEffects {
     [CreateAssetMenu(menuName = "ScriptableObjects/BuffEffects/DamageOnTurnStart")]
     public class DamageOnTurnStart : BuffEffectDefinition {
         public GameObject vfxPrefab;
-        public string sfxName;
+        public string sfxApply;
+        public string sfxDamage;
         public AttackData damageData;
+        public bool multiplyByStack;
         public override IBuffEffect Create(BuffInstance instance)
-            => new DamageOnTurnStartEffect(instance, vfxPrefab, sfxName, damageData);
+            => new DamageOnTurnStartEffect(instance, vfxPrefab, sfxApply, sfxDamage, damageData, multiplyByStack);
     }
 }
