@@ -96,6 +96,28 @@ namespace TurnBased.Entities.Battle
                 SoundManager.instance.PlayVOSound(this, "VanguardNormalAttack2");
             }
 
+            else if (animEvent == "PlaySound3")
+            {
+                SoundManager.instance.PlayVOSound(this, "VanguardSkillAttack1");
+            }
+            else if (animEvent == "PlaySound4")
+            {
+                SoundManager.instance.PlayVOSound(this, "VanguardSkillAttack2");                
+            }
+
+            else if (animEvent == "PlaySound5")
+            {
+                SoundManager.instance.PlayVOSound(this, "VanguardUltAttack1");
+            }
+            else if (animEvent == "PlaySound6")
+            {
+                SoundManager.instance.PlayVOSound(this, "VanguardUltAttack2");
+            }
+            else if (animEvent == "PlaySound7")
+            {
+                SoundManager.instance.PlayVOSound(this, "VanguardUltAttack3");
+            }
+
             #endregion
 
         }
@@ -282,6 +304,8 @@ namespace TurnBased.Entities.Battle
 
             // 애니메이션의 트리거를 켠다
             animator.SetTrigger("Damage");
+            // 피격시 소리를 재생한다
+            SoundManager.instance.Play2DSound("VanguardDamage");
         }
 
         public override void Dead()
