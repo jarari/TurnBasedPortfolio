@@ -14,7 +14,6 @@ public class PartySetupUIManager : MonoBehaviour
     public GameObject ConfirmButton;       // 확인 버튼
     public List<GameObject> Character;     // 캐릭터 리스트
 
-    public List<Texture> CharacterRenderTexture; // 캐릭터 렌더 텍스처 리스트
     public Texture CharacterSlotTexture; // 캐릭터 슬롯 텍스처
 
     public AudioClip Select;                    // 선택 효과음
@@ -67,6 +66,7 @@ public class PartySetupUIManager : MonoBehaviour
 
     public void ToggleCharacterListWindow()
     {
+        if (CharacterListWindow.activeSelf)PlayerController.Instance.SetPartyMemberName(); // 플레이어 컨트롤러에 파티원 이름 정보 보내기
         CharacterListWindow.SetActive(!CharacterListWindow.activeSelf);
         ConfirmButton.SetActive(CharacterListWindow.activeSelf);
         audioSource.PlayOneShot(Confirm); // 확인 효과음 재생
@@ -164,13 +164,10 @@ public class PartySetupUIManager : MonoBehaviour
 
     public void AddCharacterToSlot(int CharacterNumber, string ID)
     {
-        int index = CharacterRenderTexture.FindIndex(texture => texture.name == ID); // 렌더 텍스처 리스트에서 ID와 일치하는 텍스처의 인덱스를 찾기
-        
+        RenderTexture renderTexture = Resources.Load<RenderTexture>(CharacterDataManager.GetCharacterRenderTexturePath(ID));
+
         RawImage slotImage = CharacterSlots[CharacterNumber].GetComponent<RawImage>();
-        if (slotImage != null)
-        {
-            slotImage.texture = CharacterRenderTexture[index]; // 슬롯 이미지를 캐릭터 렌더 텍스처로 변경
-        }
+        if (slotImage != null) slotImage.texture = renderTexture; // 슬롯 이미지를 캐릭터 렌더 텍스처로 변경
     }
 
 
@@ -178,9 +175,6 @@ public class PartySetupUIManager : MonoBehaviour
     public void RemoveCharacterFromSlot(int CharacterNumber)
     {
         RawImage slotImage = CharacterSlots[CharacterNumber].GetComponent<RawImage>();
-        if (slotImage != null)
-        {
-            slotImage.texture = CharacterSlotTexture; // 슬롯 이미지를 슬롯 텍스처로 변경
-        }
+        if (slotImage != null) slotImage.texture = CharacterSlotTexture; // 슬롯 이미지를 슬롯 텍스처로 변경
     }
 }

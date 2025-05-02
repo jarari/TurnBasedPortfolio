@@ -24,8 +24,6 @@ public class MainUIManager : MonoBehaviour
     public Button Run;                          // 달리기 버튼 오브젝트
     
     public AudioClip Select;                    // 선택 효과음
-    public AudioClip Confirm;                   // 확인 효과음
-    public AudioClip Cancel;                    // 취소 효과음
 
     private AudioSource audioSource;            // 오디오 소스
     private void Awake()

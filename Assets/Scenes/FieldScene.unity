@@ -19367,8 +19367,6 @@ MonoBehaviour:
   Technique: {fileID: 4362643182589851798}
   Run: {fileID: 4615666957770085099}
   Select: {fileID: 8300000, guid: 283ff1092835ef14e8985f241267889b, type: 3}
-  Confirm: {fileID: 8300000, guid: ca1b9347fe8e4b649a101e60557a94e1, type: 3}
-  Cancel: {fileID: 8300000, guid: 98b36d625c2b1984bb7b28eb37dd6b68, type: 3}
 --- !u!4 &973805221
 Transform:
   m_ObjectHideFlags: 0
@@ -19403,7 +19401,6 @@ MonoBehaviour:
   ChracterRenderTexture: {fileID: 6559279985704027834}
   NameText: {fileID: 6712480798848725625}
   AttributeImage: {fileID: 5353133771089190725}
-  AttributeImages: []
   StatUIList:
   - StatName: {fileID: 7281671440883134106}
     StatValue: {fileID: 1506706888516163358}
@@ -19447,11 +19444,6 @@ MonoBehaviour:
   - {fileID: 2818766893512261660}
   - {fileID: 3022886673642751810}
   - {fileID: 7352604441431162508}
-  CharacterRenderTexture:
-  - {fileID: 8400000, guid: 7322f141afce18e4e853bc0184c20bf5, type: 2}
-  - {fileID: 8400000, guid: 4d781ef8f7f698b458b08da683661d1c, type: 2}
-  - {fileID: 8400000, guid: 021f11c98c8347243a43c92f006cf9a7, type: 2}
-  - {fileID: 8400000, guid: 0c7e3e95b3461db4eb5e6f335217cca3, type: 2}
   CharacterSlotTexture: {fileID: 2800000, guid: bb14183fa10e1ad40beb1ce37db6adf8, type: 3}
   Select: {fileID: 8300000, guid: 283ff1092835ef14e8985f241267889b, type: 3}
   Confirm: {fileID: 8300000, guid: ca1b9347fe8e4b649a101e60557a94e1, type: 3}
@@ -70083,6 +70075,10 @@ MonoBehaviour:
   - {fileID: 8905085519787440536, guid: 9946eeb8ca544df4ab74f7909bc30c2c, type: 3}
   - {fileID: 3489625431099037163, guid: abbe5f341875735448671a8c3fb79b1f, type: 3}
   - {fileID: 8022220411097837866, guid: d4e5f32bf62e3e54088812dc7eeb300a, type: 3}
+  sortedPrefabs:
+  - {fileID: 841792319150718950, guid: d5b5dc190a2aad244936a25ac90c15dd, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!143 &8410847516083997751
 CharacterController:
   m_ObjectHideFlags: 0

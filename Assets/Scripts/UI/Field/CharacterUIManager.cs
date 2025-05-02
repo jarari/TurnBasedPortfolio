@@ -26,8 +26,6 @@ public class CharacterUIManager : MonoBehaviour
         public Text StatValue; // 스탯 값 텍스트
     }
 
-    public List<Sprite> AttributeImages; // 속성 이미지 리스트
-
     public List<StatUI> StatUIList; // 스탯 UI 리스트
 
     public AudioClip Select;                    // 선택 효과음
@@ -111,9 +109,8 @@ public class CharacterUIManager : MonoBehaviour
         ChracterRenderTexture.texture = renderTexture; // 렌더 텍스쳐 설정
 
         // 속성 이미지 로드 및 설정
-        Sprite attributeSprite = AttributeImages.FirstOrDefault(sprite => sprite.name == character.Attribute); // 속성 이름과 일치하는 스프라이트 찾기
-        if (attributeSprite != null)
-            AttributeImage.sprite = attributeSprite;
+        // Sprite 
+            // AttributeImage.sprite = attributeSprite;
 
         // 스탯 데이터 매핑
         var stats = new Dictionary<string, string>
@@ -134,6 +131,6 @@ public class CharacterUIManager : MonoBehaviour
             StatUIList[i].StatName.text = stat.Key;   // 스탯 이름 설정
             StatUIList[i].StatValue.text = stat.Value; // 스탯 값 설정
         }
-        // audioSource.PlayOneShot(Select); // 선택 효과음 재생
+        audioSource.PlayOneShot(Select); // 선택 효과음 재생
     }
 }
