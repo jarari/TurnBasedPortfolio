@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace TurnBased.Battle.Managers {
     /// <summary>
@@ -35,6 +36,8 @@ namespace TurnBased.Battle.Managers {
         private TurnType _lastTurnType;
 
         private int _charactersInDeathSequence;
+        private int _aliveAlliesCount;
+        private int _aliveEnemiesCount;
 
         private void Awake() {
             if (instance != null) {
@@ -53,6 +56,12 @@ namespace TurnBased.Battle.Managers {
 
         private void HandleCharacterDeath(Character c, Character killer) {
             _charactersInDeathSequence++;
+            if (c.Data.Team == Data.CharacterTeam.Player) {
+                _aliveAlliesCount--;
+            }
+            else if (c.Data.Team == Data.CharacterTeam.Enemy) {
+                _aliveEnemiesCount--;
+            }
         }
 
         private void HandleCharacterDeathComplete(Character c) {
@@ -66,6 +75,12 @@ namespace TurnBased.Battle.Managers {
         /// <param name="character"></param>
         public void AddCharacter(Character character) {
             _turnQueue.Add(new TurnData(character, TurnType.Normal));
+            if (character.Data.Team == Data.CharacterTeam.Player) {
+                _aliveAlliesCount++;
+            }
+            else if (character.Data.Team == Data.CharacterTeam.Enemy) {
+                _aliveEnemiesCount++;
+            }
         }
 
         public void RemoveCharacter(Character character) {
@@ -209,6 +224,11 @@ namespace TurnBased.Battle.Managers {
                 }
                 yield return new WaitWhile(() => _charactersInDeathSequence > 0);
             }
+
+            if (_aliveAlliesCount == 0 || _aliveEnemiesCount == 0) {
+                yield break;
+            }
+
             StartNextTurn();
         }
 
