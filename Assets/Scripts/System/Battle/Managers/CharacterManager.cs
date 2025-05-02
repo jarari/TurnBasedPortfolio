@@ -28,8 +28,6 @@ namespace TurnBased.Battle.Managers {
 
         private void Start() {
             CombatManager.instance.OnCharacterDeathComplete += HandleCharacterDeathComplete;
-            //TurnManager.instance.InitializeTurnQueue();
-            //TargetManager.instance.InitializeTarget();
         }
 
         private void HandleCharacterDeathComplete(Character c) {
@@ -57,6 +55,7 @@ namespace TurnBased.Battle.Managers {
                 spawnPoint = allySpawnPoints[spawnIdx];
 
                 go = Instantiate(data.battlePrefab);
+                go.transform.SetParent(spawnPoint.transform);
                 c = go.GetComponentInParent<Character>();
 
                 TurnManager.instance.AddCharacter(c);
@@ -81,6 +80,7 @@ namespace TurnBased.Battle.Managers {
                 spawnPoint = enemySpawnPoints[spawnIdx];
 
                 go = Instantiate(data.battlePrefab);
+                go.transform.SetParent(spawnPoint.transform);
                 c = go.GetComponentInParent<Character>();
 
                 TurnManager.instance.AddCharacter(c);
