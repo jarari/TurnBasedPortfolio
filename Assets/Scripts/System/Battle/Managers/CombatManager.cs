@@ -21,6 +21,9 @@ namespace TurnBased.Battle.Managers {
 
         public event Action<int> OnSkillPointChanged;
         public event Action<int> OnSkillPointMaxChanged;
+        public event Action<Character> OnCharacterDeath;
+        public event Action<Character> OnCharacterDeathComplete;
+        public event Action<Character, Character, DamageResult> OnCharacterInflictedDamage;
 
         public int SkillPoint { get; private set; } = 3;
 
@@ -47,6 +50,18 @@ namespace TurnBased.Battle.Managers {
         public void ModifySkillPoint(int delta) {
             SkillPoint = Math.Clamp(SkillPoint + delta, 0, SkillPointMax);
             OnSkillPointChanged?.Invoke(SkillPoint);
+        }
+
+        public void NotifyCharacterDeath(Character c) {
+            OnCharacterDeath?.Invoke(c);
+        }
+
+        public void NotifyCharacterDeathComplete(Character c) {
+            OnCharacterDeathComplete?.Invoke(c);
+        }
+
+        public void NotifyCharacterInflictedDamage(Character attacker, Character victim, DamageResult result) {
+            OnCharacterInflictedDamage?.Invoke(attacker, victim, result);
         }
      
         // 데미지 피해를 계산할 함수 (때린 놈과 맞은 놈을 가져온다)

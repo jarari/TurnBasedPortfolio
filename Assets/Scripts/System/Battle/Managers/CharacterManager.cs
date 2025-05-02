@@ -27,6 +27,7 @@ namespace TurnBased.Battle.Managers {
         }
 
         private void Start() {
+            CombatManager.instance.OnCharacterDeathComplete += HandleCharacterDeathComplete;
             //TurnManager.instance.InitializeTurnQueue();
             //TargetManager.instance.InitializeTarget();
         }
@@ -92,7 +93,6 @@ namespace TurnBased.Battle.Managers {
                 _idxEnemyDict.Add(spawnIdx, c);
             }
             go.transform.position = spawnPoint.transform.position;
-            c.OnDeathComplete += HandleCharacterDeathComplete;
             return c;
         }
 

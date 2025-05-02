@@ -59,15 +59,15 @@ namespace TurnBased.Battle.Managers {
         /// <param name="character"></param>
         public void AddCharacter(Character character) {
             _turnQueue.Add(new TurnData(character, TurnType.Normal));
-            character.OnDeath += HandleCharacterDeath;
-            character.OnDeathComplete += HandleCharacterDeathComplete;
+            CombatManager.instance.OnCharacterDeath += HandleCharacterDeath;
+            CombatManager.instance.OnCharacterDeathComplete += HandleCharacterDeathComplete;
         }
 
         public void RemoveCharacter(Character character) {
             _turnQueue.RemoveAll((data) => data.Character == character);
             _turnQueue.RemoveAll((data) => data.ExtraAttackTarget == character);
-            character.OnDeath -= HandleCharacterDeath;
-            character.OnDeathComplete -= HandleCharacterDeathComplete;
+            CombatManager.instance.OnCharacterDeath -= HandleCharacterDeath;
+            CombatManager.instance.OnCharacterDeathComplete -= HandleCharacterDeathComplete;
         }
 
         public void RemoveCharacterUltExtraAttackOnly(Character character) {

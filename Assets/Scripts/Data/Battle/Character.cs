@@ -39,19 +39,16 @@ namespace TurnBased.Battle {
             UltTimeline
         }
 
-        public Action<Character> OnTurnStart;
-        public Action<Character> OnTurnEnd;
-        public Action<Character> OnUltTurn;
-        public Action<Character> OnExtraAttackTurn;
-        public Action<Character> OnTransitionTurn;
-        public Action<Character, string, string> OnAnimationEvent;
-        public Action<Character, bool> OnVisibilityChange;
-        public Action<Character, Character, DamageResult> OnInflictedDamage;
-        public Action<Character, Character, DamageResult> OnDamage;
-        public Action<Character, Character, float> OnRestoreHealth;
-        public Action<Character> OnDeath;
-        public Action<Character> OnDeathComplete;
-        public Action<Character, CharacterState> OnCharacterStateChanged;
+        public event Action<Character> OnTurnStart;
+        public event Action<Character> OnTurnEnd;
+        public event Action<Character> OnUltTurn;
+        public event Action<Character> OnExtraAttackTurn;
+        public event Action<Character> OnTransitionTurn;
+        public event Action<Character, string, string> OnAnimationEvent;
+        public event Action<Character, bool> OnVisibilityChange;
+        public event Action<Character, Character, DamageResult> OnDamage;
+        public event Action<Character, Character, float> OnRestoreHealth;
+        public event Action<Character, CharacterState> OnCharacterStateChanged;
 
         public CharacterDataInstance Data { get; private set; }
 
@@ -187,7 +184,7 @@ namespace TurnBased.Battle {
                 SoundManager.instance.PlayVOSound(this, payload);
             }
             else if (argument == "DeathComplete") {
-                OnDeathComplete?.Invoke(this);
+                CombatManager.instance.NotifyCharacterDeathComplete(this);
             }
 
             OnAnimationEvent?.Invoke(this, argument, payload);
@@ -291,7 +288,7 @@ namespace TurnBased.Battle {
             WantState = CharacterState.PrepareDead;
             // 명령대기를 하지 않음을 반환
             WantCmd = false;
-            OnDeath?.Invoke(this);
+            CombatManager.instance.NotifyCharacterDeath(this);
         }
         /// <summary>
         /// 그로기 준비함수
