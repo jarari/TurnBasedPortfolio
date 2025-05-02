@@ -12,21 +12,12 @@ namespace TurnBased.Battle.Managers {
         public List<GameObject> allySpawnPoints = new List<GameObject>();
         public List<GameObject> enemySpawnPoints = new List<GameObject>();
 
-        [SerializeField]
-        private CharacterTable _characterTable;
-
-        public CharacterTable CharacterTable {
-            get { 
-                return _characterTable;
-            }
-        }
-
         private List<Character> _characters = new List<Character>();
         private Dictionary<Character, int> _allyIdxDict = new Dictionary<Character, int>();
         private Dictionary<int, Character> _idxAllyDict = new Dictionary<int, Character>();
         private Dictionary<Character, int> _enemyIdxDict = new Dictionary<Character, int>();
         private Dictionary<int, Character> _idxEnemyDict = new Dictionary<int, Character>();
-        private Dictionary<string, CharacterData> _characterDict = new Dictionary<string, CharacterData>();
+
         private void Awake() {
             if (instance != null) {
                 Destroy(this);
@@ -36,21 +27,16 @@ namespace TurnBased.Battle.Managers {
         }
 
         private void Start() {
-            foreach (var entry in _characterTable.entries) {
-                if (!_characterDict.ContainsKey(entry.name)) {
-                    _characterDict.Add(entry.name, entry.characterData);
-                }
-            }
             //TurnManager.instance.InitializeTurnQueue();
             //TargetManager.instance.InitializeTarget();
         }
 
         public Character SpawnCharacter(string name, int spawnIdx) {
-            if (!_characterDict.ContainsKey(name)) {
+            var data = CharacterDataManager.Instance.GetCharacterData(name);
+            if (data == null) {
                 return null;
             }
 
-            var data = _characterDict[name];
             var go = Instantiate(data.battlePrefab);
             Character c = go.GetComponentInParent<Character>();
             GameObject spawnPoint;
