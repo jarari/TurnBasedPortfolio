@@ -44,7 +44,7 @@ namespace TurnBased.Battle.Managers {
             instance = this;
         }
 
-        private void HandleCharacterDeath(Character c) {
+        private void HandleCharacterDeath(Character c, Character killer) {
             _charactersInDeathSequence++;
         }
 

@@ -21,7 +21,7 @@ namespace TurnBased.Battle.Managers {
 
         public event Action<int> OnSkillPointChanged;
         public event Action<int> OnSkillPointMaxChanged;
-        public event Action<Character> OnCharacterDeath;
+        public event Action<Character, Character> OnCharacterDeath;
         public event Action<Character> OnCharacterDeathComplete;
         public event Action<Character, Character, DamageResult> OnCharacterInflictedDamage;
 
@@ -52,8 +52,8 @@ namespace TurnBased.Battle.Managers {
             OnSkillPointChanged?.Invoke(SkillPoint);
         }
 
-        public void NotifyCharacterDeath(Character c) {
-            OnCharacterDeath?.Invoke(c);
+        public void NotifyCharacterDeath(Character victim, Character killer) {
+            OnCharacterDeath?.Invoke(victim, killer);
         }
 
         public void NotifyCharacterDeathComplete(Character c) {
