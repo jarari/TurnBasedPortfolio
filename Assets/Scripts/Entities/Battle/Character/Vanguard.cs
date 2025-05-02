@@ -126,6 +126,13 @@ namespace TurnBased.Entities.Battle
         {
             // 레이어를 필살리 타임라인으로 맞춘다
             SetMeshLayer(MeshLayer.UltTimeline);
+
+            // 타임라인을 실행한다
+            ultAttack.Play();
+
+            // 마지막 공격이 필살기로 잡는다
+            _lastAttack = CharacterState.CastUltAttack;
+
             // 중앙에 있는 에너미를 타겟으로 가져온다
             var enemyCenter = TargetManager.instance.Target;
             // 자신의 위치를 중앙으로 잡는다
@@ -148,12 +155,7 @@ namespace TurnBased.Entities.Battle
 
             // 자신의 레이어를 필살기 타임라인 레이어로 잡는다
             SetMeshLayer(MeshLayer.UltTimeline);
-
-            // 타임라인을 실행한다
-            ultAttack.Play();            
-
-            // 마지막 공격이 필살기로 잡는다
-            _lastAttack = CharacterState.CastUltAttack;
+            
         }
 
         protected override void Awake()
@@ -321,20 +323,24 @@ namespace TurnBased.Entities.Battle
             if (_lastAttack == CharacterState.DoAttack || _lastAttack == CharacterState.DoExtraAttack)
             {
                 normalAttack.time = normalAttack.duration;
-                normalAttack.Evaluate();                
+                normalAttack.Evaluate();
+                normalAttack.Stop();
             }
             else if (_lastAttack == CharacterState.CastSkill)
             {
                 skillAttack.time = skillAttack.duration;
                 skillAttack.Evaluate();
+                skillAttack.Stop();
             }
             else if (_lastAttack == CharacterState.CastUltAttack)
             {
                 ultAttack.time = ultAttack.duration;
                 ultAttack.Evaluate();
+                ultAttack.Stop();
             }
             // 자신의 위치를 바로 잡는다
             meshParent.transform.localPosition = Vector3.zero;
+            _lastAttack = CharacterState.Idle;
         }
 
     }

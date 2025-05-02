@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: RadioactivityDOT
   m_EditorClassIdentifier: 
   vfxPrefab: {fileID: 2909985082218465068, guid: 95aece5acc03cf646b8af9b79725f996, type: 3}
-  sfxName: 
+  sfxApply: BuffRadioactivity
+  sfxDamage: BuffRadioactivityHit
   damageData: {fileID: 11400000, guid: 622569f84491a4f4995697860bd21969, type: 2}
+  multiplyByStack: 0
