@@ -9,6 +9,7 @@ namespace TurnBased.Data {
             public float Base { get; }
             public float Current { get; private set; }
             public float CurrentMax { get; private set; }
+            public bool HasMax { get; }
             public event Action<float> OnValueChanged;
             public event Action<float> OnValueMaxChanged;
 
@@ -17,14 +18,12 @@ namespace TurnBased.Data {
                 Current = baseValue;
                 if (hasMax) {
                     CurrentMax = baseValue;
-                }
-                else {
-                    CurrentMax = -1;
+                    HasMax = true;
                 }
             }
 
             public void ModifyCurrent(float delta) {
-                if (CurrentMax == -1) {
+                if (!HasMax) {
                     Current = Current + delta;
                 }
                 else {
@@ -39,7 +38,7 @@ namespace TurnBased.Data {
             }
 
             public void SetCurrent(float value) {
-                if (CurrentMax == -1) {
+                if (!HasMax) {
                     Current = value;
                 }
                 else {
@@ -63,8 +62,8 @@ namespace TurnBased.Data {
         public Stat Speed { get; }
         public Stat CritChance { get; }
         public Stat CritMult { get; }
+        public Stat UltPts { get; }
         public float UltThreshold { get; }
-        public float MaxUltPts { get; }
         public ElementType ElementType { get; }
         public ElementType Weakness { get; }
         public CharacterTeam Team { get; }
@@ -80,8 +79,9 @@ namespace TurnBased.Data {
             Speed = new Stat(data.stats.Speed);
             CritChance = new Stat(data.stats.CritChance);
             CritMult = new Stat(data.stats.CritMult);
+            UltPts = new Stat(0, true);
+            UltPts.SetCurrentMax(data.stats.MaxUltPts);
             UltThreshold = data.stats.UseUltThreshold;
-            MaxUltPts = data.stats.MaxUltPts;
             ElementType = data.stats.ElementType;
             Weakness = data.stats.Weakness;
             Team = data.team;
