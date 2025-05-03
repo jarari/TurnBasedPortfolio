@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TurnBased.Battle.UI;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
@@ -230,6 +231,7 @@ namespace TurnBased.Battle.Managers {
             }
 
             StartNextTurn();
+            ActionOrderUIManager.instance.UpdateActionOrderUIPositions(); // 턴이 종료된 후 행동 서열 UI 업데이트
         }
 
         /// <summary>

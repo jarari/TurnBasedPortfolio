@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine;
+using UnityEditor.Overlays;
 
 namespace TurnBased.Data {
     public class CharacterDataInstance {
@@ -55,6 +56,7 @@ namespace TurnBased.Data {
             public void Reset() => SetCurrent(CurrentMax);
         }
 
+        public CharacterData BaseData { get; } // CharacterData 참조 추가
         public Stat HP { get; }
         public Stat Toughness { get; }
         public Stat Attack { get; }
@@ -72,6 +74,7 @@ namespace TurnBased.Data {
         private readonly List<StatModifier> _modifiers = new List<StatModifier>();
 
         public CharacterDataInstance(CharacterData data) {
+            BaseData = data; // CharacterData 저장
             HP = new Stat(data.stats.MaxHP, true);
             Toughness = new Stat(data.stats.MaxToughness, true);
             Attack = new Stat(data.stats.Attack);

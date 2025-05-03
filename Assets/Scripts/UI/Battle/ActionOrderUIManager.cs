@@ -1,51 +1,89 @@
 using System.Collections.Generic;
 using TurnBased.Battle.Managers;
+using TurnBased.Data;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TurnBased.Battle.UI
 {
     public class ActionOrderUIManager : MonoBehaviour
     {
+        public static ActionOrderUIManager instance; // 싱글톤 인스턴스
+
         public List<GameObject> actionOrderUIObjects; // 행동 서열 UI 오브젝트 리스트
 
-        private void Update()
+        private void Awake()
         {
-            UpdateCharacterUIPositions(); // 캐릭터 UI 위치 업데이트
+            if (instance == null)
+            {
+                instance = this; // 싱글톤 인스턴스 설정
+            }
+            else
+            {
+                Destroy(gameObject); // 중복 인스턴스 제거
+            }
         }
 
-        private void UpdateCharacterUIPositions()
+        private void Start()
         {
-            Character currentCharacter = TurnManager.instance.CurrentCharacter; // 현재 캐릭터 가져오기
-            List<Character> turnOrder = TurnManager.instance.GetActionOrder(); // 행동 서열 가져오기
+            UpdateActionOrderUIPositions(); // 행동 서열 UI 초기화
+        }
 
-            Debug.Log("Current Character: " + currentCharacter.name); // 현재 캐릭터 이름 출력
+        public void UpdateActionOrderUIPositions()
+        {
+            List<Character> actionOrder = TurnManager.instance.GetActionOrder(); // 행동 서열 가져오기
 
-            // 현재 캐릭터를 가장 위에 표시
-            GameObject currentCharacterUI = actionOrderUIObjects.Find(obj => obj.name == currentCharacter.name); // 현재 캐릭터 UI 오브젝트 찾기
-            if (currentCharacterUI != null)
+            // 행동 서열이 1개 이상일 때, 마지막 캐릭터를 첫 번째로 이동
+            if (actionOrder.Count > 1)
             {
-                RectTransform rectTransform = currentCharacterUI.GetComponent<RectTransform>(); // RectTransform 가져오기
-                if (rectTransform != null)
-                    rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, -40); // 위치 설정
+                Character lastCharacter = actionOrder[actionOrder.Count - 1]; // 마지막 캐릭터 저장
+                actionOrder.RemoveAt(actionOrder.Count - 1); // 마지막 캐릭터 제거
+                actionOrder.Insert(0, lastCharacter); // 마지막 캐릭터를 첫 번째로 이동
             }
 
-            // 턴 순서에서 현재 캐릭터를 제외한 나머지 캐릭터들을 순서대로 표시
-            int positionIndex = 1; // 위치 인덱스 초기화
-            foreach (var character in turnOrder)
+            // UI 오브젝트의 활성화 상태를 업데이트
+            for (int i = 0; i < actionOrderUIObjects.Count; i++)
             {
-                if (character.name == currentCharacter.name)
-                    continue; // 현재 턴을 잡고 있는 캐릭터는 이미 젤 위에 표시했으니 제외
-
-                GameObject uiObject = actionOrderUIObjects.Find(obj => obj.name == character.name); // UI 오브젝트 찾기
-                if (uiObject != null)
+                // 행동 서열의 길이보다 UI 오브젝트의 길이가 짧을 경우, UI 오브젝트를 비활성화
+                if (i < actionOrder.Count)
                 {
-                    RectTransform rectTransform = uiObject.GetComponent<RectTransform>(); // RectTransform 가져오기
-                    if (rectTransform != null)
+                    Character character = actionOrder[i]; // 행동 서열에서 캐릭터 가져오기
+                    CharacterData characterData = character.Data.BaseData; // 캐릭터 데이터 가져오기
+
+                    actionOrderUIObjects[i].SetActive(true); // UI 오브젝트 활성화
+
+                    string imagePath = characterData.CharacterImagePath; // 캐릭터 이미지 경로 가져오기
+                    Sprite characterSprite = Resources.Load<Sprite>(imagePath); // 리소스에서 스프라이트 로드
+
+                    // UI 오브젝트의 이미지 컴포넌트 설정
+                    Transform imageTransform = actionOrderUIObjects[i].transform.Find("Image_Character"); // 이미지 트랜스폼 찾기
+                    
+                    if (imageTransform != null)
                     {
-                        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, -40 - (positionIndex * 90)); // 위치 설정
-                        positionIndex++; // 위치 인덱스 증가
+                        Image imageComponent = imageTransform.GetComponent<Image>(); // 이미지 컴포넌트 가져오기
+                        if (imageComponent != null && characterSprite != null) 
+                        {
+                            imageComponent.sprite = characterSprite; // 스프라이트 설정
+                            imageComponent.preserveAspect = true; // 비율 유지 설정
+                        }
+                        else if (imageComponent != null) imageComponent.sprite = null; // 스프라이트가 없을 경우 null 설정
+                    }
+
+                    // UI 오브젝트의 텍스트 컴포넌트 설정
+                    Text textComponent = actionOrderUIObjects[i].GetComponentInChildren<Text>(); // 텍스트 컴포넌트 찾기
+
+                    if (textComponent != null)
+                    {
+                        if (i == 0) textComponent.text = "0"; // 첫 번째 캐릭터의 경우 남은 행동력을 0으로 설정
+                        else
+                        {
+                            float remainingTime = TurnManager.instance.GetRemainingTime(character); // 남은 시간 가져오기
+                            int remainingTimeInt = Mathf.FloorToInt(remainingTime); // 남은 시간을 정수로 변환
+                            textComponent.text = remainingTimeInt.ToString(); // 텍스트 설정
+                        }
                     }
                 }
+                else actionOrderUIObjects[i].SetActive(false); // 할당되지 않은 UI 오브젝트 비활성화
             }
         }
     }
