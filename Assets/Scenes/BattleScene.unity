@@ -22566,11 +22566,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!4 &2044424392 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8792431728288930256, guid: 3779b1b43621e3c4bb51f63c9ba40c31, type: 3}
-  m_PrefabInstance: {fileID: 7125143701683946249}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2054794023
 GameObject:
   m_ObjectHideFlags: 0
