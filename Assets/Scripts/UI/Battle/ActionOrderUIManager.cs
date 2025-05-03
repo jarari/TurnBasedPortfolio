@@ -8,82 +8,82 @@ namespace TurnBased.Battle.UI
 {
     public class ActionOrderUIManager : MonoBehaviour
     {
-        public static ActionOrderUIManager instance; // ½Ì±ÛÅæ ÀÎ½ºÅÏ½º
+        public static ActionOrderUIManager instance; // ì‹±ê¸€í†¤ ì¸ìŠ¤í„´ìŠ¤
 
-        public List<GameObject> actionOrderUIObjects; // Çàµ¿ ¼­¿­ UI ¿ÀºêÁ§Æ® ¸®½ºÆ®
+        public List<GameObject> actionOrderUIObjects; // í–‰ë™ ì„œì—´ UI ì˜¤ë¸Œì íŠ¸ ë¦¬ìŠ¤íŠ¸
 
         private void Awake()
         {
             if (instance == null)
             {
-                instance = this; // ½Ì±ÛÅæ ÀÎ½ºÅÏ½º ¼³Á¤
+                instance = this; // ì‹±ê¸€í†¤ ì¸ìŠ¤í„´ìŠ¤ ì„¤ì •
             }
             else
             {
-                Destroy(gameObject); // Áßº¹ ÀÎ½ºÅÏ½º Á¦°Å
+                Destroy(gameObject); // ì¤‘ë³µ ì¸ìŠ¤í„´ìŠ¤ ì œê±°
             }
         }
 
         private void Start()
         {
-            UpdateActionOrderUIPositions(); // Çàµ¿ ¼­¿­ UI ÃÊ±âÈ­
+            UpdateActionOrderUIPositions(); // í–‰ë™ ì„œì—´ UI ì´ˆê¸°í™”
         }
-
+        
         public void UpdateActionOrderUIPositions()
         {
-            List<Character> actionOrder = TurnManager.instance.GetActionOrder(); // Çàµ¿ ¼­¿­ °¡Á®¿À±â
+            List<Character> actionOrder = TurnManager.instance.GetActionOrder(); // í–‰ë™ ì„œì—´ ê°€ì ¸ì˜¤ê¸°
 
-            // Çàµ¿ ¼­¿­ÀÌ 1°³ ÀÌ»óÀÏ ¶§, ¸¶Áö¸· Ä³¸¯ÅÍ¸¦ Ã¹ ¹øÂ°·Î ÀÌµ¿
+            // í–‰ë™ ì„œì—´ì´ 1ê°œ ì´ìƒì¼ ë•Œ, ë§ˆì§€ë§‰ ìºë¦­í„°ë¥¼ ì²« ë²ˆì§¸ë¡œ ì´ë™
             if (actionOrder.Count > 1)
             {
-                Character lastCharacter = actionOrder[actionOrder.Count - 1]; // ¸¶Áö¸· Ä³¸¯ÅÍ ÀúÀå
-                actionOrder.RemoveAt(actionOrder.Count - 1); // ¸¶Áö¸· Ä³¸¯ÅÍ Á¦°Å
-                actionOrder.Insert(0, lastCharacter); // ¸¶Áö¸· Ä³¸¯ÅÍ¸¦ Ã¹ ¹øÂ°·Î ÀÌµ¿
+                Character lastCharacter = actionOrder[actionOrder.Count - 1]; // ë§ˆì§€ë§‰ ìºë¦­í„° ì €ì¥
+                actionOrder.RemoveAt(actionOrder.Count - 1); // ë§ˆì§€ë§‰ ìºë¦­í„° ì œê±°
+                actionOrder.Insert(0, lastCharacter); // ë§ˆì§€ë§‰ ìºë¦­í„°ë¥¼ ì²« ë²ˆì§¸ë¡œ ì´ë™
             }
 
-            // UI ¿ÀºêÁ§Æ®ÀÇ È°¼ºÈ­ »óÅÂ¸¦ ¾÷µ¥ÀÌÆ®
+            // UI ì˜¤ë¸Œì íŠ¸ì˜ í™œì„±í™” ìƒíƒœë¥¼ ì—…ë°ì´íŠ¸
             for (int i = 0; i < actionOrderUIObjects.Count; i++)
             {
-                // Çàµ¿ ¼­¿­ÀÇ ±æÀÌº¸´Ù UI ¿ÀºêÁ§Æ®ÀÇ ±æÀÌ°¡ ÂªÀ» °æ¿ì, UI ¿ÀºêÁ§Æ®¸¦ ºñÈ°¼ºÈ­
+                // í–‰ë™ ì„œì—´ì˜ ê¸¸ì´ë³´ë‹¤ UI ì˜¤ë¸Œì íŠ¸ì˜ ê¸¸ì´ê°€ ì§§ì„ ê²½ìš°, UI ì˜¤ë¸Œì íŠ¸ë¥¼ ë¹„í™œì„±í™”
                 if (i < actionOrder.Count)
                 {
-                    Character character = actionOrder[i]; // Çàµ¿ ¼­¿­¿¡¼­ Ä³¸¯ÅÍ °¡Á®¿À±â
-                    CharacterData characterData = character.Data.BaseData; // Ä³¸¯ÅÍ µ¥ÀÌÅÍ °¡Á®¿À±â
+                    Character character = actionOrder[i]; // í–‰ë™ ì„œì—´ì—ì„œ ìºë¦­í„° ê°€ì ¸ì˜¤ê¸°
+                    CharacterData characterData = character.Data.BaseData; // ìºë¦­í„° ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
 
-                    actionOrderUIObjects[i].SetActive(true); // UI ¿ÀºêÁ§Æ® È°¼ºÈ­
+                    actionOrderUIObjects[i].SetActive(true); // UI ì˜¤ë¸Œì íŠ¸ í™œì„±í™”
 
-                    string imagePath = characterData.CharacterImagePath; // Ä³¸¯ÅÍ ÀÌ¹ÌÁö °æ·Î °¡Á®¿À±â
-                    Sprite characterSprite = Resources.Load<Sprite>(imagePath); // ¸®¼Ò½º¿¡¼­ ½ºÇÁ¶óÀÌÆ® ·Îµå
+                    string imagePath = characterData.CharacterImagePath; // ìºë¦­í„° ì´ë¯¸ì§€ ê²½ë¡œ ê°€ì ¸ì˜¤ê¸°
+                    Sprite characterSprite = Resources.Load<Sprite>(imagePath); // ë¦¬ì†ŒìŠ¤ì—ì„œ ìŠ¤í”„ë¼ì´íŠ¸ ë¡œë“œ
 
-                    // UI ¿ÀºêÁ§Æ®ÀÇ ÀÌ¹ÌÁö ÄÄÆ÷³ÍÆ® ¼³Á¤
-                    Transform imageTransform = actionOrderUIObjects[i].transform.Find("Image_Character"); // ÀÌ¹ÌÁö Æ®·£½ºÆû Ã£±â
+                    // UI ì˜¤ë¸Œì íŠ¸ì˜ ì´ë¯¸ì§€ ì»´í¬ë„ŒíŠ¸ ì„¤ì •
+                    Transform imageTransform = actionOrderUIObjects[i].transform.Find("Image_Character"); // ì´ë¯¸ì§€ íŠ¸ëœìŠ¤í¼ ì°¾ê¸°
                     
                     if (imageTransform != null)
                     {
-                        Image imageComponent = imageTransform.GetComponent<Image>(); // ÀÌ¹ÌÁö ÄÄÆ÷³ÍÆ® °¡Á®¿À±â
+                        Image imageComponent = imageTransform.GetComponent<Image>(); // ì´ë¯¸ì§€ ì»´í¬ë„ŒíŠ¸ ê°€ì ¸ì˜¤ê¸°
                         if (imageComponent != null && characterSprite != null) 
                         {
-                            imageComponent.sprite = characterSprite; // ½ºÇÁ¶óÀÌÆ® ¼³Á¤
-                            imageComponent.preserveAspect = true; // ºñÀ² À¯Áö ¼³Á¤
+                            imageComponent.sprite = characterSprite; // ìŠ¤í”„ë¼ì´íŠ¸ ì„¤ì •
+                            imageComponent.preserveAspect = true; // ë¹„ìœ¨ ìœ ì§€ ì„¤ì •
                         }
-                        else if (imageComponent != null) imageComponent.sprite = null; // ½ºÇÁ¶óÀÌÆ®°¡ ¾øÀ» °æ¿ì null ¼³Á¤
+                        else if (imageComponent != null) imageComponent.sprite = null; // ìŠ¤í”„ë¼ì´íŠ¸ê°€ ì—†ì„ ê²½ìš° null ì„¤ì •
                     }
 
-                    // UI ¿ÀºêÁ§Æ®ÀÇ ÅØ½ºÆ® ÄÄÆ÷³ÍÆ® ¼³Á¤
-                    Text textComponent = actionOrderUIObjects[i].GetComponentInChildren<Text>(); // ÅØ½ºÆ® ÄÄÆ÷³ÍÆ® Ã£±â
+                    // UI ì˜¤ë¸Œì íŠ¸ì˜ í…ìŠ¤íŠ¸ ì»´í¬ë„ŒíŠ¸ ì„¤ì •
+                    Text textComponent = actionOrderUIObjects[i].GetComponentInChildren<Text>(); // í…ìŠ¤íŠ¸ ì»´í¬ë„ŒíŠ¸ ì°¾ê¸°
 
                     if (textComponent != null)
                     {
-                        if (i == 0) textComponent.text = "0"; // Ã¹ ¹øÂ° Ä³¸¯ÅÍÀÇ °æ¿ì ³²Àº Çàµ¿·ÂÀ» 0À¸·Î ¼³Á¤
+                        if (i == 0) textComponent.text = "0"; // ì²« ë²ˆì§¸ ìºë¦­í„°ì˜ ê²½ìš° ë‚¨ì€ í–‰ë™ë ¥ì„ 0ìœ¼ë¡œ ì„¤ì •
                         else
                         {
-                            float remainingTime = TurnManager.instance.GetRemainingTime(character); // ³²Àº ½Ã°£ °¡Á®¿À±â
-                            int remainingTimeInt = Mathf.FloorToInt(remainingTime); // ³²Àº ½Ã°£À» Á¤¼ö·Î º¯È¯
-                            textComponent.text = remainingTimeInt.ToString(); // ÅØ½ºÆ® ¼³Á¤
+                            float remainingTime = TurnManager.instance.GetRemainingTime(character); // ë‚¨ì€ ì‹œê°„ ê°€ì ¸ì˜¤ê¸°
+                            int remainingTimeInt = Mathf.FloorToInt(remainingTime); // ë‚¨ì€ ì‹œê°„ì„ ì •ìˆ˜ë¡œ ë³€í™˜
+                            textComponent.text = remainingTimeInt.ToString(); // í…ìŠ¤íŠ¸ ì„¤ì •
                         }
                     }
                 }
-                else actionOrderUIObjects[i].SetActive(false); // ÇÒ´çµÇÁö ¾ÊÀº UI ¿ÀºêÁ§Æ® ºñÈ°¼ºÈ­
+                else actionOrderUIObjects[i].SetActive(false); // í• ë‹¹ë˜ì§€ ì•Šì€ UI ì˜¤ë¸Œì íŠ¸ ë¹„í™œì„±í™”
             }
         }
     }

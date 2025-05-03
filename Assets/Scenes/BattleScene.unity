@@ -8143,6 +8143,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1f516d8dddeb97047944967197295b7e, type: 2}
   - {fileID: 11400000, guid: 81e364e956fb1b944957b6983ae1f898, type: 2}
   - {fileID: 11400000, guid: 0ca1d8cfcdc046f4790d4e49a4024f02, type: 2}
+  - {fileID: 11400000, guid: 9dd9ea077437c4f4a8227389dc773f8a, type: 2}
+  - {fileID: 11400000, guid: efef20aa910141249844d28e0b7fd8b0, type: 2}
   _2dAudioSource: {fileID: 511772497}
   _musicAudioSource: {fileID: 845374951}
 --- !u!1 &729263310
@@ -22564,6 +22566,11 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!4 &2044424392 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8792431728288930256, guid: 3779b1b43621e3c4bb51f63c9ba40c31, type: 3}
+  m_PrefabInstance: {fileID: 7125143701683946249}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2054794023
 GameObject:
   m_ObjectHideFlags: 0

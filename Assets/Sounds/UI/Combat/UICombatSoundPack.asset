@@ -61,3 +61,13 @@ MonoBehaviour:
     volume: 0.9
     audioClips:
     - {fileID: 8300000, guid: be5d906af9c95624fa67bb8d13011066, type: 3}
+  - name: BuffRadioactivity
+    volume: 0.9
+    audioClips:
+    - {fileID: 8300000, guid: 9fd1d35aff480ce4bbbbfb0f2ded5fd5, type: 3}
+    - {fileID: 8300000, guid: c6830bc2104a31e4997d402cffe6af3e, type: 3}
+    - {fileID: 8300000, guid: 948713fed83c18a42bccfa670f11fc01, type: 3}
+  - name: BuffRadioactivityHit
+    volume: 0.9
+    audioClips:
+    - {fileID: 8300000, guid: fcbf86791c63a7c4f8674876390498e8, type: 3}

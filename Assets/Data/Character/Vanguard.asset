@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6d5f44d892fd144e8c234723dbcdcef, type: 3}
+  m_Name: Vanguard
+  m_EditorClassIdentifier: 
+  stats:
+    <MaxHP>k__BackingField: 5000
+    <MaxToughness>k__BackingField: 0
+    <UseUltThreshold>k__BackingField: 100
+    <MaxUltPts>k__BackingField: 100
+    <Attack>k__BackingField: 1400
+    <Defense>k__BackingField: 600
+    <Speed>k__BackingField: 120
+    <CritChance>k__BackingField: 0
+    <CritMult>k__BackingField: 1.5
+    <ElementType>k__BackingField: 16
+    <Weakness>k__BackingField: 0
+  team: 0
+  attackTable:
+    normalAttack: {fileID: 11400000, guid: 09ab6d53b6df3514caff3ba934ff4916, type: 2}
+    skillAttack: {fileID: 11400000, guid: 6e5066f9f13feb94f9cda442f1bd71d4, type: 2}
+    ultAttack: {fileID: 11400000, guid: 7c649478183f9c74188a7f3e2710a01c, type: 2}
+    extraAttack: {fileID: 0}
+    additionalData: []

@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df8cc8c012f849e4fbaf13c0183004d6, type: 3}
+  m_Name: MakerManSoundPack
+  m_EditorClassIdentifier: 
+  soundData:
+  - name: MakerManDamage
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 2c215a6e82078dd4a9761d232ae6f5a2, type: 3}
+  - name: MakerManNormalAttack1
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 1c17af043820283449728423624e1b16, type: 3}
+    - {fileID: 8300000, guid: 1cd3dc83a86d8f94dbf7557c575e78ce, type: 3}
+    - {fileID: 8300000, guid: 1cb1dafe45c2896489f153f257997982, type: 3}
+  - name: MakerManNormalAttack2
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: a4a8092838f377c4b9e3190bd614ea84, type: 3}
+    - {fileID: 8300000, guid: 2cb289f5d0256cf4b927270ee4f6bd58, type: 3}
+  - name: MakerManSkillAttack1
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: dca26b226104ee544a299b2227e1e6e3, type: 3}
+    - {fileID: 8300000, guid: 43858185ee5dd2447bb1835bc72c2dd0, type: 3}
+    - {fileID: 8300000, guid: 5807042a50b73af479d175434afce975, type: 3}
+  - name: MakerManSkillAttack2
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 526a5a1ad564c8849970eaa92a9f981a, type: 3}
+  - name: MakerManUltAttack1
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 3b5f203fdf44e2c4f9e0013256944116, type: 3}
+  - name: MakerManUltAttack2
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: b4b7107bf70bb96458dc2ba6371f26c5, type: 3}
+    - {fileID: 8300000, guid: 7e9473ddd876dc64781316aab9c56f79, type: 3}
+  - name: MakerManUltAttack3
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: a4a8092838f377c4b9e3190bd614ea84, type: 3}
+    - {fileID: 8300000, guid: 2cb289f5d0256cf4b927270ee4f6bd58, type: 3}
+  - name: MakerManUltAttack4
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 1d9e668f88ed7be4b8a9e65767d2bb01, type: 3}
+    - {fileID: 8300000, guid: 96b189fa1b322364f843537d54b0de1c, type: 3}

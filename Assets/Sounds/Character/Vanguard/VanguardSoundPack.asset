@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df8cc8c012f849e4fbaf13c0183004d6, type: 3}
+  m_Name: VanguardSoundPack
+  m_EditorClassIdentifier: 
+  soundData:
+  - name: VanguardDamage
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 001d75d3ea0b0994e9ada7fb87adf56c, type: 3}
+    - {fileID: 8300000, guid: d7590994465ee7449af3169bf7c4c84b, type: 3}
+  - name: VanguardNormalAttack1
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: a766f54bc7ea97f4fa6b89740de567de, type: 3}
+    - {fileID: 8300000, guid: 00a5b96f3e6cc7746a0c602941631a80, type: 3}
+  - name: VanguardNormalAttack2
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 8334a54c55cc84c4cbc22949fd6ed8f8, type: 3}
+  - name: VanguardSkillAttack1
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 16d9e766711b75b44aa209ec02dca3eb, type: 3}
+    - {fileID: 8300000, guid: f22d69de14a300f49ba762db7b952ae1, type: 3}
+  - name: VanguardSkillAttack2
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 9fd1d35aff480ce4bbbbfb0f2ded5fd5, type: 3}
+    - {fileID: 8300000, guid: c6830bc2104a31e4997d402cffe6af3e, type: 3}
+    - {fileID: 8300000, guid: 948713fed83c18a42bccfa670f11fc01, type: 3}
+  - name: VanguardUltAttack1
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: b9c4861b09ef4334aadcbcf1dc1eddf3, type: 3}
+    - {fileID: 8300000, guid: 0a706d11eafc29a418a22210559bbe24, type: 3}
+    - {fileID: 8300000, guid: 9ac33783e50f66c4baeafda62b6e31ad, type: 3}
+  - name: VanguardUltAttack2
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: 3ea4205ea02551249b677f6a4b459a11, type: 3}
+    - {fileID: 8300000, guid: 91ce4c336065fe0448593f671fc078a4, type: 3}
+  - name: VanguardUltAttack3
+    volume: 1
+    audioClips:
+    - {fileID: 8300000, guid: b492dc4cfd8ffe64ea3744491e341d3e, type: 3}
+    - {fileID: 8300000, guid: 843c63456a0a8a64c8726fb31c23a883, type: 3}
+    - {fileID: 8300000, guid: 66ba8b0d2f5b2fb44b9dab71b5a49318, type: 3}

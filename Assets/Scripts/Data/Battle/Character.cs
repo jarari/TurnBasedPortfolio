@@ -186,7 +186,7 @@ namespace TurnBased.Battle {
             else if (argument == "DeathComplete") {
                 CombatManager.instance.NotifyCharacterDeathComplete(this);
             }
-
+            Debug.Log("사운드호출");
             OnAnimationEvent?.Invoke(this, argument, payload);
         }
 
