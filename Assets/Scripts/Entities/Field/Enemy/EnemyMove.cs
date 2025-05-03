@@ -7,7 +7,7 @@ namespace TurnBased.Entities.Field {
     /// </summary>
     public class EnemyMove
     {
-        float speed = 3.0f;
+        float speed = 1.0f;
         
         /// <summary>
         /// 플레이어를 추적할 함수
@@ -19,10 +19,7 @@ namespace TurnBased.Entities.Field {
         {
             // 이동 방향을 플레이어 위치로 설정한다
             Vector3 dir = (target - enemy.transform.position).normalized;
-
-            // 에너미가 타겟을 바라보게 한다.
-            enemy.transform.forward = target;
-
+                        
             // 캐릭터 컨트롤러를 이용해 이동을 시작한다
             cc.Move(dir * speed * Time.deltaTime);
         }

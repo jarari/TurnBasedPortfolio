@@ -92,13 +92,25 @@ namespace TurnBased.Entities.Field {
         }
 
 
-        public virtual void F_Idle()  { }   // 얜 뭐넣지...?
+        public void F_Idle()  
+        {
+            // 만약 현재 상태가 기본 상태일 경우
+            if (f_state == F_EnemyState.Idle)
+            { 
+                // 그냥 반환한다
+                return; 
+            }
+        }
 
-        public virtual void F_Move() 
+        public void F_Move() 
         {
             // 에너미를 플레이어를 향해 움직인다
             Move.FE_Move(target.transform.position, cc, this.gameObject);
-            
+
+            // 에너미가 타겟을 바라보게 한다.
+            this.transform.forward = target.transform.position;
+
+
             // 플레이어와의 거리를 계산하는 불값을 켜고
             bool A_switch = Move.FE_SwitchMove(target.transform.position, this.gameObject, attDistance);
             
@@ -113,7 +125,7 @@ namespace TurnBased.Entities.Field {
             }
 
         }
-        public virtual void F_Attack()
+        public void F_Attack()
         {
             // 플레이어와의 거리를 계산하는 불값을 켜고
             bool A_switch = Move.FE_SwitchMove(target.transform.position, this.gameObject, attDistance);
@@ -147,17 +159,27 @@ namespace TurnBased.Entities.Field {
 
             if (target != null) // 타겟이 null이 아닐때
             {
-                if (Vector3.Distance(transform.position, target.transform.position) < findDistnace) // 타겟과의 거리가 탐지거리보다 작을때
+                if (Vector3.Distance(transform.position, target.transform.position) <= findDistnace) // 타겟과의 거리가 탐지거리보다 작거나 같을때
                 {
-                    Debug.Log("플레이어 감지: " + target.name);
+                    // 현재 상태를 무브로 바꾼다
                     f_state = F_EnemyState.Move;
+                    // 애니메이션의 트리거를 켠다
+                    anim.SetTrigger("IdleToMove");
+                }
+                else if (Vector3.Distance(transform.position, target.transform.position) > findDistnace) // 타겟과의 거리가 탐지 거리보다 멀때
+                {
+                    // 에너미상태를 전환 한다
+                    f_state = F_EnemyState.Idle;
+                    // 애니메이션의 트리거를 켠다
+                    anim.SetTrigger("MoveToIdle");
                 }
             }
             else if (target == null)
             {
                 // 에너미상태를 전환 한다
                 f_state = F_EnemyState.Idle;
-                
+                // 애니메이션의 트리거를 켠다
+                anim.SetTrigger("MoveToIdle");
             }
         
         }
