@@ -17,9 +17,9 @@ MonoBehaviour:
     <MaxToughness>k__BackingField: 0
     <UseUltThreshold>k__BackingField: 100
     <MaxUltPts>k__BackingField: 100
-    <Attack>k__BackingField: 100
-    <Defense>k__BackingField: 100
-    <Speed>k__BackingField: 140
+    <Attack>k__BackingField: 1400
+    <Defense>k__BackingField: 600
+    <Speed>k__BackingField: 120
     <CritChance>k__BackingField: 0
     <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 16
