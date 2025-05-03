@@ -16,10 +16,6 @@ namespace TurnBased.Entities.Battle
         public PlayableDirector skillAttack;    // 스킬 공격
         public PlayableDirector ultAttack;      // 필살기
 
-        [Header("AttackObjects")]
-        public GameObject attackObject_1;     // 공격에 사용될 오브젝트 1
-
-
         [Header("Components")]
         public Animator animator;   // 캐릭터의 애니메이터
 
@@ -70,6 +66,44 @@ namespace TurnBased.Entities.Battle
                 }
 
             }
+
+            #region 사운드
+
+            else if (animEvent == "PlaySound1")
+            {
+                SoundManager.instance.PlayVOSound(this, "MakerManNormalAttack1");
+            }
+            else if (animEvent == "PlaySound2")
+            {
+                SoundManager.instance.PlayVOSound(this, "MakerManNormalAttack2");
+            }
+
+            else if (animEvent == "PlaySound3")
+            {
+                SoundManager.instance.PlayVOSound(this, "MakerManSkillAttack1");
+            }
+            else if (animEvent == "PlaySound4")
+            {
+                SoundManager.instance.PlayVOSound(this, "MakerManSkillAttack2");
+            }
+
+            else if (animEvent == "PlaySound5")
+            {
+                SoundManager.instance.PlayVOSound(this, "MakerManUltAttack1");
+            }
+            else if (animEvent == "PlaySound6")
+            {                
+                SoundManager.instance.PlayVOSound(this, "MakerManUltAttack2");
+            }
+            else if (animEvent == "PlaySound7")
+            {
+                SoundManager.instance.PlayVOSound(this, "MakerManUltAttack3");
+            }
+            else if (animEvent == "PlaySound8")
+            {
+                SoundManager.instance.PlayVOSound(this, "MakerManUltAttack4");
+            }
+            #endregion
 
         }
 

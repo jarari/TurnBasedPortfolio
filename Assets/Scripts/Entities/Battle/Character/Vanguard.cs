@@ -16,10 +16,6 @@ namespace TurnBased.Entities.Battle
         public PlayableDirector skillAttack;    // 스킬 공격
         public PlayableDirector ultAttack;      // 필살기
 
-        [Header("AttackObjects")]
-        public GameObject attackObject_1;     // 공격에 사용될 오브젝트 1
-        
-
         [Header("Components")]
         public Animator animator;   // 캐릭터의 애니메이터
 

@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: MakerMan
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 3000
+    <MaxHP>k__BackingField: 4500
     <MaxToughness>k__BackingField: 0
     <UseUltThreshold>k__BackingField: 100
     <MaxUltPts>k__BackingField: 100
     <Attack>k__BackingField: 1000
     <Defense>k__BackingField: 450
-    <Speed>k__BackingField: 170
+    <Speed>k__BackingField: 160
     <CritChance>k__BackingField: 0
     <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 8
