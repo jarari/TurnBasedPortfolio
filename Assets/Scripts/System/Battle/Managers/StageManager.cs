@@ -75,7 +75,9 @@ namespace TurnBased.Battle.Managers {
         private void SpawnAllyCharacters() {
             CharacterManager.instance.SpawnCharacter("Ally_Colphne");
             _aliveAllyCount++;
-            CharacterManager.instance.SpawnCharacter("Ally_SoccerPlayer");
+            CharacterManager.instance.SpawnCharacter("Ally_Vanguard");
+            _aliveAllyCount++;
+            CharacterManager.instance.SpawnCharacter("Ally_MarkerMan");
             _aliveAllyCount++;
         }
 
