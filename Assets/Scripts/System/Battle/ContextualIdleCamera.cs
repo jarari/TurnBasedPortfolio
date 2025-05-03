@@ -106,51 +106,41 @@ namespace TurnBased.Battle {
             }
         }
 
-        private void OnCharacterTurnStart(Character c) {
+        private void OnCharacterTurnEnd(Character c) {
+            _currentContext = Context.WaitingTurn;
+        }
+
+        private void ProcessTurnStartCommon() {
             Priority = 4;
+            Prioritize();
             if (CinemachineCore.IsLive(this)) {
                 _character.ProcessCamChanged();
                 _character.ProcessCamGain();
             }
             ResetAllCharacterLayers();
+        }
+
+        private void OnCharacterTurnStart(Character c) {
+            ProcessTurnStartCommon();
             if (_currentContext == Context.TargetEnemy) {
                 _currentContext = Context.TurnStart;
                 _delayedContext = Context.TargetEnemy;
             }
         }
 
-        private void OnCharacterTurnEnd(Character c) {
-            _currentContext = Context.WaitingTurn;
-        }
-
         private void OnCharacterUltTurn(Character c) {
-            Priority = 4;
-            if (CinemachineCore.IsLive(this)) {
-                _character.ProcessCamChanged();
-                _character.ProcessCamGain();
-            }
-            ResetAllCharacterLayers();
+            ProcessTurnStartCommon();
             _currentContext = Context.Ult;
             _ultIdleSplineDolly.CameraPosition = 0;
         }
 
         private void OnCharacterExtraAttackTurn(Character c) {
-            Priority = 4;
-            if (CinemachineCore.IsLive(this)) {
-                _character.ProcessCamChanged();
-                _character.ProcessCamGain();
-            }
-            ResetAllCharacterLayers();
+            ProcessTurnStartCommon();
             _currentContext = Context.TurnStart;
         }
 
         private void OnCharacterTransitionTurn(Character c) {
-            Priority = 4;
-            if (CinemachineCore.IsLive(this)) {
-                _character.ProcessCamChanged();
-                _character.ProcessCamGain();
-            }
-            ResetAllCharacterLayers();
+            ProcessTurnStartCommon();
             _currentContext = Context.TargetSelf;
         }
 
