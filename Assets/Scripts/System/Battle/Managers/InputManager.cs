@@ -68,52 +68,53 @@ namespace TurnBased.Battle.Managers {
         /// <param name="inputValue"></param>
         private void OnSkill(InputValue inputValue) {
             var currentCharacter = TurnManager.instance.CurrentCharacter;
-            if (CanCharacterTakeInput()) {
-                if (currentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack &&
-                    currentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {
-                    if (currentCharacter.CurrentState == Character.CharacterState.PrepareSkill) {
-                        currentCharacter.CastSkill();
+            if (CombatManager.instance.SkillPoint > 0) {
+                if (CanCharacterTakeInput()) {
+                    if (currentCharacter.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                        currentCharacter.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                        if (currentCharacter.CurrentState == Character.CharacterState.PrepareSkill) {
+                            currentCharacter.CastSkill();
+                        }
+                        else {
+                            currentCharacter.PrepareSkill();
+                        }
                     }
                     else {
-                        currentCharacter.PrepareSkill();
+                        if (currentCharacter.CurrentState == Character.CharacterState.PrepareUltSkill) {
+                            currentCharacter.CastUltSkill();
+                        }
+                        else {
+                            currentCharacter.PrepareUltSkill();
+                        }
                     }
                 }
+            }
+            //TODO: Send notification on no sp
+        }
+
+        private void TryCastUlt(Character character) {
+            if (character != null &&
+                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
+                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
+                if (CombatManager.CanCharacterUseUlt(character)) {
+                    TurnManager.instance.AddUltTurn(character);
+                }
                 else {
-                    if (currentCharacter.CurrentState == Character.CharacterState.PrepareUltSkill) {
-                        currentCharacter.CastUltSkill();
-                    }
-                    else {
-                        currentCharacter.PrepareUltSkill();
-                    }
+                    SoundManager.instance.Play2DSound("UIUltNotReady");
                 }
             }
         }
 
         private void OnUlt1(InputValue inputValue) {
-            var character = CharacterManager.instance.GetAllyCharacters()[0];
-            if (character != null && 
-                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
-                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
-                TurnManager.instance.AddUltTurn(character);
-            }
+            TryCastUlt(CharacterManager.instance.GetAllyCharacters()[0]);
         }
 
         private void OnUlt2(InputValue inputValue) {
-            var character = CharacterManager.instance.GetAllyCharacters()[1];
-            if (character != null &&
-                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
-                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
-                TurnManager.instance.AddUltTurn(character);
-            }
+            TryCastUlt(CharacterManager.instance.GetAllyCharacters()[1]);
         }
 
         private void OnUlt3(InputValue inputValue) {
-            var character = CharacterManager.instance.GetAllyCharacters()[2];
-            if (character != null &&
-                character.CurrentState != Character.CharacterState.PrepareUltAttack &&
-                character.CurrentState != Character.CharacterState.PrepareUltSkill) {
-                TurnManager.instance.AddUltTurn(character);
-            }
+            TryCastUlt(CharacterManager.instance.GetAllyCharacters()[2]);
         }
     }
 }

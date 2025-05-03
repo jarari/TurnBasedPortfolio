@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TurnBased.Battle.UI;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace TurnBased.Battle.Managers {
     /// <summary>
@@ -35,6 +37,8 @@ namespace TurnBased.Battle.Managers {
         private TurnType _lastTurnType;
 
         private int _charactersInDeathSequence;
+        private int _aliveAlliesCount;
+        private int _aliveEnemiesCount;
 
         private void Awake() {
             if (instance != null) {
@@ -42,10 +46,23 @@ namespace TurnBased.Battle.Managers {
                 return;
             }
             instance = this;
+
+            _roundRemaining = Round1Time;
         }
 
-        private void HandleCharacterDeath(Character c) {
+        private void Start() {
+            CombatManager.instance.OnCharacterDeath += HandleCharacterDeath;
+            CombatManager.instance.OnCharacterDeathComplete += HandleCharacterDeathComplete;
+        }
+
+        private void HandleCharacterDeath(Character c, Character killer) {
             _charactersInDeathSequence++;
+            if (c.Data.Team == Data.CharacterTeam.Player) {
+                _aliveAlliesCount--;
+            }
+            else if (c.Data.Team == Data.CharacterTeam.Enemy) {
+                _aliveEnemiesCount--;
+            }
         }
 
         private void HandleCharacterDeathComplete(Character c) {
@@ -59,15 +76,17 @@ namespace TurnBased.Battle.Managers {
         /// <param name="character"></param>
         public void AddCharacter(Character character) {
             _turnQueue.Add(new TurnData(character, TurnType.Normal));
-            character.OnDeath += HandleCharacterDeath;
-            character.OnDeathComplete += HandleCharacterDeathComplete;
+            if (character.Data.Team == Data.CharacterTeam.Player) {
+                _aliveAlliesCount++;
+            }
+            else if (character.Data.Team == Data.CharacterTeam.Enemy) {
+                _aliveEnemiesCount++;
+            }
         }
 
         public void RemoveCharacter(Character character) {
             _turnQueue.RemoveAll((data) => data.Character == character);
             _turnQueue.RemoveAll((data) => data.ExtraAttackTarget == character);
-            character.OnDeath -= HandleCharacterDeath;
-            character.OnDeathComplete -= HandleCharacterDeathComplete;
         }
 
         public void RemoveCharacterUltExtraAttackOnly(Character character) {
@@ -117,7 +136,6 @@ namespace TurnBased.Battle.Managers {
 
         public void InitializeTurnQueue() {
             _turnQueue = _turnQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
-            _roundRemaining = Round1Time;
             StartNextTurn();
         }
 
@@ -207,7 +225,13 @@ namespace TurnBased.Battle.Managers {
                 }
                 yield return new WaitWhile(() => _charactersInDeathSequence > 0);
             }
+
+            if (_aliveAlliesCount == 0 || _aliveEnemiesCount == 0) {
+                yield break;
+            }
+
             StartNextTurn();
+            ActionOrderUIManager.instance.UpdateActionOrderUIPositions(); // 턴이 종료된 후 행동 서열 UI 업데이트
         }
 
         /// <summary>

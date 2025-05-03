@@ -31,3 +31,16 @@ MonoBehaviour:
     ultAttack: {fileID: 11400000, guid: 7e7f7baabb00ce344a716c3ca63a292f, type: 2}
     extraAttack: {fileID: 0}
     additionalData: []
+  battlePrefab: {fileID: 4121010406214284663, guid: 099a05f2e37c8484b82293ce982428fb, type: 3}
+  fieldPrefab: {fileID: 0}
+  Name: Colphne
+  Attribute: Quantum
+  BreakEffect: 110
+  CharacterImagePath: Images/Characters/Character2
+  CharacterRenderTexturePath: Images/Characters/RenderTexture/C2
+  AttributeImagePath: Images/Icons/Attributes/Quantum
+  BasicAttackImagePath: 
+  SkillImagePath: 
+  UltimateImagePath: 
+  TalentImagePath: 
+  TechniqueImagePath: 

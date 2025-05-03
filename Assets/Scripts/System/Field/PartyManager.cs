@@ -18,6 +18,7 @@ public class PartyManager : MonoBehaviour
 
     private void Start()
     {
+        /*
         // 데이터 로드
         CharacterDataManager.Instance.LoadCharacterData();
 
@@ -26,6 +27,7 @@ public class PartyManager : MonoBehaviour
         {
             characters[i] = CharacterDataManager.Instance.GetCharacterDataByIndex(i).ID;
         }
+        */
     }
     
     public bool IsPartyFull()

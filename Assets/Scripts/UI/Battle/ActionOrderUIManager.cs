@@ -1,51 +1,89 @@
 using System.Collections.Generic;
 using TurnBased.Battle.Managers;
+using TurnBased.Data;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TurnBased.Battle.UI
 {
     public class ActionOrderUIManager : MonoBehaviour
     {
-        public List<GameObject> actionOrderUIObjects; // Çàµ¿ ¼­¿­ UI ¿ÀºêÁ§Æ® ¸®½ºÆ®
+        public static ActionOrderUIManager instance; // ì‹±ê¸€í†¤ ì¸ìŠ¤í„´ìŠ¤
 
-        private void Update()
+        public List<GameObject> actionOrderUIObjects; // í–‰ë™ ì„œì—´ UI ì˜¤ë¸Œì íŠ¸ ë¦¬ìŠ¤íŠ¸
+
+        private void Awake()
         {
-            UpdateCharacterUIPositions(); // Ä³¸¯ÅÍ UI À§Ä¡ ¾÷µ¥ÀÌÆ®
+            if (instance == null)
+            {
+                instance = this; // ì‹±ê¸€í†¤ ì¸ìŠ¤í„´ìŠ¤ ì„¤ì •
+            }
+            else
+            {
+                Destroy(gameObject); // ì¤‘ë³µ ì¸ìŠ¤í„´ìŠ¤ ì œê±°
+            }
         }
 
-        private void UpdateCharacterUIPositions()
+        private void Start()
         {
-            Character currentCharacter = TurnManager.instance.CurrentCharacter; // ÇöÀç Ä³¸¯ÅÍ °¡Á®¿À±â
-            List<Character> turnOrder = TurnManager.instance.GetActionOrder(); // Çàµ¿ ¼­¿­ °¡Á®¿À±â
+            UpdateActionOrderUIPositions(); // í–‰ë™ ì„œì—´ UI ì´ˆê¸°í™”
+        }
+        
+        public void UpdateActionOrderUIPositions()
+        {
+            List<Character> actionOrder = TurnManager.instance.GetActionOrder(); // í–‰ë™ ì„œì—´ ê°€ì ¸ì˜¤ê¸°
 
-            //Debug.Log("Current Character: " + currentCharacter.name); // ÇöÀç Ä³¸¯ÅÍ ÀÌ¸§ Ãâ·Â
-
-            // ÇöÀç Ä³¸¯ÅÍ¸¦ °¡Àå À§¿¡ Ç¥½Ã
-            GameObject currentCharacterUI = actionOrderUIObjects.Find(obj => obj.name == currentCharacter.name); // ÇöÀç Ä³¸¯ÅÍ UI ¿ÀºêÁ§Æ® Ã£±â
-            if (currentCharacterUI != null)
+            // í–‰ë™ ì„œì—´ì´ 1ê°œ ì´ìƒì¼ ë•Œ, ë§ˆì§€ë§‰ ìºë¦­í„°ë¥¼ ì²« ë²ˆì§¸ë¡œ ì´ë™
+            if (actionOrder.Count > 1)
             {
-                RectTransform rectTransform = currentCharacterUI.GetComponent<RectTransform>(); // RectTransform °¡Á®¿À±â
-                if (rectTransform != null)
-                    rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, -40); // À§Ä¡ ¼³Á¤
+                Character lastCharacter = actionOrder[actionOrder.Count - 1]; // ë§ˆì§€ë§‰ ìºë¦­í„° ì €ì¥
+                actionOrder.RemoveAt(actionOrder.Count - 1); // ë§ˆì§€ë§‰ ìºë¦­í„° ì œê±°
+                actionOrder.Insert(0, lastCharacter); // ë§ˆì§€ë§‰ ìºë¦­í„°ë¥¼ ì²« ë²ˆì§¸ë¡œ ì´ë™
             }
 
-            // ÅÏ ¼ø¼­¿¡¼­ ÇöÀç Ä³¸¯ÅÍ¸¦ Á¦¿ÜÇÑ ³ª¸ÓÁö Ä³¸¯ÅÍµéÀ» ¼ø¼­´ë·Î Ç¥½Ã
-            int positionIndex = 1; // À§Ä¡ ÀÎµ¦½º ÃÊ±âÈ­
-            foreach (var character in turnOrder)
+            // UI ì˜¤ë¸Œì íŠ¸ì˜ í™œì„±í™” ìƒíƒœë¥¼ ì—…ë°ì´íŠ¸
+            for (int i = 0; i < actionOrderUIObjects.Count; i++)
             {
-                if (character.name == currentCharacter.name)
-                    continue; // ÇöÀç ÅÏÀ» Àâ°í ÀÖ´Â Ä³¸¯ÅÍ´Â ÀÌ¹Ì Á© À§¿¡ Ç¥½ÃÇßÀ¸´Ï Á¦¿Ü
-
-                GameObject uiObject = actionOrderUIObjects.Find(obj => obj.name == character.name); // UI ¿ÀºêÁ§Æ® Ã£±â
-                if (uiObject != null)
+                // í–‰ë™ ì„œì—´ì˜ ê¸¸ì´ë³´ë‹¤ UI ì˜¤ë¸Œì íŠ¸ì˜ ê¸¸ì´ê°€ ì§§ì„ ê²½ìš°, UI ì˜¤ë¸Œì íŠ¸ë¥¼ ë¹„í™œì„±í™”
+                if (i < actionOrder.Count)
                 {
-                    RectTransform rectTransform = uiObject.GetComponent<RectTransform>(); // RectTransform °¡Á®¿À±â
-                    if (rectTransform != null)
+                    Character character = actionOrder[i]; // í–‰ë™ ì„œì—´ì—ì„œ ìºë¦­í„° ê°€ì ¸ì˜¤ê¸°
+                    CharacterData characterData = character.Data.BaseData; // ìºë¦­í„° ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
+
+                    actionOrderUIObjects[i].SetActive(true); // UI ì˜¤ë¸Œì íŠ¸ í™œì„±í™”
+
+                    string imagePath = characterData.CharacterImagePath; // ìºë¦­í„° ì´ë¯¸ì§€ ê²½ë¡œ ê°€ì ¸ì˜¤ê¸°
+                    Sprite characterSprite = Resources.Load<Sprite>(imagePath); // ë¦¬ì†ŒìŠ¤ì—ì„œ ìŠ¤í”„ë¼ì´íŠ¸ ë¡œë“œ
+
+                    // UI ì˜¤ë¸Œì íŠ¸ì˜ ì´ë¯¸ì§€ ì»´í¬ë„ŒíŠ¸ ì„¤ì •
+                    Transform imageTransform = actionOrderUIObjects[i].transform.Find("Image_Character"); // ì´ë¯¸ì§€ íŠ¸ëœìŠ¤í¼ ì°¾ê¸°
+                    
+                    if (imageTransform != null)
                     {
-                        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, -40 - (positionIndex * 90)); // À§Ä¡ ¼³Á¤
-                        positionIndex++; // À§Ä¡ ÀÎµ¦½º Áõ°¡
+                        Image imageComponent = imageTransform.GetComponent<Image>(); // ì´ë¯¸ì§€ ì»´í¬ë„ŒíŠ¸ ê°€ì ¸ì˜¤ê¸°
+                        if (imageComponent != null && characterSprite != null) 
+                        {
+                            imageComponent.sprite = characterSprite; // ìŠ¤í”„ë¼ì´íŠ¸ ì„¤ì •
+                            imageComponent.preserveAspect = true; // ë¹„ìœ¨ ìœ ì§€ ì„¤ì •
+                        }
+                        else if (imageComponent != null) imageComponent.sprite = null; // ìŠ¤í”„ë¼ì´íŠ¸ê°€ ì—†ì„ ê²½ìš° null ì„¤ì •
+                    }
+
+                    // UI ì˜¤ë¸Œì íŠ¸ì˜ í…ìŠ¤íŠ¸ ì»´í¬ë„ŒíŠ¸ ì„¤ì •
+                    Text textComponent = actionOrderUIObjects[i].GetComponentInChildren<Text>(); // í…ìŠ¤íŠ¸ ì»´í¬ë„ŒíŠ¸ ì°¾ê¸°
+
+                    if (textComponent != null)
+                    {
+                        if (i == 0) textComponent.text = "0"; // ì²« ë²ˆì§¸ ìºë¦­í„°ì˜ ê²½ìš° ë‚¨ì€ í–‰ë™ë ¥ì„ 0ìœ¼ë¡œ ì„¤ì •
+                        else
+                        {
+                            float remainingTime = TurnManager.instance.GetRemainingTime(character); // ë‚¨ì€ ì‹œê°„ ê°€ì ¸ì˜¤ê¸°
+                            int remainingTimeInt = Mathf.FloorToInt(remainingTime); // ë‚¨ì€ ì‹œê°„ì„ ì •ìˆ˜ë¡œ ë³€í™˜
+                            textComponent.text = remainingTimeInt.ToString(); // í…ìŠ¤íŠ¸ ì„¤ì •
+                        }
                     }
                 }
+                else actionOrderUIObjects[i].SetActive(false); // í• ë‹¹ë˜ì§€ ì•Šì€ UI ì˜¤ë¸Œì íŠ¸ ë¹„í™œì„±í™”
             }
         }
     }

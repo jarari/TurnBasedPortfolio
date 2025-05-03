@@ -39,22 +39,28 @@ namespace TurnBased.Battle {
             UltTimeline
         }
 
-        public Action<Character> OnTurnStart;
-        public Action<Character> OnTurnEnd;
-        public Action<Character> OnUltTurn;
-        public Action<Character> OnExtraAttackTurn;
-        public Action<Character> OnTransitionTurn;
-        public Action<Character, string, string> OnAnimationEvent;
-        public Action<Character, bool> OnVisibilityChange;
-        public Action<Character, Character, DamageResult> OnInflictedDamage;
-        public Action<Character, Character, DamageResult> OnDamage;
-        public Action<Character, Character, float> OnRestoreHealth;
-        public Action<Character> OnDeath;
-        public Action<Character> OnDeathComplete;
+        public event Action<Character> OnTurnStart;
+        public event Action<Character> OnTurnEnd;
+        public event Action<Character> OnUltTurn;
+        public event Action<Character> OnExtraAttackTurn;
+        public event Action<Character> OnTransitionTurn;
+        public event Action<Character, string, string> OnAnimationEvent;
+        public event Action<Character, bool> OnVisibilityChange;
+        public event Action<Character, Character, DamageResult> OnDamage;
+        public event Action<Character, Character, float> OnRestoreHealth;
+        public event Action<Character, CharacterState> OnCharacterStateChanged;
 
         public CharacterDataInstance Data { get; private set; }
 
-        public CharacterState CurrentState { get; protected set; }
+        public CharacterState CurrentState {
+            get {
+                return _currentState;
+            }
+            protected set {
+                _currentState = value;
+                OnCharacterStateChanged?.Invoke(this, value);
+            }
+        }
         public bool WantCmd { get; set; }
         public CharacterState WantState { get; protected set; } = CharacterState.PrepareAttack;
         public bool IsVisible { get; set; }
@@ -70,6 +76,8 @@ namespace TurnBased.Battle {
                 return _chest != null ? _chest : transform;
             }
         }
+
+        private CharacterState _currentState;
 
 
         protected virtual void Awake() {
@@ -103,7 +111,13 @@ namespace TurnBased.Battle {
                 }
                 else if (WantState == CharacterState.PrepareSkill)
                 {
-                    PrepareSkill();
+                    if (CombatManager.instance.SkillPoint > 0) {
+                        PrepareSkill();
+                    }
+                    else {
+                        WantState = CharacterState.PrepareAttack;
+                        PrepareAttack();
+                    }
                 }
             }
             // 만약 에너미일때
@@ -170,7 +184,7 @@ namespace TurnBased.Battle {
                 SoundManager.instance.PlayVOSound(this, payload);
             }
             else if (argument == "DeathComplete") {
-                OnDeathComplete?.Invoke(this);
+                CombatManager.instance.NotifyCharacterDeathComplete(this);
             }
             Debug.Log("사운드호출");
             OnAnimationEvent?.Invoke(this, argument, payload);
@@ -189,6 +203,9 @@ namespace TurnBased.Battle {
             CurrentState = CharacterState.DoAttack;
             WantState = CharacterState.PrepareAttack;
             WantCmd = false;
+            if (Data.Team == CharacterTeam.Player) {
+                CombatManager.instance.ModifySkillPoint(1);
+            }
         }
         /// <summary>
         /// 추가 공격 발동
@@ -209,6 +226,9 @@ namespace TurnBased.Battle {
             CurrentState = CharacterState.CastSkill;
             WantState = CharacterState.PrepareSkill;
             WantCmd = false;
+            if (Data.Team == CharacterTeam.Player) {
+                CombatManager.instance.ModifySkillPoint(-1);
+            }
         }
         /// <summary>
         /// 궁극기 Q 준비자세
@@ -222,6 +242,10 @@ namespace TurnBased.Battle {
         public virtual void CastUltAttack() {
             CurrentState = CharacterState.CastUltAttack;
             WantCmd = false;
+            // 궁극기 발동 시 궁극기 5 포인트 회복
+            if (Data.Team == CharacterTeam.Player) {
+                Data.UltPts.ModifyCurrent(5);
+            }
         }
         /// <summary>
         /// 궁극기 E 준비자세
@@ -235,6 +259,10 @@ namespace TurnBased.Battle {
         public virtual void CastUltSkill() {
             CurrentState = CharacterState.CastUltSkill;
             WantCmd = false;
+            // 궁극기 발동 시 궁극기 5 포인트 회복
+            if (Data.Team == CharacterTeam.Player) {
+                Data.UltPts.ModifyCurrent(5);
+            }
         }
         /// <summary>
         /// 캐릭터 모델 활성화/비활성화
@@ -268,7 +296,6 @@ namespace TurnBased.Battle {
             WantState = CharacterState.PrepareDead;
             // 명령대기를 하지 않음을 반환
             WantCmd = false;
-            OnDeath?.Invoke(this);
         }
         /// <summary>
         /// 그로기 준비함수
@@ -323,6 +350,11 @@ namespace TurnBased.Battle {
                 return;
             }
 
+            // 피격 시 궁극기 10 포인트 회복
+            if (Data.Team == CharacterTeam.Player) {
+                Data.UltPts.ModifyCurrent(10);
+            }
+
             if (Data.Toughness.CurrentMax > 0) {
                 // 만약 강인도가 있다면
                 if (Data.Toughness.Current > 0) {
@@ -361,6 +393,7 @@ namespace TurnBased.Battle {
             if (Data.HP.Current <= 0) {
                 // 죽음을 다룰 함수를 실행한다
                 Dead();
+                CombatManager.instance.NotifyCharacterDeath(this, attacker);
             }
         }
 

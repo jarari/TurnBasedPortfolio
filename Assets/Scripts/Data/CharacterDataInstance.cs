@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine;
+using UnityEditor.Overlays;
 
 namespace TurnBased.Data {
     public class CharacterDataInstance {
@@ -9,6 +10,7 @@ namespace TurnBased.Data {
             public float Base { get; }
             public float Current { get; private set; }
             public float CurrentMax { get; private set; }
+            public bool HasMax { get; }
             public event Action<float> OnValueChanged;
             public event Action<float> OnValueMaxChanged;
 
@@ -17,14 +19,12 @@ namespace TurnBased.Data {
                 Current = baseValue;
                 if (hasMax) {
                     CurrentMax = baseValue;
-                }
-                else {
-                    CurrentMax = -1;
+                    HasMax = true;
                 }
             }
 
             public void ModifyCurrent(float delta) {
-                if (CurrentMax == -1) {
+                if (!HasMax) {
                     Current = Current + delta;
                 }
                 else {
@@ -39,7 +39,7 @@ namespace TurnBased.Data {
             }
 
             public void SetCurrent(float value) {
-                if (CurrentMax == -1) {
+                if (!HasMax) {
                     Current = value;
                 }
                 else {
@@ -56,6 +56,7 @@ namespace TurnBased.Data {
             public void Reset() => SetCurrent(CurrentMax);
         }
 
+        public CharacterData BaseData { get; } // CharacterData 참조 추가
         public Stat HP { get; }
         public Stat Toughness { get; }
         public Stat Attack { get; }
@@ -63,8 +64,8 @@ namespace TurnBased.Data {
         public Stat Speed { get; }
         public Stat CritChance { get; }
         public Stat CritMult { get; }
+        public Stat UltPts { get; }
         public float UltThreshold { get; }
-        public float MaxUltPts { get; }
         public ElementType ElementType { get; }
         public ElementType Weakness { get; }
         public CharacterTeam Team { get; }
@@ -73,6 +74,7 @@ namespace TurnBased.Data {
         private readonly List<StatModifier> _modifiers = new List<StatModifier>();
 
         public CharacterDataInstance(CharacterData data) {
+            BaseData = data; // CharacterData 저장
             HP = new Stat(data.stats.MaxHP, true);
             Toughness = new Stat(data.stats.MaxToughness, true);
             Attack = new Stat(data.stats.Attack);
@@ -80,8 +82,9 @@ namespace TurnBased.Data {
             Speed = new Stat(data.stats.Speed);
             CritChance = new Stat(data.stats.CritChance);
             CritMult = new Stat(data.stats.CritMult);
+            UltPts = new Stat(0, true);
+            UltPts.SetCurrentMax(data.stats.MaxUltPts);
             UltThreshold = data.stats.UseUltThreshold;
-            MaxUltPts = data.stats.MaxUltPts;
             ElementType = data.stats.ElementType;
             Weakness = data.stats.Weakness;
             Team = data.team;
