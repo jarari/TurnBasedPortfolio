@@ -30,6 +30,11 @@ namespace TurnBased.Entities.Battle
             // 공격이 종료 되었다는 신호를 받았다면
             if (animEvent == "AttackEnd")
             {
+                // 에니메이션을 끝까지 진행시키게 한다
+                ProcessCamChanged();
+                // 애니메이터의 상태를 초기화 시킨다
+                animator.Rebind();
+
                 // 턴을 종료한다
                 EndTurn();
             }
@@ -290,17 +295,19 @@ namespace TurnBased.Entities.Battle
             base.Damage(attacker, result);
 
             // 애니메이션의 트리거를 켠다
-            animator.SetTrigger("Damage");            
+            animator.SetTrigger("Damage");
+            // 피격시 소리를 재생한다
+            SoundManager.instance.Play2DSound("MakerManDamage");
         }
 
         public override void Dead()
         {
             base.Dead();
             // 애니메이션의 트리거를 켠다
-            animator.SetTrigger("Dead");
+            animator.SetTrigger("Dead");            
         }
 
-        // 카메라 체인지
+        // 각 공격 애니메이션의 진행을 끝까지시키고 애니메이션을 정지시킨다
         public override void ProcessCamChanged()
         {
             if (_lastAttack == CharacterState.DoAttack || _lastAttack == CharacterState.DoExtraAttack)
@@ -323,6 +330,7 @@ namespace TurnBased.Entities.Battle
             }
             // 자신의 위치를 바로 잡는다
             meshParent.transform.localPosition = Vector3.zero;
+            // 마지막 공격을 기본상태로 만든다
             _lastAttack = CharacterState.Idle;
         }
 
