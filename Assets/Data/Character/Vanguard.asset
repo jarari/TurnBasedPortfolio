@@ -31,3 +31,16 @@ MonoBehaviour:
     ultAttack: {fileID: 11400000, guid: 7c649478183f9c74188a7f3e2710a01c, type: 2}
     extraAttack: {fileID: 0}
     additionalData: []
+  battlePrefab: {fileID: 8367890564493888269, guid: 5bb906d27c9e7984aabe7a511b420c5a, type: 3}
+  fieldPrefab: {fileID: 0}
+  Name: Vanguard
+  Attribute: Wind
+  BreakEffect: 0
+  CharacterImagePath: Images/Characters/Character3
+  CharacterRenderTexturePath: Images/Characters/RenderTexture/C3
+  AttributeImagePath: Images/Icons/Attributes/Wind
+  BasicAttackImagePath: 
+  SkillImagePath: 
+  UltimateImagePath: 
+  TalentImagePath: 
+  TechniqueImagePath: 

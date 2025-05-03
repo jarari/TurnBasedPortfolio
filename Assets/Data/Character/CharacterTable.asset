@@ -17,6 +17,10 @@ MonoBehaviour:
     characterData: {fileID: 11400000, guid: cfa15eedc5b865945aec08c04536bc26, type: 2}
   - name: Ally_Colphne
     characterData: {fileID: 11400000, guid: 7d544508d0b770f4a804eff122759f1d, type: 2}
+  - name: Ally_Vanguard
+    characterData: {fileID: 11400000, guid: 2f12ae61ea1441044be78cd06bd74a82, type: 2}
+  - name: Ally_MarkerMan
+    characterData: {fileID: 11400000, guid: 459c5437379b2734c93742e4f5f42ee7, type: 2}
   - name: Enemy_Alien_Soldier
     characterData: {fileID: 11400000, guid: 235bf0c25abab7f44a63e83ae20afd48, type: 2}
   - name: Enemy_Eber

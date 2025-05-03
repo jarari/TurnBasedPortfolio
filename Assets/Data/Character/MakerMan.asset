@@ -31,3 +31,16 @@ MonoBehaviour:
     ultAttack: {fileID: 11400000, guid: 4eaeb8febb033ea479018d51ca961ba4, type: 2}
     extraAttack: {fileID: 0}
     additionalData: []
+  battlePrefab: {fileID: 3382347728041854705, guid: 3779b1b43621e3c4bb51f63c9ba40c31, type: 3}
+  fieldPrefab: {fileID: 0}
+  Name: MarkerMan
+  Attribute: Thunder
+  BreakEffect: 0
+  CharacterImagePath: Images/Characters/Character4
+  CharacterRenderTexturePath: Images/Characters/RenderTexture/C4
+  AttributeImagePath: Images/Icons/Attributes/Thunder
+  BasicAttackImagePath: 
+  SkillImagePath: 
+  UltimateImagePath: 
+  TalentImagePath: 
+  TechniqueImagePath: 
