@@ -24,6 +24,19 @@ namespace TurnBased.Entities.Field {
             cc.Move(dir * speed * Time.deltaTime);
         }
 
+        public void FE_Rotate(Vector3 target, CharacterController cc, GameObject enemy)
+        {
+            // 회전 방향을 플레이어로 정한다
+            Vector3 dir = (target - cc.transform.position).normalized;
+            // y축 회전 방지
+            dir.y = 0;
+            // 타겟 방향을 바라보는 회전 생성
+            Quaternion targetRotate = Quaternion.LookRotation(dir);
+            // 현재 회전에서 타겟 회전까지 일정한 속도로 회전
+            cc.transform.rotation = Quaternion.RotateTowards(cc.transform.rotation, targetRotate, 720 * Time.deltaTime);
+
+        }
+
         /// <summary>
         /// 에너미가 공격이 가능한 거리 까지 온다면 불값을 반환 시켜 알릴 함수
         /// </summary>

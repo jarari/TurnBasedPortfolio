@@ -22,7 +22,7 @@ namespace TurnBased.Entities.Field {
         #region 에너미 추적 관련
         
         // 에너미 탐지 거리
-        public float findDistnace = 4.0f;
+        public float findDistnace = 6.0f;
 
         // 추적할 플레이어를 담을 변수
         public GameObject target;
@@ -65,8 +65,8 @@ namespace TurnBased.Entities.Field {
             // 캐릭터 컨트롤러를 가져온다
             cc = this.GetComponent<CharacterController>();
 
-            // 캐릭터의 에니메이터를 가져온다
-            anim = this.GetComponent<Animator>();
+            // 자식오브젝트의 에니메이터를 가져온다
+            anim = GetComponentInChildren<Animator>();
 
             // 각 클래스들의 인스턴스를 생성한다
             detecter = new EnemyDetector();
@@ -92,18 +92,15 @@ namespace TurnBased.Entities.Field {
         }
 
 
-        public void F_Idle()  
-        {
-            // 만약 현재 상태가 기본 상태일 경우
-            if (f_state == F_EnemyState.Idle)
-            { 
-                // 그냥 반환한다
-                return; 
-            }
-        }
+        public void F_Idle()  {  }
 
         public void F_Move() 
         {
+            // 에너미를 플레이어로 바라보게 회전시킨다
+            //Move.FE_Rotate(target.transform.position, cc, this.gameObject);
+
+            this.transform.forward = target.transform.position;
+
             // 에너미를 플레이어를 향해 움직인다
             Move.FE_Move(target.transform.position, cc, this.gameObject);
 
@@ -174,13 +171,7 @@ namespace TurnBased.Entities.Field {
                     anim.SetTrigger("MoveToIdle");
                 }
             }
-            else if (target == null)
-            {
-                // 에너미상태를 전환 한다
-                f_state = F_EnemyState.Idle;
-                // 애니메이션의 트리거를 켠다
-                anim.SetTrigger("MoveToIdle");
-            }
+            
         
         }
 
