@@ -4,10 +4,12 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 
-namespace TurnBased.Battle.Managers {
+namespace TurnBased.Battle.Managers
+{
 
     // 데미지를 정의 하는 클래스
-    public class  DamageResult {
+    public class DamageResult
+    {
         public float BaseDamage;        // 그냥 공격 데미지
         public float ReducedDamage;     // 방어력으로 감소한 데미지
         public float FinalDamage;       // 최종적으로 받는 데미지
@@ -16,7 +18,8 @@ namespace TurnBased.Battle.Managers {
     }
 
     // 데미지를 계산하는 클래스
-    public class CombatManager : MonoBehaviour {
+    public class CombatManager : MonoBehaviour
+    {
         public static CombatManager instance;
 
         public event Action<int> OnSkillPointChanged;
@@ -29,43 +32,56 @@ namespace TurnBased.Battle.Managers {
 
         public int SkillPointMax { get; private set; } = 5;
 
-        private void Awake() {
-            if (instance != null) {
+        private void Awake()
+        {
+            if (instance != null)
+            {
                 Destroy(this);
                 return;
             }
             instance = this;
         }
 
-        public void SetSkillPoint(int p) {
+        public void SetSkillPoint(int p)
+        {
             SkillPoint = Math.Clamp(p, 0, SkillPointMax);
             OnSkillPointChanged?.Invoke(SkillPoint);
+            CombatUIManager.Instance?.UpdateSkillPointUI(SkillPoint);
         }
 
-        public void SetSkillPointMax(int pMax) {
+        public void SetSkillPointMax(int pMax)
+        {
             SkillPointMax = pMax;
             OnSkillPointMaxChanged?.Invoke(pMax);
         }
 
-        public void ModifySkillPoint(int delta) {
+        public void ModifySkillPoint(int delta)
+        {
             SkillPoint = Math.Clamp(SkillPoint + delta, 0, SkillPointMax);
             OnSkillPointChanged?.Invoke(SkillPoint);
+            CombatUIManager.Instance?.UpdateSkillPointUI(SkillPoint);
         }
 
-        public void NotifyCharacterDeath(Character victim, Character killer) {
-            if (killer.Data.Team == CharacterTeam.Player) {
+        public void NotifyCharacterDeath(Character victim, Character killer)
+        {
+            if (killer.Data.Team == CharacterTeam.Player)
+            {
                 killer.Data.UltPts.ModifyCurrent(10);
             }
             OnCharacterDeath?.Invoke(victim, killer);
         }
 
-        public void NotifyCharacterDeathComplete(Character c) {
+        public void NotifyCharacterDeathComplete(Character c)
+        {
             OnCharacterDeathComplete?.Invoke(c);
         }
 
-        public void NotifyCharacterInflictedDamage(Character attacker, Character victim, DamageResult result) {
-            if (attacker.Data.Team == CharacterTeam.Player) {
-                switch (attacker.CurrentState) {
+        public void NotifyCharacterInflictedDamage(Character attacker, Character victim, DamageResult result)
+        {
+            if (attacker.Data.Team == CharacterTeam.Player)
+            {
+                switch (attacker.CurrentState)
+                {
                     case Character.CharacterState.DoAttack:
                         attacker.Data.UltPts.ModifyCurrent(20);
                         break;
@@ -85,7 +101,7 @@ namespace TurnBased.Battle.Managers {
             }
             OnCharacterInflictedDamage?.Invoke(attacker, victim, result);
         }
-     
+
         // 데미지 피해를 계산할 함수 (때린 놈과 맞은 놈을 가져온다)
         public static DamageResult CalculateDamage(Character attacker, Character defender, AttackData attackData, int attackNum = 0)
         {
@@ -97,7 +113,8 @@ namespace TurnBased.Battle.Managers {
             float victimDef = defender.Data.Defense.Current;
 
             bool isCrit = false;
-            if (attackData.canCrit && Random.Range(float.Epsilon, 1f) <= attacker.Data.CritChance.Current) {
+            if (attackData.canCrit && Random.Range(float.Epsilon, 1f) <= attacker.Data.CritChance.Current)
+            {
                 baseDamage *= attacker.Data.CritMult.Current;
                 isCrit = true;
             }
@@ -116,8 +133,10 @@ namespace TurnBased.Battle.Managers {
             };
         }
 
-        public static DamageResult CalculateTrueDamage(float damage, float toughnessDamage) {
-            return new DamageResult {
+        public static DamageResult CalculateTrueDamage(float damage, float toughnessDamage)
+        {
+            return new DamageResult
+            {
                 BaseDamage = damage,
                 ReducedDamage = 0,
                 FinalDamage = damage,
@@ -126,11 +145,13 @@ namespace TurnBased.Battle.Managers {
             };
         }
 
-        public static bool CheckElementMatch(ElementType type1, ElementType type2) {
+        public static bool CheckElementMatch(ElementType type1, ElementType type2)
+        {
             return (type1 & type2) > 0;
         }
 
-        public static bool CanCharacterUseUlt(Character c) {
+        public static bool CanCharacterUseUlt(Character c)
+        {
             return c.Data.UltPts.Current >= c.Data.UltThreshold;
         }
     }
