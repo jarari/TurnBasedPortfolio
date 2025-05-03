@@ -62,7 +62,7 @@ namespace TurnBased.Entities.Battle
                     t.Damage(c, result);
 
                     // 이벤트를 실행시킨다
-                    OnInflictedDamage?.Invoke(this, t, result);
+                    CombatManager.instance.NotifyCharacterInflictedDamage(this, t, result);
                 }
 
             }
