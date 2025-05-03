@@ -117,6 +117,7 @@ namespace TurnBased.Battle.Managers {
                 TurnPassed--;
                 StartNextTurn();
             }
+            character.Data.UltPts.ModifyCurrent(-character.Data.UltThreshold);
             SoundManager.instance.Play2DSound("UIUltStandby");
         }
 
