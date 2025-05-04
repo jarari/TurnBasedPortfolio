@@ -7,34 +7,31 @@ namespace TurnBased.Entities.Field {
     /// </summary>
     public class EnemyMove
     {
-        float speed = 1.0f;
+        float speed = 2.0f;
         
         /// <summary>
-        /// 플레이어를 추적할 함수
+        /// 캐릭터 컨트롤러가 움직일 벡터를 계산하는 함수
         /// </summary>
-        /// <param name="target">추적할 플레이어</param>
-        /// <param name="enemy">에너미</param>
-        /// <param name="cc">에너미의 캐릭터 컨트롤러</param>
-        public void FE_Move(Vector3 target, CharacterController cc, GameObject enemy)
+        /// <param name="player">추적할 대상</param>
+        /// <param name="enemy">자기 자신</param>
+        /// <param name="yn">벡터만을 반환할지 속도,시간까지 계산할지를 선택한다</param>
+        /// <returns></returns>
+        public Vector3 FE_MoveVector(GameObject player, GameObject enemy, bool yn)
         {
-            // 이동 방향을 플레이어 위치로 설정한다
-            Vector3 dir = (target - enemy.transform.position).normalized;
-                        
-            // 캐릭터 컨트롤러를 이용해 이동을 시작한다
-            cc.Move(dir * speed * Time.deltaTime);
-        }
+            // 추적할 대상과 자신의 거리를 뺀다음 정규화 시키고
+            Vector3 dir = (player.transform.position - enemy.transform.position).normalized;
 
-        public void FE_Rotate(Vector3 target, CharacterController cc, GameObject enemy)
-        {
-            // 회전 방향을 플레이어로 정한다
-            Vector3 dir = (target - cc.transform.position).normalized;
-            // y축 회전 방지
-            dir.y = 0;
-            // 타겟 방향을 바라보는 회전 생성
-            Quaternion targetRotate = Quaternion.LookRotation(dir);
-            // 현재 회전에서 타겟 회전까지 일정한 속도로 회전
-            cc.transform.rotation = Quaternion.RotateTowards(cc.transform.rotation, targetRotate, 720 * Time.deltaTime);
 
+            if (yn == true)
+            {
+                // 거리와 속도 그리고 시간을 곱한값을 반환한다
+                return dir * speed * Time.deltaTime;
+            }
+            else
+            {
+                // 벡터만을 반환한다
+                return dir;
+            }
         }
 
         /// <summary>
@@ -46,15 +43,17 @@ namespace TurnBased.Entities.Field {
         /// <returns></returns>
         public bool FE_SwitchMove(Vector3 target, GameObject enemy, float distance)
         {
-            // 에너미와 플레이어 사이의 거리가 공격 거리보다 작다면
-            if (Vector3.Distance(enemy.transform.position, target) < distance)
+            // 에너미와 플레이어 사이의 거리가 공격 거리보다 같거나 작다면
+            if (Vector3.Distance(enemy.transform.position, target) <= distance)
             {
                 // true를 반환
                 return true;
             }
             // 아니라면
-            else
+            else if (Vector3.Distance(enemy.transform.position, target) > distance)
                 // false를 반환
+                return false;
+            else
                 return false;
         }
     }
