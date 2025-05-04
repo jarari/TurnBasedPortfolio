@@ -46,7 +46,6 @@ namespace TurnBased.Battle.Managers
         {
             SkillPoint = Math.Clamp(p, 0, SkillPointMax);
             OnSkillPointChanged?.Invoke(SkillPoint);
-            CombatUIManager.Instance?.UpdateSkillPointUI(SkillPoint);
         }
 
         public void SetSkillPointMax(int pMax)
@@ -59,7 +58,6 @@ namespace TurnBased.Battle.Managers
         {
             SkillPoint = Math.Clamp(SkillPoint + delta, 0, SkillPointMax);
             OnSkillPointChanged?.Invoke(SkillPoint);
-            CombatUIManager.Instance?.UpdateSkillPointUI(SkillPoint);
         }
 
         public void NotifyCharacterDeath(Character victim, Character killer)
