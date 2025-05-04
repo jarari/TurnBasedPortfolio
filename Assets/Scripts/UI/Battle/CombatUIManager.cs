@@ -5,6 +5,7 @@ using TurnBased.Battle;
 using TurnBased.Data;
 using UnityEngine;
 using UnityEngine.UI;
+using TurnBased.Battle.UI.Element;
 
 
 public class CombatUIManager : MonoBehaviour
@@ -22,15 +23,10 @@ public class CombatUIManager : MonoBehaviour
     public GameObject SkillUIBorder;      // 전투 스킬 UI 테두리 오브젝트
     public GameObject UltimateUI;         // 필살기 UI 오브젝트
 
-    public List<Image> AllyCharacterImagesUI; // 아군 캐릭터 이미지를 표시할 UI 리스트
+    public List<AllyState> AllyStates; // 아군 캐릭터 상태 표시 UI 엘레멘트
 
     public List<GameObject> SkillPoints; // 스킬 포인트 리스트
     public Text SkillPointText; // 스킬 포인트 개수 텍스트
-
-    public List<Slider> HPSlider;          // HP 슬라이더
-    public List<Text> HPText; // HP 텍스트
-
-    public List<GameObject> Ultimate;         // 궁극기 리스트
 
     public GameObject CurrentWindow;     // 현재 열려 있는 창
 
@@ -45,20 +41,6 @@ public class CombatUIManager : MonoBehaviour
             Destroy(gameObject); // 중복된 인스턴스 삭제
         }
     }
-    private void OnEnable()
-    {
-        if (CombatManager.instance != null)
-        {
-            // CombatManager의 SkillPoint 변경 이벤트 구독
-            CombatManager.instance.OnSkillPointChanged += UpdateSkillPointUI;
-        }
-    }
-
-    private void OnDisable()
-    {
-        // 이벤트 구독 해제
-        CombatManager.instance.OnSkillPointChanged -= UpdateSkillPointUI;
-    }
 
     void Start()
     {
@@ -68,9 +50,8 @@ public class CombatUIManager : MonoBehaviour
 
         CurrentWindow = CombatUI; // 현재 창을 메인 UI로 설정
 
-        UpdateCharacterImages();
-        UpdateCharacterHPUI();
-        UpdateUltimateUI();
+        CombatManager.instance.OnSkillPointChanged += UpdateSkillPointUI;
+        CharacterManager.instance.OnCharacterSpawn += HandleCharacterSpawn;
     }
 
     void Update()
@@ -87,6 +68,12 @@ public class CombatUIManager : MonoBehaviour
                 SelectObject(BasicAttackUI); // 일반 공격 UI 선택
             if (Input.GetKeyDown(KeyCode.E)) // E 키를 눌렀을 때
                 SelectObject(SkillUI); // 전투 스킬 UI 선택
+        }
+    }
+
+    private void HandleCharacterSpawn(Character c, int idx) {
+        if (c.Data.Team == CharacterTeam.Player) {
+            InitializeAllyUI(c, idx);
         }
     }
 
@@ -162,87 +149,11 @@ public class CombatUIManager : MonoBehaviour
         }
     }
 
-    public void UpdateCharacterHPUI()
-    {
-        // 아군 캐릭터 리스트 가져오기
-        List<Character> allyCharacters = CharacterManager.instance.GetAllyCharacters();
-
-        // 아군 체력 업데이트
-        for (int i = 0; i < HPSlider.Count; i++)
-        {
-            if (i < allyCharacters.Count)
-            {
-                HPSlider[i].gameObject.SetActive(true);
-                HPSlider[i].value = allyCharacters[i].Data.HP.Current / allyCharacters[i].Data.HP.CurrentMax;
-
-                // 체력 텍스트 업데이트
-                HPText[i].gameObject.SetActive(true);
-                HPText[i].text = allyCharacters[i].Data.HP.Current.ToString();
-            }
-            else
-            {
-                HPSlider[i].gameObject.SetActive(false);
-
-                // 체력 텍스트 비활성화
-                HPText[i].gameObject.SetActive(false);
-            }
-        }
-    }
-
-    public void UpdateCharacterImages()
-    {
-        // 아군 캐릭터 리스트 가져오기
-        List<Character> allyCharacters = CharacterManager.instance.GetAllyCharacters();
-
-        for (int i = 0; i < AllyCharacterImagesUI.Count; i++)
-        {
-            if (i < allyCharacters.Count)
-            {
-                // 캐릭터 데이터에서 이미지 경로 가져오기
-                string imagePath = allyCharacters[i].Data.BaseData.CharacterImagePath;
-
-                // 이미지 로드
-                Sprite characterSprite = Resources.Load<Sprite>(imagePath);
-
-                if (characterSprite != null)
-                {
-                    // UI에 이미지 설정
-                    AllyCharacterImagesUI[i].sprite = characterSprite;
-                    AllyCharacterImagesUI[i].gameObject.SetActive(true);
-                }
-                else
-                {
-                    AllyCharacterImagesUI[i].gameObject.SetActive(false);
-                }
-            }
-            else
-            {
-                // 캐릭터가 없으면 이미지 비활성화
-                AllyCharacterImagesUI[i].gameObject.SetActive(false);
-            }
-        }
-    }
-
-    public void UpdateUltimateUI()
-    {
-        // 아군 캐릭터 리스트 가져오기
-        List<Character> allyCharacters = CharacterManager.instance.GetAllyCharacters();
-
-        for (int i = 0; i < Ultimate.Count; i++)
-        {
-            if (i < allyCharacters.Count)
-            {
-                // 궁극기 사용 가능 여부 확인
-                bool canUseUlt = CombatManager.CanCharacterUseUlt(allyCharacters[i]);
-
-                // 궁극기 오브젝트 활성화/비활성화
-                Ultimate[i].SetActive(canUseUlt);
-            }
-            else
-            {
-                // 캐릭터가 없으면 궁극기 오브젝트 비활성화
-                Ultimate[i].SetActive(false);
-            }
+    public void InitializeAllyUI(Character c, int idx) {
+        if (idx < AllyStates.Count) {
+            var allyState = AllyStates[idx];
+            allyState.gameObject.SetActive(true);
+            allyState.InitializeAllyUI(c);
         }
     }
 
