@@ -12,8 +12,11 @@ EditorBuildSettings:
     path: Assets/Scenes/NormalScene.unity
     guid: 80e45f8fb4d244c428eb67a51889c5c7
   - enabled: 1
+    path: Assets/Scenes/FieldScene.unity
+    guid: c44e0cb105902614ea6a9c0f2df1723e
+  - enabled: 1
     path: Assets/Scenes/BattleScene.unity
-    guid: f10309832bfb7314a81dba95e8e7c8d1
+    guid: 8c8a8c84ee52ca54eb1e4241470939a4
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 13ab2410e5b4d364a835c1d03443fe74, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

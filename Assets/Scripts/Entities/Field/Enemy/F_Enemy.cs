@@ -95,10 +95,8 @@ namespace TurnBased.Entities.Field {
         }
 
 
-        public void F_Idle()  
-        {
-        }
-
+        public void F_Idle() { }
+        
         public void F_Move() 
         {
             if (target == null)
@@ -138,18 +136,6 @@ namespace TurnBased.Entities.Field {
                 // 애니메이션 트리거를 켠다
                 anim.SetTrigger("ToMove");
             }
-
-            bool battle = hit_signal(A_switch);
-
-            // 만약 에너미의 공격이 플레이어에게 히트 했을 경우
-            if (battle == true)
-            {
-                // 전투 씬으로 전환할 함수를 실행한다
-                attack.ChangeScene();
-            }
-            // 히트 하지 못했을 경우
-            else
-                return;
         }
 
         public virtual void findPlayer(GameObject player) 
@@ -192,7 +178,11 @@ namespace TurnBased.Entities.Field {
         }
 
         // 공격 애니메이션 진행시 시그널을 받을 함수
-        public virtual bool hit_signal(bool a) { return false;}
+        public void hit_signal() 
+        {
+            Debug.Log("공격 애니메이션에서 시그널을 수신 받음");
+            attack.ChangeScene();
+        }
 
     }
 
