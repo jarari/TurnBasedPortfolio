@@ -5,7 +5,7 @@ namespace TurnBased.Entities.Field {
     /// <summary>
     /// 필드의 에너미 스크립트
     /// </summary>
-    public class F_Enemy : MonoBehaviour
+    public class F_Enemy : MonoBehaviour, hit_Damage
     {
 
         #region 에너미의 상태
@@ -43,8 +43,10 @@ namespace TurnBased.Entities.Field {
         // 플레이어를 탐지할 클래스
         protected EnemyDetector detecter;
         protected EnemyMove Move;
-        protected EnemyAttack attack;
         protected EnemySignal signal;
+
+        // scene전환을 담당할 변수
+        protected BattleSceneChange bs_change;
 
         #endregion
 
@@ -74,8 +76,9 @@ namespace TurnBased.Entities.Field {
             // 각 클래스들의 인스턴스를 생성한다
             detecter = new EnemyDetector();
             Move = new EnemyMove();
-            attack = new EnemyAttack();
             signal = new EnemySignal();
+            // 전투씬으로 전환할 스크립트를 가져온다
+            bs_change = GetComponent<BattleSceneChange>();
         }
 
         private void Update()
@@ -173,15 +176,23 @@ namespace TurnBased.Entities.Field {
                 }
 
             }
-            
-        
+                    
         }
 
         // 공격 애니메이션 진행시 시그널을 받을 함수
         public void hit_signal() 
         {
-            Debug.Log("공격 애니메이션에서 시그널을 수신 받음");
-            attack.ChangeScene();
+            Debug.Log("에너미가 공격 애니메이션에서 시그널을 수신 받음");
+            // 씬을 전환시킬 함수를 호출
+            bs_change.ChangeScene();
+        }
+        // 자신이 공격을 받았을때
+        public void Damage()
+        {
+            // 애니메이터의 트리거를 켠다
+            anim.SetTrigger("Damge");
+            // 씬을 전환할 함수를 호출
+            bs_change.ChangeScene();
         }
 
     }

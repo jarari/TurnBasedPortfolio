@@ -14,7 +14,7 @@ namespace TurnBased.Entities.Field {
         private void Awake()
         {
             // 에너미 스크립트가 비어있을경우
-            if(enemy == null)
+            if (enemy == null)
                 // 부모 오브젝트에서 에너미 스크립트를 가져온다
                 enemy = GetComponentInParent<F_Enemy>();
 
@@ -25,6 +25,8 @@ namespace TurnBased.Entities.Field {
 
         public void Signal()
         {
+            Debug.Log("시그널 신호 수신");
+
             // 에너미가 비어있지 않다면
             if (enemy != null)
                 // 부모 오브젝트의 에너미 스크립트에서 히트 시그널을 호출한다

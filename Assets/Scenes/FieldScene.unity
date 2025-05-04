@@ -8803,6 +8803,7 @@ GameObject:
   - component: {fileID: 2075156325}
   - component: {fileID: 2075156328}
   - component: {fileID: 2075156326}
+  - component: {fileID: 2075156329}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -8867,6 +8868,19 @@ MonoBehaviour:
   findDistnace: 5
   target: {fileID: 0}
   attDistance: 2
+--- !u!114 &2075156329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075156324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50cf5b7d2ea2ff14ea4aef123761eb35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scenewait: 2
 --- !u!1 &2076977475
 GameObject:
   m_ObjectHideFlags: 0

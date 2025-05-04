@@ -7,7 +7,7 @@ namespace TurnBased.Entities.Field
 { 
 
     [RequireComponent(typeof(CharacterController))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, hit_Damage
     {
         public float moveSpeed = 5.0f; // 기본 이동 속도
         public float runSpeed = 10.0f; // 달리기 속도
@@ -34,7 +34,13 @@ namespace TurnBased.Entities.Field
     
         public static event Action<GameObject> OnPlayerNearEnemy; // 적 탐지 이벤트
 
+        // 공격시 이동을 멈추는 변수
+        private bool att_moveStop = false;
+
         #endregion
+
+        // scene전환을 담당할 변수
+        protected BattleSceneChange bs_change;
 
         void Start()
         {
@@ -46,6 +52,8 @@ namespace TurnBased.Entities.Field
 
             // 플레이어 공격을 담당할 스크립트를 생성한다
             playerAttack = new PlayerAttack();
+            // Scene전환을 담당할 스크립트를 가져온다
+            bs_change = GetComponent<BattleSceneChange>();
         }
     
         void Update()
@@ -58,50 +66,72 @@ namespace TurnBased.Entities.Field
     
             #region 플레이어 이동 관련
 
-        // 달리기 상태 토글
-        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetMouseButtonDown(1)) // 쉬프트 키 또는 마우스 우클릭
-            isRunning = !isRunning;
+            // 달리기 상태 토글
+            if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetMouseButtonDown(1)) // 쉬프트 키 또는 마우스 우클릭
+                isRunning = !isRunning;
 
-        // 현재 속도 설정
-        float currentSpeed = isRunning ? runSpeed : moveSpeed;
+            // 현재 속도 설정
+            float currentSpeed = isRunning ? runSpeed : moveSpeed;
 
-        // 입력 값 가져오기
-        float horizontal = Input.GetAxis("Horizontal"); // A, D 키 (왼쪽, 오른쪽)
-        float vertical = Input.GetAxis("Vertical");     // W, S 키 (앞, 뒤)
+            // 입력 값 가져오기
+            float horizontal = Input.GetAxis("Horizontal"); // A, D 키 (왼쪽, 오른쪽)
+            float vertical = Input.GetAxis("Vertical");     // W, S 키 (앞, 뒤)
 
-        // 카메라 기준 이동 방향 계산
-        Vector3 forward = cameraTransform.forward;
-        Vector3 right = cameraTransform.right;
+            // 카메라 기준 이동 방향 계산
+            Vector3 forward = cameraTransform.forward;
+            Vector3 right = cameraTransform.right;
 
-        // y축 방향 제거 (수평 이동만 고려)
-        forward.y = 0;
-        right.y = 0;
+            // y축 방향 제거 (수평 이동만 고려)
+            forward.y = 0;
+            right.y = 0;
 
-        forward.Normalize();
-        right.Normalize();
+            forward.Normalize();
+            right.Normalize();
 
-        Vector3 moveDirection = (forward * vertical + right * horizontal) * currentSpeed; // 이동 방향 계산
+            Vector3 moveDirection = (forward * vertical + right * horizontal) * currentSpeed; // 이동 방향 계산
 
-        // y축 값을 0으로 고정
-        moveDirection.y = 0;
+            // y축 값을 0으로 고정
+            moveDirection.y = 0;
 
-        characterController.Move(moveDirection * Time.deltaTime); // 이동 적용
+            if (att_moveStop == false)
+            { 
+                characterController.Move(moveDirection * Time.deltaTime); // 이동 적용
+            }
+            else
+            {
+                return;
+            }
 
-        // 이동 방향이 0이 아닐 때만 회전
-        if (moveDirection != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f); // 부드럽게 회전
-        }
+
+            // 이동 방향이 0이 아닐 때만 회전
+            if (moveDirection != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f); // 부드럽게 회전
+            }
 
             #endregion
 
             #region 플레이어 공격
 
+            // 마우스 왼쪽 입력을 받으면
             if (Input.GetMouseButtonDown(0))
             {
-                // 에너미를 공격할 함수를 실행한다
-                playerAttack.Attack(enemy, animator);                
+                // 탐지한 에너미가 있다면
+                if (enemy != null)
+                {
+                    // 에너미를 향하게한다
+                    Vector3 direction = (enemy.transform.position - transform.position);
+                    direction.y = 0;
+                    transform.rotation = Quaternion.LookRotation(direction);
+                    
+                    // 에너미를 공격할 함수를 실행한다
+                    playerAttack.Attack(animator);
+                }
+                // 탐지한 에너미가 없다면
+                else
+                    // 에너미를 공격할 함수를 실행한다
+                    playerAttack.Attack(animator);
             }
 
             #endregion
@@ -168,12 +198,33 @@ namespace TurnBased.Entities.Field
                 {
                     // 에너미 오브젝트를 가져온다
                     enemy = hitCollider.gameObject;
-                    OnPlayerNearEnemy(this.gameObject); // 이벤트 호출
-                    Debug.Log("적 감지: " + hitCollider.name);
+                    OnPlayerNearEnemy(this.gameObject); // 이벤트 호출                    
                 }
             }
         }
 
+        public void Attack_End_Signal()
+        { 
+            // 이동을 시작할수있게 불값을 바꾼다
+            att_moveStop = false;
+        }
+
+        // 공격 애니메이션 진행시 시그널을 받을 함수
+        public void hit_signal()
+        {
+            Debug.Log("플레이어가 공격 애니메이션에서 시그널을 수신받음");
+            // 씬을 전환시킬 함수를 호출
+            bs_change.ChangeScene();
+        }
+
+        // 자신이 공격을 받았을때
+        public void Damage()
+        {
+            // 애니메이터의 트리거를 켠다
+            animator.SetTrigger("Damage");
+            // 씬을 전환할 함수를 호출
+            bs_change.ChangeScene();
+        }
 
     }
 
