@@ -6,6 +6,7 @@ using TurnBased.Data;
 using UnityEngine;
 using UnityEngine.UI;
 using TurnBased.Battle.UI.Element;
+using System;
 
 
 public class CombatUIManager : MonoBehaviour
@@ -32,7 +33,12 @@ public class CombatUIManager : MonoBehaviour
     public RawImage BasicAttackIcon;
     public RawImage SkillIcon;
 
+    public GameObject TargetSelectorRoot;
+    public List<Transform> TargetSelectors;
+
     public GameObject CurrentWindow;     // 현재 열려 있는 창
+
+    private Camera _mainCamera;
 
     private void Awake()
     {
@@ -44,6 +50,7 @@ public class CombatUIManager : MonoBehaviour
         {
             Destroy(gameObject); // 중복된 인스턴스 삭제
         }
+        _mainCamera = Camera.main;
     }
 
     void Start()
@@ -56,8 +63,12 @@ public class CombatUIManager : MonoBehaviour
 
         CombatManager.instance.OnSkillPointChanged += UpdateSkillPointUI;
         CharacterManager.instance.OnCharacterSpawn += HandleCharacterSpawn;
+
         TurnManager.instance.OnBeforeTurnStart += HandleBeforeTurnStart;
         TurnManager.instance.OnTurnEnd += HandleTurnEnd;
+
+        TargetManager.instance.OnTargetChanged += HandleTargetChanged;
+        TargetManager.instance.OnTargetSettingChanged += HandleTargetSettingChanged;
     }
 
     void Update()
@@ -70,6 +81,12 @@ public class CombatUIManager : MonoBehaviour
                 OpenAllyCharacterWindow(); // 아군 캐릭터 창 열기
             if (Input.GetKeyDown(KeyCode.Z)) // Z 키를 눌렀을 때
                 OpenEnemyCharacterWindow(); // 적 캐릭터 창 열기
+        }
+
+        foreach (var selector in TargetSelectors) {
+            if (selector.gameObject.activeInHierarchy) {
+                selector.LookAt(_mainCamera.transform);
+            }
         }
     }
 
@@ -102,6 +119,9 @@ public class CombatUIManager : MonoBehaviour
             c.OnCharacterStateChanged += HandleCharacterStateChanged;
             UpdateSkillIcons(c, context.Type);
         }
+        else {
+            TargetSelectorRoot.SetActive(false);
+        }
     }
 
     private void HandleTurnEnd(TurnContext context) {
@@ -109,6 +129,35 @@ public class CombatUIManager : MonoBehaviour
         if (c.Data.Team == CharacterTeam.Player) {
             c.OnCharacterStateChanged -= HandleCharacterStateChanged;
         }
+    }
+
+    private void UpdateTargetSelectors() {
+        var targets = TargetManager.instance.GetTargets();
+        if (targets.Count == 0) {
+            TargetSelectorRoot.SetActive(false);
+        }
+        else {
+            TargetSelectorRoot.SetActive(true);
+            for (int i = 0; i < TargetSelectors.Count; ++i) {
+                if (i >= targets.Count) {
+                    TargetSelectors[i].gameObject.SetActive(false);
+                }
+                else {
+                    TargetSelectors[i].gameObject.SetActive(true);
+                    if (targets[i] != null && targets[i].Chest != null) {
+                        TargetSelectors[i].transform.position = targets[i].Chest.transform.position;
+                    }
+                }
+            }
+        }
+    }
+
+    private void HandleTargetSettingChanged() {
+        UpdateTargetSelectors();
+    }
+
+    private void HandleTargetChanged(Character character) {
+        UpdateTargetSelectors();
     }
 
     private void UpdateSkillPointUI(int currentSkillPoints) {
