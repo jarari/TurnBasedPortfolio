@@ -97,13 +97,13 @@ namespace TurnBased.Entities.Field {
 
         public void F_Idle()  
         {
-
-            // 중복 방지 변수를 끈다
-            prevention = false;
         }
 
         public void F_Move() 
         {
+            if (target == null)
+                return;
+
             // 에너미를 플레이어를 향해 움직인다            
             cc.Move(Move.FE_MoveVector(target, this.gameObject, true));
 
@@ -158,7 +158,7 @@ namespace TurnBased.Entities.Field {
 
             if (target != null) // 타겟이 null이 아닐때
             {
-                if (Vector3.Distance(transform.position, target.transform.position) < findDistnace) // 타겟과의 거리가 탐지거리보다 작거나 같을때
+                if (Vector3.Distance(transform.position, target.transform.position) <= findDistnace) // 타겟과의 거리가 탐지거리보다 작거나 같을때
                 {
                     // 타겟이 있는 상태에서 중복 방지 불값이 false라면
                     if (prevention == false)
@@ -172,15 +172,18 @@ namespace TurnBased.Entities.Field {
                         prevention = true;
                     }
                 }
-                else if (Vector3.Distance(transform.position, target.transform.position) >= findDistnace) // 타겟과의 거리가 탐지 거리보다 멀때
+                else if (Vector3.Distance(transform.position, target.transform.position) > findDistnace) // 타겟과의 거리가 탐지 거리보다 멀때
                 {
-                    // 에너미상태를 전환 한다
-                    f_state = F_EnemyState.Idle;
-                    // 애니메이션의 트리거를 켠다
-                    anim.SetTrigger("ToIdle");
+                    if (prevention == true)
+                    { 
+                        // 에너미상태를 전환 한다
+                        f_state = F_EnemyState.Idle;
+                        // 애니메이션의 트리거를 켠다
+                        anim.SetTrigger("ToIdle");
                     
-                    // 중복 방지 를 켠다
-                    prevention = true;
+                        // 중복 방지 를 켠다
+                        prevention = false;
+                    }
                 }
 
             }

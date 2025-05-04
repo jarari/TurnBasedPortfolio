@@ -7,7 +7,7 @@ namespace TurnBased.Entities.Field {
     /// </summary>
     public class EnemyMove
     {
-        float speed = 2.0f;
+        float speed = 3.0f;
         
         /// <summary>
         /// 캐릭터 컨트롤러가 움직일 벡터를 계산하는 함수
