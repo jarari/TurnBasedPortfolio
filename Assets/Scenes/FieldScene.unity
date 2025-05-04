@@ -22063,8 +22063,9 @@ MonoBehaviour:
   cameraTransform: {fileID: 568461261}
   detectRange: 10
   characterPrefabs:
-  - {fileID: 7373332819472468957, guid: 8d7960efc29271c4d9fea261dae23d40, type: 3}
+  - {fileID: 4489267583803964840, guid: 560dec7be18ecd24ba6f4ce8f3774b62, type: 3}
   - {fileID: 1879278931929706080, guid: d5b5dc190a2aad244936a25ac90c15dd, type: 3}
+  - {fileID: 7373332819472468957, guid: 8d7960efc29271c4d9fea261dae23d40, type: 3}
   - {fileID: 1608953865590017040, guid: 900fd73b685a8b2498d8343d73b2952b, type: 3}
   enemy: {fileID: 0}
   wait_att: 0
@@ -30324,7 +30325,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2663815352115047296, guid: d896d6eb16c30134c8c0703654a2e8de, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 4.06
       objectReference: {fileID: 0}
     - target: {fileID: 2663815352115047296, guid: d896d6eb16c30134c8c0703654a2e8de, type: 3}
       propertyPath: m_LocalRotation.w
