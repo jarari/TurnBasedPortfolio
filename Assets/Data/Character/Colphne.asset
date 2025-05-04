@@ -39,8 +39,8 @@ MonoBehaviour:
   CharacterImagePath: Images/Characters/Character2
   CharacterRenderTexturePath: Images/Characters/RenderTexture/C2
   AttributeImagePath: Images/Icons/Attributes/Quantum
-  BasicAttackImagePath: 
-  SkillImagePath: 
-  UltimateImagePath: 
-  TalentImagePath: 
+  BasicAttackImagePath: Images/Icons/Colphne/Skill_ColphneSR_Active_2
+  SkillImagePath: Images/Icons/Colphne/Skill_ColphneSR_Active_1
+  UltimateImagePath: Images/Icons/Colphne/Skill_ColphneSR_Active_3
+  TalentImagePath: Images/Icons/Colphne/Skill_ColphneSR_Active_4
   TechniqueImagePath: 
