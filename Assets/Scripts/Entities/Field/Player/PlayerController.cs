@@ -213,6 +213,11 @@ namespace TurnBased.Entities.Field
         public void hit_signal()
         {
             Debug.Log("플레이어가 공격 애니메이션에서 시그널을 수신받음");
+
+            hit_Damage ehit = enemy.GetComponent<hit_Damage>();
+            // 에너미의 데미지 함수를 실행한다
+            ehit.Damage();
+
             // 씬을 전환시킬 함수를 호출
             bs_change.ChangeScene();
         }
