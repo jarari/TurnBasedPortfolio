@@ -17,6 +17,7 @@ public class CombatUIManager : MonoBehaviour
     public GameObject CharacterWindow;    // 캐릭터 창 오브젝트
     public GameObject AllyCharacterList;  // 아군 캐릭터 목록 오브젝트
     public GameObject EnemyCharacterList; // 적 캐릭터 목록 오브젝트
+    public GameObject StateRoot;
     public GameObject BasicAttackUI;      // 일반 공격 UI 오브젝트
     public GameObject BasicAttackUIBorder;// 일반 공격 UI 테두리 오브젝트
     public GameObject SkillUI;            // 전투 스킬 UI 오브젝트
@@ -27,6 +28,9 @@ public class CombatUIManager : MonoBehaviour
 
     public List<GameObject> SkillPoints; // 스킬 포인트 리스트
     public Text SkillPointText; // 스킬 포인트 개수 텍스트
+
+    public RawImage BasicAttackIcon;
+    public RawImage SkillIcon;
 
     public GameObject CurrentWindow;     // 현재 열려 있는 창
 
@@ -52,6 +56,8 @@ public class CombatUIManager : MonoBehaviour
 
         CombatManager.instance.OnSkillPointChanged += UpdateSkillPointUI;
         CharacterManager.instance.OnCharacterSpawn += HandleCharacterSpawn;
+        TurnManager.instance.OnBeforeTurnStart += HandleBeforeTurnStart;
+        TurnManager.instance.OnTurnEnd += HandleTurnEnd;
     }
 
     void Update()
@@ -64,16 +70,73 @@ public class CombatUIManager : MonoBehaviour
                 OpenAllyCharacterWindow(); // 아군 캐릭터 창 열기
             if (Input.GetKeyDown(KeyCode.Z)) // Z 키를 눌렀을 때
                 OpenEnemyCharacterWindow(); // 적 캐릭터 창 열기
-            if (Input.GetKeyDown(KeyCode.Q)) // Q 키를 눌렀을 때
-                SelectObject(BasicAttackUI); // 일반 공격 UI 선택
-            if (Input.GetKeyDown(KeyCode.E)) // E 키를 눌렀을 때
-                SelectObject(SkillUI); // 전투 스킬 UI 선택
         }
     }
 
     private void HandleCharacterSpawn(Character c, int idx) {
         if (c.Data.Team == CharacterTeam.Player) {
             InitializeAllyUI(c, idx);
+        }
+    }
+
+    private void HandleCharacterStateChanged(Character c, Character.CharacterState state) {
+        switch (state) {
+            case Character.CharacterState.PrepareAttack:
+                SelectObject(BasicAttackUI);
+                break;
+            case Character.CharacterState.PrepareSkill:
+                SelectObject(SkillUI);
+                break;
+            case Character.CharacterState.PrepareUltAttack:
+                SelectObject(BasicAttackUI);
+                break;
+            case Character.CharacterState.PrepareUltSkill:
+                SelectObject(SkillUI);
+                break;
+        }
+    }
+
+    private void HandleBeforeTurnStart(TurnContext context) {
+        var c = context.Character;
+        if (c.Data.Team == CharacterTeam.Player) {
+            c.OnCharacterStateChanged += HandleCharacterStateChanged;
+            UpdateSkillIcons(c, context.Type);
+        }
+    }
+
+    private void HandleTurnEnd(TurnContext context) {
+        var c = context.Character;
+        if (c.Data.Team == CharacterTeam.Player) {
+            c.OnCharacterStateChanged -= HandleCharacterStateChanged;
+        }
+    }
+
+    private void UpdateSkillPointUI(int currentSkillPoints) {
+        // 텍스트 업데이트
+        SkillPointText.text = currentSkillPoints.ToString();
+
+        // 스킬 포인트 오브젝트 활성화/비활성화
+        for (int i = 0; i < SkillPoints.Count; i++) {
+            SkillPoints[i].SetActive(i < currentSkillPoints);
+        }
+    }
+
+    private void UpdateSkillIcons(Character c, TurnType type) {
+        StateRoot.SetActive(true);
+        if (type == TurnType.Normal) {
+            Debug.Log("Basci path: " + c.Data.BaseData.BasicAttackImagePath);
+            Texture basicTex = Resources.Load<Texture>(c.Data.BaseData.BasicAttackImagePath);
+            BasicAttackIcon.texture = basicTex;
+            Texture skillTex = Resources.Load<Texture>(c.Data.BaseData.SkillImagePath);
+            SkillIcon.texture = skillTex;
+        }
+        else if (type == TurnType.Ult) {
+            Texture ultTex = Resources.Load<Texture>(c.Data.BaseData.UltimateImagePath);
+            BasicAttackIcon.texture = ultTex;
+            SkillIcon.texture = ultTex;
+        }
+        else {
+            StateRoot.SetActive(false);
         }
     }
 
@@ -134,18 +197,6 @@ public class CombatUIManager : MonoBehaviour
             UltimateUI.SetActive(true); // 필살기 UI 활성화
             BasicAttackUI.SetActive(false); // 일반 공격 UI 비활성화
             SkillUI.SetActive(false); // 전투 스킬 UI 비활성화
-        }
-    }
-
-    public void UpdateSkillPointUI(int currentSkillPoints)
-    {
-        // 텍스트 업데이트
-        SkillPointText.text = currentSkillPoints.ToString();
-
-        // 스킬 포인트 오브젝트 활성화/비활성화
-        for (int i = 0; i < SkillPoints.Count; i++)
-        {
-            SkillPoints[i].SetActive(i < currentSkillPoints);
         }
     }
 
