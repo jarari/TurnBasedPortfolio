@@ -33,4 +33,10 @@ public class PlayerSignal : MonoBehaviour
             Debug.Log("부모 player가 없습니다");
     }
 
+    // 공격이 끝났으니 이동을 할수있게 하는 함수를 호출
+    public void AttackEnd()
+    {
+        playercc.Attack_End_Signal();
+    }
+
 }

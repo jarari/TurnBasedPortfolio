@@ -117,6 +117,9 @@ namespace TurnBased.Entities.Field
             // 마우스 왼쪽 입력을 받으면
             if (Input.GetMouseButtonDown(0))
             {
+                // 공격시 캐릭터의 이동을 멈춘다
+                att_moveStop = true;
+
                 // 탐지한 에너미가 있다면
                 if (enemy != null)
                 {
