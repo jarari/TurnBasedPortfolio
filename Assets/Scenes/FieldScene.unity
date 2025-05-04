@@ -27602,9 +27602,10 @@ MonoBehaviour:
   runSpeed: 10
   cameraTransform: {fileID: 568461261}
   detectRange: 10
-  animator: {fileID: 0}
   characterPrefabs:
   - {fileID: 1879278931929706080, guid: d5b5dc190a2aad244936a25ac90c15dd, type: 3}
+  enemy: {fileID: 0}
+  wait_att: 0
 --- !u!224 &3478271621630412318
 RectTransform:
   m_ObjectHideFlags: 0
