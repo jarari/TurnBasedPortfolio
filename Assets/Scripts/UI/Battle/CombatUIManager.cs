@@ -124,7 +124,6 @@ public class CombatUIManager : MonoBehaviour
     private void UpdateSkillIcons(Character c, TurnType type) {
         StateRoot.SetActive(true);
         if (type == TurnType.Normal) {
-            Debug.Log("Basci path: " + c.Data.BaseData.BasicAttackImagePath);
             Texture basicTex = Resources.Load<Texture>(c.Data.BaseData.BasicAttackImagePath);
             BasicAttackIcon.texture = basicTex;
             Texture skillTex = Resources.Load<Texture>(c.Data.BaseData.SkillImagePath);
