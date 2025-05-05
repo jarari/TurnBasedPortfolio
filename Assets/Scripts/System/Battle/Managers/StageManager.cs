@@ -79,18 +79,6 @@ namespace TurnBased.Battle.Managers {
         {
             Debug.Log("SpawnAllyCharacters 진입");
 
-            if (EncounterManager.Instance.PlayerTeamIds == null || EncounterManager.Instance.PlayerTeamIds.Count == 0)
-            {
-                Debug.Log("PlayerTeamIds가 비어있습니다");
-                return;
-            }
-
-            // PlayerTeamIds의 값 확인
-            foreach (var id in EncounterManager.Instance.PlayerTeamIds)
-            {
-                Debug.Log("아이디: " + id);
-            }
-
             foreach (var id in EncounterManager.Instance.PlayerTeamIds)
             {
                 var character = CharacterManager.instance.SpawnCharacter(id);
