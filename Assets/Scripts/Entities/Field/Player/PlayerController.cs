@@ -2,6 +2,8 @@ using UnityEngine;
 using System;
 using NUnit.Framework.Internal.Commands;
 using System.Collections;
+using TurnBased.Battle;
+using System.Collections.Generic;
 
 namespace TurnBased.Entities.Field
 { 
@@ -41,7 +43,7 @@ namespace TurnBased.Entities.Field
 
         // scene전환을 담당할 변수
         protected BattleSceneChange bs_change;
-
+        
         void Start()
         {
             // 캐릭터 컨트롤러 컴포넌트 가져오기
@@ -186,6 +188,10 @@ namespace TurnBased.Entities.Field
             currentCharacterIndex = newIndex; // 현재 캐릭터 인덱스 업데이트
             currentCharacter.transform.localRotation = Quaternion.Euler(0, 0, 0); // 로테이션 초기화
             animator = currentCharacter.GetComponent<Animator>(); // Animator 컴포넌트 가져오기
+
+            // 씬 전환 메니저에 플레이어 리스트 저장
+            string charId = characterPrefabs[newIndex].name;
+            EncounterManager.Instance.PlayerTeamIds = new List<string> { charId };
         }
         
         /// <summary>
@@ -220,18 +226,14 @@ namespace TurnBased.Entities.Field
             hit_Damage ehit = enemy.GetComponent<hit_Damage>();
             // 에너미의 데미지 함수를 실행한다
             ehit.Damage();
-
-            // 씬을 전환시킬 함수를 호출
-            bs_change.ChangeScene();
+            
         }
 
         // 자신이 공격을 받았을때
         public void Damage()
         {
             // 애니메이터의 트리거를 켠다
-            animator.SetTrigger("Damage");
-            // 씬을 전환할 함수를 호출
-            bs_change.ChangeScene();
+            animator.SetTrigger("Damage");            
         }
 
     }

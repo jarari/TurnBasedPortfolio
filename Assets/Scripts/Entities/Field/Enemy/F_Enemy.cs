@@ -85,9 +85,10 @@ namespace TurnBased.Entities.Field {
             // 각 클래스들의 인스턴스를 생성한다
             detecter = new EnemyDetector();
             Move = new EnemyMove();
-            signal = new EnemySignal();
             // 전투씬으로 전환할 스크립트를 가져온다
             bs_change = GetComponent<BattleSceneChange>();
+
+            signal = transform.GetComponentInChildren<EnemySignal>();
         }
 
         private void Update()
@@ -259,7 +260,7 @@ namespace TurnBased.Entities.Field {
         public void Damage()
         {
             // 애니메이터의 트리거를 켠다
-            anim.SetTrigger("Damge");
+            anim.SetTrigger("Damage");
 
             // 스테이지 데이터에 에너미 이름 추가
             PrepareWaveData();

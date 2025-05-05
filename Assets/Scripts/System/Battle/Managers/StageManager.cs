@@ -32,7 +32,11 @@ namespace TurnBased.Battle.Managers {
                 _stageData = _testStageData;
             }
             else {
-                //TODO: Use stage data passed from field scene
+                #region -by 정준
+
+                _stageData = EncounterManager.Instance.stagedata;
+
+                #endregion
             }
 
             CombatManager.instance.OnCharacterDeath += HandleCharacterDeath;
@@ -69,7 +73,47 @@ namespace TurnBased.Battle.Managers {
             var go = Instantiate(_stageData.stagePrefab);
             go.transform.SetParent(_worldRoot);
         }
+        #region -by 정준
 
+        private void SpawnAllyCharacters()
+        {
+            Debug.Log("SpawnAllyCharacters 진입");
+
+            if (EncounterManager.Instance.PlayerTeamIds == null || EncounterManager.Instance.PlayerTeamIds.Count == 0)
+            {
+                Debug.Log("PlayerTeamIds가 비어있습니다");
+                return;
+            }
+
+            // PlayerTeamIds의 값 확인
+            foreach (var id in EncounterManager.Instance.PlayerTeamIds)
+            {
+                Debug.Log("아이디: " + id);
+            }
+
+            foreach (var id in EncounterManager.Instance.PlayerTeamIds)
+            {
+                var character = CharacterManager.instance.SpawnCharacter(id);
+
+                if (character != null)
+                {
+                    //CharacterManager.instance.SpawnCharacter(id);
+                    _aliveAllyCount++;
+                    Debug.Log(character.gameObject.name + " + 생성");
+                }
+                else
+                {
+                    Debug.Log("캐릭터 생성 실패" + id);
+                }
+
+
+            }
+        
+        }
+
+        #endregion
+
+        /*
         private void SpawnAllyCharacters() {
             CharacterManager.instance.SpawnCharacter("Ally_Colphne");
             _aliveAllyCount++;
@@ -78,6 +122,8 @@ namespace TurnBased.Battle.Managers {
             CharacterManager.instance.SpawnCharacter("Ally_MarkerMan");
             _aliveAllyCount++;
         }
+        */
+
 
         public void InitializeStage() {
             CreateStage();

@@ -1,7 +1,9 @@
 using System;
+using NUnit.Framework;
 using TurnBased.Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class EncounterManager : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class EncounterManager : MonoBehaviour
     public string EnemyInstanceId;  // 에너미 고유 ID (전투 종료 후 해당 적 제거 용)
     public Vector3 PlayerSpawnPos;  // 필드에서 전투 전 플레이어 위치
     public bool LastBattleResult;   // 전투 승패
+
+    public List<string> PlayerTeamIds;  // 플레이어 팀 캐릭터 이름 목록
 
     private void Awake()
     {
@@ -35,6 +39,7 @@ public class EncounterManager : MonoBehaviour
         stagedata = stage;                                      // 전달 받은 SceneData 저장
         EnemyInstanceId = enemyId;                    // 적 정보 저장
         PlayerSpawnPos = playerPos;                   // 필드 복귀시 위치
+
         SceneManager.LoadScene("BattleScene");  // 전투씬을 불러온다
     }
 

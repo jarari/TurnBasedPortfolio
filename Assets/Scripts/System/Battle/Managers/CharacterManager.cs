@@ -40,6 +40,10 @@ namespace TurnBased.Battle.Managers {
         public Character SpawnCharacter(string name) {
             var data = CharacterDataManager.Instance.GetCharacterData(name);
             if (data == null) {
+                #region - by 준
+                Debug.Log("캐릭터의 데이터 없음" + name);
+                #endregion
+
                 return null;
             }
 
