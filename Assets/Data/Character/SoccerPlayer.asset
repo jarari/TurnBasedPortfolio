@@ -34,6 +34,7 @@ MonoBehaviour:
   battlePrefab: {fileID: 5650078710049367956, guid: fc80d86f3e9ed7c419da8eb8ade6891d, type: 3}
   fieldPrefab: {fileID: 0}
   Name: SoccerPlayer
+  ClassName: Ally_SoccerPlayer
   Attribute: Fire
   BreakEffect: 100
   CharacterImagePath: Images/Characters/Character1

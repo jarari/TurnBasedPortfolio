@@ -34,6 +34,7 @@ MonoBehaviour:
   battlePrefab: {fileID: 4121010406214284663, guid: 099a05f2e37c8484b82293ce982428fb, type: 3}
   fieldPrefab: {fileID: 0}
   Name: Colphne
+  ClassName: Ally_Colphne
   Attribute: Quantum
   BreakEffect: 110
   CharacterImagePath: Images/Characters/Character2

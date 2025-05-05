@@ -34,6 +34,7 @@ MonoBehaviour:
   battlePrefab: {fileID: 3382347728041854705, guid: 3779b1b43621e3c4bb51f63c9ba40c31, type: 3}
   fieldPrefab: {fileID: 0}
   Name: MarkerMan
+  ClassName: Ally_MarkerMan
   Attribute: Thunder
   BreakEffect: 0
   CharacterImagePath: Images/Characters/Character4

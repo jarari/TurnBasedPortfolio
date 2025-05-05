@@ -33,3 +33,15 @@ MonoBehaviour:
     additionalData: []
   battlePrefab: {fileID: 5343080657001798120, guid: 242461ae745dbe24985a00e417e7ef9f, type: 3}
   fieldPrefab: {fileID: 0}
+  Name: Eber
+  ClassName: Enemy_Eber
+  Attribute: 
+  BreakEffect: 0
+  CharacterImagePath: 
+  CharacterRenderTexturePath: 
+  AttributeImagePath: 
+  BasicAttackImagePath: 
+  SkillImagePath: 
+  UltimateImagePath: 
+  TalentImagePath: 
+  TechniqueImagePath: 

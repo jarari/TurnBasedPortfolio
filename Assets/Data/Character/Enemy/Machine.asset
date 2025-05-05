@@ -33,3 +33,15 @@ MonoBehaviour:
     additionalData: []
   battlePrefab: {fileID: 7546878521568162563, guid: 34289b19c4efb6d49ae5582fa337af5e, type: 3}
   fieldPrefab: {fileID: 0}
+  Name: Machine
+  ClassName: Enemy_Machine
+  Attribute: 
+  BreakEffect: 0
+  CharacterImagePath: 
+  CharacterRenderTexturePath: 
+  AttributeImagePath: 
+  BasicAttackImagePath: 
+  SkillImagePath: 
+  UltimateImagePath: 
+  TalentImagePath: 
+  TechniqueImagePath: 

@@ -33,3 +33,15 @@ MonoBehaviour:
     additionalData: []
   battlePrefab: {fileID: 6179733450111935287, guid: 352dea3dffce427489ca9ec4945af16b, type: 3}
   fieldPrefab: {fileID: 0}
+  Name: Alien_Soldier
+  ClassName: Enemy_Alien_Soldier
+  Attribute: 
+  BreakEffect: 0
+  CharacterImagePath: 
+  CharacterRenderTexturePath: 
+  AttributeImagePath: 
+  BasicAttackImagePath: 
+  SkillImagePath: 
+  UltimateImagePath: 
+  TalentImagePath: 
+  TechniqueImagePath: 

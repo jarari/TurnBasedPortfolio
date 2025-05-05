@@ -94,6 +94,7 @@ namespace TurnBased.Data {
         public GameObject battlePrefab;
         public GameObject fieldPrefab;
         public string Name; // 캐릭터 이름
+        public string ClassName; // 클래스 명
         public string Attribute; // 캐릭터 속성
         public int BreakEffect; // 격파 특수효과
         public string CharacterImagePath; // 캐릭터 이미지 경로
