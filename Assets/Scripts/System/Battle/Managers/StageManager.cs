@@ -89,6 +89,8 @@ namespace TurnBased.Battle.Managers {
         private void CreateStage() {
             var go = Instantiate(_stageData.stagePrefab);
             go.transform.SetParent(_worldRoot);
+
+            SoundManager.instance.PlayMusic(_stageData.stageBGM);
         }
         #region -by СЄСи
 
