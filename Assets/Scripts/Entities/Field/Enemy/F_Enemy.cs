@@ -1,4 +1,6 @@
+using TurnBased.Data;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace TurnBased.Entities.Field { 
     
@@ -47,6 +49,13 @@ namespace TurnBased.Entities.Field {
 
         // scene전환을 담당할 변수
         protected BattleSceneChange bs_change;
+
+        #endregion
+
+        #region 전투관련
+
+        // 스테이지 데이터
+        public StageData myStageData;
 
         #endregion
 
@@ -189,16 +198,75 @@ namespace TurnBased.Entities.Field {
             // 플레이어의 데미지 함수를 실행한다
             phit.Damage();
 
-            // 씬을 전환시킬 함수를 호출
-            bs_change.ChangeScene();
+            // 스테이지 데이터에 에너미 이름 추가
+            PrepareWaveData();
+
+            // EncounterManger 에 전투 데이터 전달 + 씬 호출
+            EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position);
         }
+
+        /// <summary>
+        /// 스테이지 데이터에 에너미이름을 랜덤하게 추가할 함수
+        /// </summary>
+        public void PrepareWaveData()
+        {
+            // 웨이브 데이터가 없다면 생성
+            if (myStageData.waves == null || myStageData.waves.Count == 0)
+            {
+                myStageData.waves = new List<Wave>();
+                myStageData.waves.Add(new Wave { enemies = new List<string>() });
+            }
+
+            var currentWave = myStageData.waves[0];
+            currentWave.enemies.Clear();    // 기존 목록 초기화
+
+            int random1 = Random.Range(2, 4);
+
+            // 자신의 이름을 먼저 추가
+            currentWave.enemies.Add(this.name);
+
+            // 랜덤한 적이름을 3~5회 추가
+            for (int i = 0; i < random1; i++)
+            {
+                // 0에서 4까지 랜덤한 값을 만들고
+                int random2 = Random.Range(0, 4);
+
+                // 값에 따라 에너미 이름을 추가한다
+                switch (random2)
+                {
+                    case 0:
+                        currentWave.enemies.Add("Alien_Soldier");
+                        break;
+                    case 1:
+                        currentWave.enemies.Add("Eber");
+                        break;
+                    case 2:
+                        currentWave.enemies.Add("Machine");
+                        break;
+                    case 3:
+                        currentWave.enemies.Add("Mutant");
+                        break;
+                    case 4:
+                        currentWave.enemies.Add("Y_Bot");
+                        break;
+                }
+
+            }
+
+        }
+
         // 자신이 공격을 받았을때
         public void Damage()
         {
             // 애니메이터의 트리거를 켠다
             anim.SetTrigger("Damge");
-            // 씬을 전환할 함수를 호출
-            bs_change.ChangeScene();
+
+            // 스테이지 데이터에 에너미 이름 추가
+            PrepareWaveData();
+
+            // EncounterManger 에 전투 데이터 전달 + 씬 호출
+            EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position);
+
         }
 
     }
