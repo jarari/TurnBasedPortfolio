@@ -215,7 +215,7 @@ namespace TurnBased.Entities.Field {
             PrepareWaveData();
 
             // EncounterManger 에 전투 데이터 전달 + 씬 호출
-            EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position, enemyID);
+            EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position, enemyID, this.gameObject);
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace TurnBased.Entities.Field {
             int random1 = Random.Range(2, 4);
 
             // 자신의 이름을 먼저 추가
-            currentWave.enemies.Add(this.name);
+            currentWave.enemies.Add("Enemy_" + this.name);
 
             // 랜덤한 적이름을 3~5회 추가
             for (int i = 0; i < random1; i++)
@@ -248,19 +248,19 @@ namespace TurnBased.Entities.Field {
                 switch (random2)
                 {
                     case 0:
-                        currentWave.enemies.Add("Alien_Soldier");
+                        currentWave.enemies.Add("Enemy_Alien_Soldier");
                         break;
                     case 1:
-                        currentWave.enemies.Add("Eber");
+                        currentWave.enemies.Add("Enemy_Eber");
                         break;
                     case 2:
-                        currentWave.enemies.Add("Machine");
+                        currentWave.enemies.Add("Enemy_Machine");
                         break;
                     case 3:
-                        currentWave.enemies.Add("Mutant");
+                        currentWave.enemies.Add("Enemy_Mutant");
                         break;
                     case 4:
-                        currentWave.enemies.Add("Y_Bot");
+                        currentWave.enemies.Add("Enemy_Y_Bot");
                         break;
                 }
 
@@ -278,9 +278,10 @@ namespace TurnBased.Entities.Field {
             PrepareWaveData();
 
             // EncounterManger 에 전투 데이터 전달 + 씬 호출
-            EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position, enemyID);
+            EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position, enemyID, this.gameObject);
 
         }
+
 
     }
 

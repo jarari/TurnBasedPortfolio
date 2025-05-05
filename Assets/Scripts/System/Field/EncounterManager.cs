@@ -17,6 +17,9 @@ public class EncounterManager : MonoBehaviour
 
     public List<string> PlayerTeamIds;  // 플레이어 팀 캐릭터 이름 목록
 
+    // 에너미 오브젝트를 저장
+    public GameObject enemy;
+
     private void Awake()
     {
         // 이미 인스턴스가 있다면
@@ -35,12 +38,19 @@ public class EncounterManager : MonoBehaviour
     /// <param name="stage"></param>
     /// <param name="enemyId"></param>
     /// <param name="playerPos"></param>
-    public void StartEncounter(StageData stage, string enemyname, Vector3 playerPos, string enemyId)
+    public void StartEncounter(StageData stage, string enemyname, Vector3 playerPos, string enemyId, GameObject gameObject)
     {
         stagedata = stage;                                      // 전달 받은 SceneData 저장
         EnemyInstanceName = enemyname;                    // 적 이름 저장
         PlayerSpawnPos = playerPos;                   // 필드 복귀시 위치
         EnemyInstanceId = enemyId;                  // 적 고유 ID저장
+        enemy = gameObject;
+
+        if (enemy != null)
+        { 
+            DontDestroyOnLoad (gameObject); // 전투에 들어가도 적오브젝트 보존
+            gameObject.SetActive(false);    // 비활성화 시킨다
+        }
 
         // 플레이어들의 리스트를 넘긴다
         PlayerTeamIds = new List<string> { "Ally_MarkerMan", "Ally_SoccerPlayer", "Ally_Colphne" };
