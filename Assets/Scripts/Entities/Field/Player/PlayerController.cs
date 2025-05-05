@@ -186,10 +186,7 @@ namespace TurnBased.Entities.Field
             currentCharacterIndex = newIndex; // 현재 캐릭터 인덱스 업데이트
             currentCharacter.transform.localRotation = Quaternion.Euler(0, 0, 0); // 로테이션 초기화
             animator = currentCharacter.GetComponent<Animator>(); // Animator 컴포넌트 가져오기
-
-            // 씬 전환 메니저에 플레이어 리스트 저장
-            string charId = characterPrefabs[newIndex].GetComponent<FieldCharacter>().BaseData.ClassName;
-            EncounterManager.Instance.PlayerTeamIds = new List<string> { charId };
+                        
         }
         
         /// <summary>
