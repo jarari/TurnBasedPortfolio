@@ -1,3 +1,4 @@
+using System.Collections;
 using TurnBased.Data;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -57,19 +58,33 @@ namespace TurnBased.Battle.Managers {
 
         private void HandleCharacterDeathComplete(Character c) {
             if (_aliveAllyCount == 0) {
-                Debug.Log("전투 실패");
-                EncounterManager.Instance.FinishEncounter(false);       // 실패로 종료
+                Debug.Log("전투 실패");                
+                StartCoroutine(FinishBattle(false));       // 실패로 종료   =====
             }
             else if (_aliveEnemyCount == 0) {
                 if (_waveNum < _stageData.waves.Count) {
                     _enemySpawnTimeline.Play();
                 }
                 else {
-                    Debug.Log("전투 승리");
-                    EncounterManager.Instance.FinishEncounter(true);    // 승리로 종료
+                    Debug.Log("전투 승리");                    
+                    StartCoroutine(FinishBattle(true));     // 승리로 종료   =====
                 }
             }
         }
+        #region - by 준
+        /// <summary>
+        /// 2초후 씬전환을 시킬 코루틴함수
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        IEnumerator FinishBattle(bool a)
+        {
+            // 2초 기다린다
+            yield return new WaitForSeconds(2.0f);
+
+            EncounterManager.Instance.FinishEncounter(a);
+        }
+        #endregion
 
         private void CreateStage() {
             var go = Instantiate(_stageData.stagePrefab);
