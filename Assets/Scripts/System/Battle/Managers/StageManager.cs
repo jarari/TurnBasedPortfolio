@@ -57,14 +57,16 @@ namespace TurnBased.Battle.Managers {
 
         private void HandleCharacterDeathComplete(Character c) {
             if (_aliveAllyCount == 0) {
-                //TODO: Stage fail
+                Debug.Log("전투 실패");
+                EncounterManager.Instance.FinishEncounter(false);       // 실패로 종료
             }
             else if (_aliveEnemyCount == 0) {
                 if (_waveNum < _stageData.waves.Count) {
                     _enemySpawnTimeline.Play();
                 }
                 else {
-                    //TODO: Stage clear
+                    Debug.Log("전투 승리");
+                    EncounterManager.Instance.FinishEncounter(true);    // 승리로 종료
                 }
             }
         }

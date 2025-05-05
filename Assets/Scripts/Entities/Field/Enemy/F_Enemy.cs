@@ -57,6 +57,9 @@ namespace TurnBased.Entities.Field {
         // 스테이지 데이터
         public StageData myStageData;
 
+        // 에너미의 ID
+        public string enemyID;
+
         #endregion
 
         private void OnEnable()
@@ -69,6 +72,15 @@ namespace TurnBased.Entities.Field {
         {
             // 이벤트 구독 해제
             PlayerController.OnPlayerNearEnemy -= findPlayer;            
+        }
+
+        private void Awake()
+        {
+            if (string.IsNullOrEmpty(enemyID))
+            { 
+                // 에너미 고유 ID
+                enemyID = System.Guid.NewGuid().ToString();                
+            }
         }
 
         private void Start()
@@ -203,7 +215,7 @@ namespace TurnBased.Entities.Field {
             PrepareWaveData();
 
             // EncounterManger 에 전투 데이터 전달 + 씬 호출
-            EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position);
+            EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position, enemyID);
         }
 
         /// <summary>
@@ -266,7 +278,7 @@ namespace TurnBased.Entities.Field {
             PrepareWaveData();
 
             // EncounterManger 에 전투 데이터 전달 + 씬 호출
-            EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position);
+            EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position, enemyID);
 
         }
 

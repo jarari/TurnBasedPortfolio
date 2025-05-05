@@ -11,6 +11,7 @@ public class EncounterManager : MonoBehaviour
     
     public StageData stagedata;  // 전투 진입시 넘겨줄 스테이지 데이터
     public string EnemyInstanceId;  // 에너미 고유 ID (전투 종료 후 해당 적 제거 용)
+    public string EnemyInstanceName;  // 에너미 이름 전투 씬에서 인스턴스 시키기위함
     public Vector3 PlayerSpawnPos;  // 필드에서 전투 전 플레이어 위치
     public bool LastBattleResult;   // 전투 승패
 
@@ -34,11 +35,12 @@ public class EncounterManager : MonoBehaviour
     /// <param name="stage"></param>
     /// <param name="enemyId"></param>
     /// <param name="playerPos"></param>
-    public void StartEncounter(StageData stage, string enemyId, Vector3 playerPos)
+    public void StartEncounter(StageData stage, string enemyname, Vector3 playerPos, string enemyId)
     {
         stagedata = stage;                                      // 전달 받은 SceneData 저장
-        EnemyInstanceId = enemyId;                    // 적 정보 저장
+        EnemyInstanceName = enemyname;                    // 적 이름 저장
         PlayerSpawnPos = playerPos;                   // 필드 복귀시 위치
+        EnemyInstanceId = enemyId;                  // 적 고유 ID저장
 
         SceneManager.LoadScene("BattleScene");  // 전투씬을 불러온다
     }
