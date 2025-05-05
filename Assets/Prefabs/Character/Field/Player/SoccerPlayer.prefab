@@ -558,6 +558,7 @@ GameObject:
   - component: {fileID: 8431555830351179572}
   - component: {fileID: 6445914857817620422}
   - component: {fileID: 8668615481800191512}
+  - component: {fileID: -1967307298590866290}
   m_Layer: 0
   m_Name: SoccerPlayer
   m_TagString: Untagged
@@ -637,6 +638,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scenewait: 2
+--- !u!114 &-1967307298590866290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879278931929706080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fda92582603e70c49afe539b338a0fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _baseData: {fileID: 11400000, guid: cfa15eedc5b865945aec08c04536bc26, type: 2}
 --- !u!1 &2098357106184322750
 GameObject:
   m_ObjectHideFlags: 0

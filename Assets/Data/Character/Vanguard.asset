@@ -34,6 +34,7 @@ MonoBehaviour:
   battlePrefab: {fileID: 8367890564493888269, guid: 5bb906d27c9e7984aabe7a511b420c5a, type: 3}
   fieldPrefab: {fileID: 0}
   Name: Vanguard
+  ClassName: Ally_Vanguard
   Attribute: Wind
   BreakEffect: 0
   CharacterImagePath: Images/Characters/Character3

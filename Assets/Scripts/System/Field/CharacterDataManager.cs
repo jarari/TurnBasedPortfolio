@@ -47,8 +47,8 @@ public class CharacterDataManager : MonoBehaviour
 
 
         foreach (var entry in _characterTable.entries) {
-            if (!_characterDict.ContainsKey(entry.name)) {
-                _characterDict.Add(entry.name, entry.characterData);
+            if (!_characterDict.ContainsKey(entry.ClassName)) {
+                _characterDict.Add(entry.ClassName, entry);
             }
         }
     }

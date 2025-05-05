@@ -34,7 +34,7 @@ public class MainUIManager : MonoBehaviour
         {
             Instance = this; // 인스턴스 설정
             transform.SetParent(null); // 루트 GameObject로 설정
-            DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않도록 설정
+            //DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않도록 설정
         }
         else // 인스턴스가 이미 존재할 때
         {
@@ -67,7 +67,7 @@ public class MainUIManager : MonoBehaviour
     {
         HandleCursor(); // 마우스 커서 처리
         OnKeyInput(); // 조작키 입력 처리
-        UpdatePartyUI(); // 파티 UI 업데이트
+        //UpdatePartyUI(); // 파티 UI 업데이트
     }
 
     private void HandleCursor()

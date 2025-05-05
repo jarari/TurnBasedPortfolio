@@ -33,7 +33,8 @@ MonoBehaviour:
     additionalData: []
   battlePrefab: {fileID: 1286197017674165834, guid: dcac95d6a9c722d47ba0f560c2d9dbc6, type: 3}
   fieldPrefab: {fileID: 0}
-  Name: 
+  Name: Mutant
+  ClassName: Enemy_Mutant
   Attribute: 
   BreakEffect: 0
   CharacterImagePath: 

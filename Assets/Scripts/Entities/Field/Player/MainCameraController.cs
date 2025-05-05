@@ -23,6 +23,14 @@ public class MainCameraController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        // 커서를 중앙에 고정한다
+        Cursor.lockState = CursorLockMode.Locked;
+        // 커서가 화면밖으로 나가지 않게 한다
+        Cursor.lockState = CursorLockMode.Confined;
+    }
+
     void LateUpdate()
     {
         if (!Input.GetKey(KeyCode.LeftAlt))

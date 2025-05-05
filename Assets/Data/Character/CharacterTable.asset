@@ -13,23 +13,13 @@ MonoBehaviour:
   m_Name: CharacterTable
   m_EditorClassIdentifier: 
   entries:
-  - name: Ally_SoccerPlayer
-    characterData: {fileID: 11400000, guid: cfa15eedc5b865945aec08c04536bc26, type: 2}
-  - name: Ally_Colphne
-    characterData: {fileID: 11400000, guid: 7d544508d0b770f4a804eff122759f1d, type: 2}
-  - name: Ally_Vanguard
-    characterData: {fileID: 11400000, guid: 2f12ae61ea1441044be78cd06bd74a82, type: 2}
-  - name: Ally_MarkerMan
-    characterData: {fileID: 11400000, guid: 459c5437379b2734c93742e4f5f42ee7, type: 2}
-  - name: Enemy_Alien_Soldier
-    characterData: {fileID: 11400000, guid: 235bf0c25abab7f44a63e83ae20afd48, type: 2}
-  - name: Enemy_Eber
-    characterData: {fileID: 11400000, guid: 424f56a61fb43ec4ebac6a3d451d7df2, type: 2}
-  - name: Enemy_EberBird_Boss
-    characterData: {fileID: 11400000, guid: 4effc6c658780da46bc742d36b9a0dbb, type: 2}
-  - name: Enemy_Machine
-    characterData: {fileID: 11400000, guid: c59903aa44aa8714fb848789f2800e4a, type: 2}
-  - name: Enemy_Mutant
-    characterData: {fileID: 11400000, guid: 5cecd060d06d57d428c5cfe1dcd5167f, type: 2}
-  - name: Enemy_Y_Bot
-    characterData: {fileID: 11400000, guid: abe9a663dd050de47aa9cd5ad36e57af, type: 2}
+  - {fileID: 11400000, guid: cfa15eedc5b865945aec08c04536bc26, type: 2}
+  - {fileID: 11400000, guid: 7d544508d0b770f4a804eff122759f1d, type: 2}
+  - {fileID: 11400000, guid: 2f12ae61ea1441044be78cd06bd74a82, type: 2}
+  - {fileID: 11400000, guid: 459c5437379b2734c93742e4f5f42ee7, type: 2}
+  - {fileID: 11400000, guid: 235bf0c25abab7f44a63e83ae20afd48, type: 2}
+  - {fileID: 11400000, guid: 424f56a61fb43ec4ebac6a3d451d7df2, type: 2}
+  - {fileID: 11400000, guid: 4effc6c658780da46bc742d36b9a0dbb, type: 2}
+  - {fileID: 11400000, guid: c59903aa44aa8714fb848789f2800e4a, type: 2}
+  - {fileID: 11400000, guid: 5cecd060d06d57d428c5cfe1dcd5167f, type: 2}
+  - {fileID: 11400000, guid: abe9a663dd050de47aa9cd5ad36e57af, type: 2}

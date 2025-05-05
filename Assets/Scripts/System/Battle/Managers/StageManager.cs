@@ -1,3 +1,4 @@
+using System.Collections;
 using TurnBased.Data;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -32,7 +33,11 @@ namespace TurnBased.Battle.Managers {
                 _stageData = _testStageData;
             }
             else {
-                //TODO: Use stage data passed from field scene
+                #region -by 정준
+
+                _stageData = EncounterManager.Instance.stagedata;
+
+                #endregion
             }
 
             CombatManager.instance.OnCharacterDeath += HandleCharacterDeath;
@@ -53,23 +58,67 @@ namespace TurnBased.Battle.Managers {
 
         private void HandleCharacterDeathComplete(Character c) {
             if (_aliveAllyCount == 0) {
-                //TODO: Stage fail
+                Debug.Log("전투 실패");                
+                StartCoroutine(FinishBattle(false));       // 실패로 종료   =====
             }
             else if (_aliveEnemyCount == 0) {
                 if (_waveNum < _stageData.waves.Count) {
                     _enemySpawnTimeline.Play();
                 }
                 else {
-                    //TODO: Stage clear
+                    Debug.Log("전투 승리");                    
+                    StartCoroutine(FinishBattle(true));     // 승리로 종료   =====
                 }
             }
         }
+        #region - by 준
+        /// <summary>
+        /// 2초후 씬전환을 시킬 코루틴함수
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        IEnumerator FinishBattle(bool a)
+        {
+            // 2초 기다린다
+            yield return new WaitForSeconds(2.0f);
+
+            EncounterManager.Instance.FinishEncounter(a);
+        }
+        #endregion
 
         private void CreateStage() {
             var go = Instantiate(_stageData.stagePrefab);
             go.transform.SetParent(_worldRoot);
         }
+        #region -by 정준
 
+        private void SpawnAllyCharacters()
+        {
+            Debug.Log("SpawnAllyCharacters 진입");
+
+            foreach (var id in EncounterManager.Instance.PlayerTeamIds)
+            {
+                var character = CharacterManager.instance.SpawnCharacter(id);
+
+                if (character != null)
+                {
+                    //CharacterManager.instance.SpawnCharacter(id);
+                    _aliveAllyCount++;
+                    Debug.Log(character.gameObject.name + " + 생성");
+                }
+                else
+                {
+                    Debug.Log("캐릭터 생성 실패" + id);
+                }
+
+
+            }
+        
+        }
+
+        #endregion
+
+        /*
         private void SpawnAllyCharacters() {
             CharacterManager.instance.SpawnCharacter("Ally_Colphne");
             _aliveAllyCount++;
@@ -78,6 +127,8 @@ namespace TurnBased.Battle.Managers {
             CharacterManager.instance.SpawnCharacter("Ally_MarkerMan");
             _aliveAllyCount++;
         }
+        */
+
 
         public void InitializeStage() {
             CreateStage();

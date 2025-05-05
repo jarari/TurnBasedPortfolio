@@ -140,6 +140,7 @@ namespace TurnBased.Battle.Managers
             else {
                 OnTurnQueueChanged?.Invoke();
             }
+            character.Data.UltPts.ModifyCurrent(-character.Data.UltThreshold);
             SoundManager.instance.Play2DSound("UIUltStandby");
         }
 
