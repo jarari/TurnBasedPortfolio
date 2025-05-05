@@ -42,6 +42,9 @@ public class EncounterManager : MonoBehaviour
         PlayerSpawnPos = playerPos;                   // 필드 복귀시 위치
         EnemyInstanceId = enemyId;                  // 적 고유 ID저장
 
+        // 플레이어들의 리스트를 넘긴다
+        PlayerTeamIds = new List<string> { "Ally_MarkerMan", "Ally_SoccerPlayer", "Ally_Colphne" };
+
         SceneManager.LoadScene("BattleScene");  // 전투씬을 불러온다
     }
 
