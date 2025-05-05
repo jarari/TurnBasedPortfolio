@@ -1,9 +1,7 @@
 using UnityEngine;
 using System;
-using NUnit.Framework.Internal.Commands;
-using System.Collections;
-using TurnBased.Battle;
 using System.Collections.Generic;
+using TurnBased.Field;
 
 namespace TurnBased.Entities.Field
 { 
@@ -190,7 +188,7 @@ namespace TurnBased.Entities.Field
             animator = currentCharacter.GetComponent<Animator>(); // Animator 컴포넌트 가져오기
 
             // 씬 전환 메니저에 플레이어 리스트 저장
-            string charId = characterPrefabs[newIndex].name;
+            string charId = characterPrefabs[newIndex].GetComponent<FieldCharacter>().BaseData.ClassName;
             EncounterManager.Instance.PlayerTeamIds = new List<string> { charId };
         }
         
