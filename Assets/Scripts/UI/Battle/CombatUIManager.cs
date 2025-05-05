@@ -5,6 +5,8 @@ using TurnBased.Battle;
 using TurnBased.Data;
 using UnityEngine;
 using UnityEngine.UI;
+using TurnBased.Battle.UI.Element;
+using System;
 
 
 public class CombatUIManager : MonoBehaviour
@@ -16,23 +18,27 @@ public class CombatUIManager : MonoBehaviour
     public GameObject CharacterWindow;    // 캐릭터 창 오브젝트
     public GameObject AllyCharacterList;  // 아군 캐릭터 목록 오브젝트
     public GameObject EnemyCharacterList; // 적 캐릭터 목록 오브젝트
+    public GameObject StateRoot;
     public GameObject BasicAttackUI;      // 일반 공격 UI 오브젝트
     public GameObject BasicAttackUIBorder;// 일반 공격 UI 테두리 오브젝트
     public GameObject SkillUI;            // 전투 스킬 UI 오브젝트
     public GameObject SkillUIBorder;      // 전투 스킬 UI 테두리 오브젝트
     public GameObject UltimateUI;         // 필살기 UI 오브젝트
 
-    public List<Image> AllyCharacterImagesUI; // 아군 캐릭터 이미지를 표시할 UI 리스트
+    public List<AllyState> AllyStates; // 아군 캐릭터 상태 표시 UI 엘레멘트
 
     public List<GameObject> SkillPoints; // 스킬 포인트 리스트
     public Text SkillPointText; // 스킬 포인트 개수 텍스트
 
-    public List<Slider> HPSlider;          // HP 슬라이더
-    public List<Text> HPText; // HP 텍스트
+    public RawImage BasicAttackIcon;
+    public RawImage SkillIcon;
 
-    public List<GameObject> Ultimate;         // 궁극기 리스트
+    public GameObject TargetSelectorRoot;
+    public List<Transform> TargetSelectors;
 
     public GameObject CurrentWindow;     // 현재 열려 있는 창
+
+    private Camera _mainCamera;
 
     private void Awake()
     {
@@ -44,20 +50,7 @@ public class CombatUIManager : MonoBehaviour
         {
             Destroy(gameObject); // 중복된 인스턴스 삭제
         }
-    }
-    private void OnEnable()
-    {
-        if (CombatManager.instance != null)
-        {
-            // CombatManager의 SkillPoint 변경 이벤트 구독
-            CombatManager.instance.OnSkillPointChanged += UpdateSkillPointUI;
-        }
-    }
-
-    private void OnDisable()
-    {
-        // 이벤트 구독 해제
-        CombatManager.instance.OnSkillPointChanged -= UpdateSkillPointUI;
+        _mainCamera = Camera.main;
     }
 
     void Start()
@@ -68,9 +61,14 @@ public class CombatUIManager : MonoBehaviour
 
         CurrentWindow = CombatUI; // 현재 창을 메인 UI로 설정
 
-        UpdateCharacterImages();
-        UpdateCharacterHPUI();
-        UpdateUltimateUI();
+        CombatManager.instance.OnSkillPointChanged += UpdateSkillPointUI;
+        CharacterManager.instance.OnCharacterSpawn += HandleCharacterSpawn;
+
+        TurnManager.instance.OnBeforeTurnStart += HandleBeforeTurnStart;
+        TurnManager.instance.OnTurnEnd += HandleTurnEnd;
+
+        TargetManager.instance.OnTargetChanged += HandleTargetChanged;
+        TargetManager.instance.OnTargetSettingChanged += HandleTargetSettingChanged;
     }
 
     void Update()
@@ -83,10 +81,110 @@ public class CombatUIManager : MonoBehaviour
                 OpenAllyCharacterWindow(); // 아군 캐릭터 창 열기
             if (Input.GetKeyDown(KeyCode.Z)) // Z 키를 눌렀을 때
                 OpenEnemyCharacterWindow(); // 적 캐릭터 창 열기
-            if (Input.GetKeyDown(KeyCode.Q)) // Q 키를 눌렀을 때
-                SelectObject(BasicAttackUI); // 일반 공격 UI 선택
-            if (Input.GetKeyDown(KeyCode.E)) // E 키를 눌렀을 때
-                SelectObject(SkillUI); // 전투 스킬 UI 선택
+        }
+
+        foreach (var selector in TargetSelectors) {
+            if (selector.gameObject.activeInHierarchy) {
+                selector.LookAt(_mainCamera.transform);
+            }
+        }
+    }
+
+    private void HandleCharacterSpawn(Character c, int idx) {
+        if (c.Data.Team == CharacterTeam.Player) {
+            InitializeAllyUI(c, idx);
+        }
+    }
+
+    private void HandleCharacterStateChanged(Character c, Character.CharacterState state) {
+        switch (state) {
+            case Character.CharacterState.PrepareAttack:
+                SelectObject(BasicAttackUI);
+                break;
+            case Character.CharacterState.PrepareSkill:
+                SelectObject(SkillUI);
+                break;
+            case Character.CharacterState.PrepareUltAttack:
+                SelectObject(BasicAttackUI);
+                break;
+            case Character.CharacterState.PrepareUltSkill:
+                SelectObject(SkillUI);
+                break;
+        }
+    }
+
+    private void HandleBeforeTurnStart(TurnContext context) {
+        var c = context.Character;
+        if (c.Data.Team == CharacterTeam.Player) {
+            c.OnCharacterStateChanged += HandleCharacterStateChanged;
+            UpdateSkillIcons(c, context.Type);
+        }
+        else {
+            TargetSelectorRoot.SetActive(false);
+        }
+    }
+
+    private void HandleTurnEnd(TurnContext context) {
+        var c = context.Character;
+        if (c.Data.Team == CharacterTeam.Player) {
+            c.OnCharacterStateChanged -= HandleCharacterStateChanged;
+        }
+    }
+
+    private void UpdateTargetSelectors() {
+        var targets = TargetManager.instance.GetTargets();
+        if (targets.Count == 0) {
+            TargetSelectorRoot.SetActive(false);
+        }
+        else {
+            TargetSelectorRoot.SetActive(true);
+            for (int i = 0; i < TargetSelectors.Count; ++i) {
+                if (i >= targets.Count) {
+                    TargetSelectors[i].gameObject.SetActive(false);
+                }
+                else {
+                    TargetSelectors[i].gameObject.SetActive(true);
+                    if (targets[i] != null && targets[i].Chest != null) {
+                        TargetSelectors[i].transform.position = targets[i].Chest.transform.position;
+                    }
+                }
+            }
+        }
+    }
+
+    private void HandleTargetSettingChanged() {
+        UpdateTargetSelectors();
+    }
+
+    private void HandleTargetChanged(Character character) {
+        UpdateTargetSelectors();
+    }
+
+    private void UpdateSkillPointUI(int currentSkillPoints) {
+        // 텍스트 업데이트
+        SkillPointText.text = currentSkillPoints.ToString();
+
+        // 스킬 포인트 오브젝트 활성화/비활성화
+        for (int i = 0; i < SkillPoints.Count; i++) {
+            SkillPoints[i].SetActive(i < currentSkillPoints);
+        }
+    }
+
+    private void UpdateSkillIcons(Character c, TurnType type) {
+        StateRoot.SetActive(true);
+        if (type == TurnType.Normal) {
+            Texture basicTex = Resources.Load<Texture>(c.Data.BaseData.BasicAttackImagePath);
+            BasicAttackIcon.texture = basicTex;
+            Texture skillTex = Resources.Load<Texture>(c.Data.BaseData.SkillImagePath);
+            SkillIcon.texture = skillTex;
+        }
+        else if (type == TurnType.Ult) {
+            Texture ultTex = Resources.Load<Texture>(c.Data.BaseData.UltimateImagePath);
+            BasicAttackIcon.texture = ultTex;
+            SkillIcon.texture = ultTex;
+        }
+        else {
+            StateRoot.SetActive(false);
         }
     }
 
@@ -150,99 +248,11 @@ public class CombatUIManager : MonoBehaviour
         }
     }
 
-    public void UpdateSkillPointUI(int currentSkillPoints)
-    {
-        // 텍스트 업데이트
-        SkillPointText.text = currentSkillPoints.ToString();
-
-        // 스킬 포인트 오브젝트 활성화/비활성화
-        for (int i = 0; i < SkillPoints.Count; i++)
-        {
-            SkillPoints[i].SetActive(i < currentSkillPoints);
-        }
-    }
-
-    public void UpdateCharacterHPUI()
-    {
-        // 아군 캐릭터 리스트 가져오기
-        List<Character> allyCharacters = CharacterManager.instance.GetAllyCharacters();
-
-        // 아군 체력 업데이트
-        for (int i = 0; i < HPSlider.Count; i++)
-        {
-            if (i < allyCharacters.Count)
-            {
-                HPSlider[i].gameObject.SetActive(true);
-                HPSlider[i].value = allyCharacters[i].Data.HP.Current / allyCharacters[i].Data.HP.CurrentMax;
-
-                // 체력 텍스트 업데이트
-                HPText[i].gameObject.SetActive(true);
-                HPText[i].text = allyCharacters[i].Data.HP.Current.ToString();
-            }
-            else
-            {
-                HPSlider[i].gameObject.SetActive(false);
-
-                // 체력 텍스트 비활성화
-                HPText[i].gameObject.SetActive(false);
-            }
-        }
-    }
-
-    public void UpdateCharacterImages()
-    {
-        // 아군 캐릭터 리스트 가져오기
-        List<Character> allyCharacters = CharacterManager.instance.GetAllyCharacters();
-
-        for (int i = 0; i < AllyCharacterImagesUI.Count; i++)
-        {
-            if (i < allyCharacters.Count)
-            {
-                // 캐릭터 데이터에서 이미지 경로 가져오기
-                string imagePath = allyCharacters[i].Data.BaseData.CharacterImagePath;
-
-                // 이미지 로드
-                Sprite characterSprite = Resources.Load<Sprite>(imagePath);
-
-                if (characterSprite != null)
-                {
-                    // UI에 이미지 설정
-                    AllyCharacterImagesUI[i].sprite = characterSprite;
-                    AllyCharacterImagesUI[i].gameObject.SetActive(true);
-                }
-                else
-                {
-                    AllyCharacterImagesUI[i].gameObject.SetActive(false);
-                }
-            }
-            else
-            {
-                // 캐릭터가 없으면 이미지 비활성화
-                AllyCharacterImagesUI[i].gameObject.SetActive(false);
-            }
-        }
-    }
-
-    public void UpdateUltimateUI()
-    {
-        // 아군 캐릭터 리스트 가져오기
-        List<Character> allyCharacters = CharacterManager.instance.GetAllyCharacters();
-
-        for (int i = 0; i < Ultimate.Count; i++)
-        {
-            if (i < allyCharacters.Count)
-            {
-                // 궁극기 사용 가능 여부 확인
-                bool canUseUlt = CombatManager.CanCharacterUseUlt(allyCharacters[i]);
-
-                // 궁극기 오브젝트 활성화/비활성화
-                Ultimate[i].SetActive(canUseUlt);
-            }
-            else
-            {
-                // 캐릭터가 없으면 궁극기 오브젝트 비활성화
-                Ultimate[i].SetActive(false);
-            }
+    public void InitializeAllyUI(Character c, int idx) {
+        if (idx < AllyStates.Count) {
+            var allyState = AllyStates[idx];
+            allyState.gameObject.SetActive(true);
+            allyState.InitializeAllyUI(c);
         }
     }
 

@@ -8,6 +8,8 @@ using TurnBased.Battle.Managers;
 
 public class EnemyUITest : MonoBehaviour {
     [SerializeField]
+    private GameObject uiRoot;
+    [SerializeField]
     private Transform weaknessRoot;
     [SerializeField]
     private GameObject weaknessPrefab;
@@ -32,6 +34,19 @@ public class EnemyUITest : MonoBehaviour {
         Toughness_OnValueChanged(_character.Data.Toughness.Current);
         _character.Data.HP.OnValueChanged += HP_OnValueChanged;
         _character.Data.Toughness.OnValueChanged += Toughness_OnValueChanged;
+        _character.OnCharacterStateChanged += HandleCharacterStateChanged;
+    }
+
+    private void HandleCharacterStateChanged(Character c, Character.CharacterState state) {
+        if (state == Character.CharacterState.DoAttack ||
+            state == Character.CharacterState.CastSkill ||
+            state == Character.CharacterState.CastUltAttack ||
+            state == Character.CharacterState.CastUltSkill) {
+            uiRoot.SetActive(false);
+        }
+        else {
+            uiRoot.SetActive(true);
+        }
     }
 
     private void Toughness_OnValueChanged(float value) {

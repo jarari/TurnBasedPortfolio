@@ -32,6 +32,7 @@ namespace TurnBased.Battle.Managers
         public event Action OnRoundChanged;
         public event Action<TurnContext> OnBeforeTurnStart;
         public event Action<TurnContext> OnTurnEnd;
+        public event Action OnTurnQueueChanged;
 
         private float _roundRemaining;
 
@@ -100,11 +101,13 @@ namespace TurnBased.Battle.Managers
         {
             _turnQueue.RemoveAll((data) => data.Character == character);
             _turnQueue.RemoveAll((data) => data.ExtraAttackTarget == character);
+            OnTurnQueueChanged?.Invoke();
         }
 
         public void RemoveCharacterUltExtraAttackOnly(Character character)
         {
             _turnQueue.RemoveAll((data) => data.Character == character && (data.Type == TurnType.Ult || data.Type == TurnType.ExtraAttack));
+            OnTurnQueueChanged?.Invoke();
         }
 
         /// <summary>
@@ -134,6 +137,9 @@ namespace TurnBased.Battle.Managers
                 TurnPassed--;
                 StartNextTurn();
             }
+            else {
+                OnTurnQueueChanged?.Invoke();
+            }
             SoundManager.instance.Play2DSound("UIUltStandby");
         }
 
@@ -151,6 +157,7 @@ namespace TurnBased.Battle.Managers
                 enumerator.MoveNext();
             }
             _turnQueue.Insert(idx, new TurnData(character, TurnType.ExtraAttack, target));
+            OnTurnQueueChanged?.Invoke();
         }
 
         public void InitializeTurnQueue()
@@ -168,6 +175,7 @@ namespace TurnBased.Battle.Managers
             _turnQueue.Remove(first);
             CurrentCharacter = first.Character;
             _lastTurnType = first.Type;
+            OnTurnQueueChanged?.Invoke();
             void ProgressTurn()
             {
                 if (first.Type == TurnType.Normal)
@@ -249,6 +257,7 @@ namespace TurnBased.Battle.Managers
                 turnData.AdvanceTurn(0);
             }
             _turnQueue = _turnQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
+            OnTurnQueueChanged?.Invoke();
         }
 
         private IEnumerator StartNextTurnDelayed()
@@ -276,9 +285,6 @@ namespace TurnBased.Battle.Managers
             }
 
             StartNextTurn();
-            ActionOrderUIManager.instance.UpdateActionOrderUIPositions(); // 턴이 종료된 후 행동 서열 UI 업데이트
-            CombatUIManager.Instance.UpdateCharacterHPUI(); // 턴이 종료된 후 캐릭터 체력 UI 업데이트
-            CombatUIManager.Instance.UpdateUltimateUI(); // 턴이 종료된 후 궁극기 UI 업데이트
         }
 
         /// <summary>
@@ -346,9 +352,15 @@ namespace TurnBased.Battle.Managers
             return predictedQueue;
         }
 
-        public List<Character> GetActionOrder()
+        public List<TurnData> GetActionOrder()
         {
-            return _turnQueue.Select(td => td.Character).ToList(); // 행동 서열을 리스트로 반환
+            List<TurnData> ret = _turnQueue.ToList();
+            if (CurrentCharacter != null) {
+                var td = new TurnData(CurrentCharacter, _lastTurnType);
+                td.ModRemainingTime(0);
+                ret.Insert(0, td);
+            }
+            return ret; // 행동 서열을 리스트로 반환
         }
 
         public void PrintTurnQueue()

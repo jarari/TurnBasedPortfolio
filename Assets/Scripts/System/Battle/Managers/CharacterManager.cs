@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TurnBased.Data;
 using UnityEngine;
@@ -11,6 +12,8 @@ namespace TurnBased.Battle.Managers {
 
         public List<GameObject> allySpawnPoints = new List<GameObject>();
         public List<GameObject> enemySpawnPoints = new List<GameObject>();
+
+        public event Action<Character, int> OnCharacterSpawn;
 
         private List<Character> _characters = new List<Character>();
         private Dictionary<Character, int> _allyIdxDict = new Dictionary<Character, int>();
@@ -43,7 +46,7 @@ namespace TurnBased.Battle.Managers {
             GameObject go, spawnPoint;
             Character c;
             if (data.team == CharacterTeam.Player) {
-                int[] idxToTry = { 1, 0, 2 };
+                int[] idxToTry = { 0, 1, 2 };
                 int tryIdx = 0;
                 while (GetAllyAtIndex(idxToTry[tryIdx]) != null && tryIdx < idxToTry.Length) {
                     tryIdx++;
@@ -66,6 +69,7 @@ namespace TurnBased.Battle.Managers {
                 _characters.Add(c);
                 _allyIdxDict.Add(c, spawnIdx);
                 _idxAllyDict.Add(spawnIdx, c);
+                OnCharacterSpawn?.Invoke(c, spawnIdx);
             }
             else {
                 int[] idxToTry = { 2, 1, 3, 0, 4 };
@@ -91,6 +95,7 @@ namespace TurnBased.Battle.Managers {
                 _characters.Add(c);
                 _enemyIdxDict.Add(c, spawnIdx);
                 _idxEnemyDict.Add(spawnIdx, c);
+                OnCharacterSpawn?.Invoke(c, spawnIdx);
             }
             go.transform.position = spawnPoint.transform.position;
             return c;
@@ -180,7 +185,7 @@ namespace TurnBased.Battle.Managers {
         /// <param name="c"></param>
         /// <returns></returns>
         public int GetAllyIndex(Character c) {
-            return _allyIdxDict[c];
+            return _allyIdxDict.TryGetValue(c, out var idx) ? idx : -1;
         }
 
         /// <summary>
@@ -198,7 +203,7 @@ namespace TurnBased.Battle.Managers {
         /// <param name="c"></param>
         /// <returns></returns>
         public int GetEnemyIndex(Character c) {
-            return _enemyIdxDict[c];
+            return _enemyIdxDict.TryGetValue(c, out var idx) ? idx : -1;
         }
 
         /// <summary>

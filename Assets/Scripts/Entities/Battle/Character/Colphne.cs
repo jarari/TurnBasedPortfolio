@@ -78,6 +78,7 @@ namespace TurnBased.Entities.Battle {
                         t.GetComponent<CharacterBuffSystem>().ApplyBuff("ColphneHeal", this);
                     }
                 }
+                Data.UltPts.ModifyCurrent(30);
             }
         }
 

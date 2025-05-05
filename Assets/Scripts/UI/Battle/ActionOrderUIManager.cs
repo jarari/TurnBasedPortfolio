@@ -26,20 +26,12 @@ namespace TurnBased.Battle.UI
 
         private void Start()
         {
-            UpdateActionOrderUIPositions(); // 행동 서열 UI 초기화
+            TurnManager.instance.OnTurnQueueChanged += UpdateActionOrderUIPositions;
         }
         
         public void UpdateActionOrderUIPositions()
         {
-            List<Character> actionOrder = TurnManager.instance.GetActionOrder(); // 행동 서열 가져오기
-
-            // 행동 서열이 1개 이상일 때, 마지막 캐릭터를 첫 번째로 이동
-            if (actionOrder.Count > 1)
-            {
-                Character lastCharacter = actionOrder[actionOrder.Count - 1]; // 마지막 캐릭터 저장
-                actionOrder.RemoveAt(actionOrder.Count - 1); // 마지막 캐릭터 제거
-                actionOrder.Insert(0, lastCharacter); // 마지막 캐릭터를 첫 번째로 이동
-            }
+            List<TurnData> actionOrder = TurnManager.instance.GetActionOrder(); // 행동 서열 가져오기
 
             // UI 오브젝트의 활성화 상태를 업데이트
             for (int i = 0; i < actionOrderUIObjects.Count; i++)
@@ -47,7 +39,7 @@ namespace TurnBased.Battle.UI
                 // 행동 서열의 길이보다 UI 오브젝트의 길이가 짧을 경우, UI 오브젝트를 비활성화
                 if (i < actionOrder.Count)
                 {
-                    Character character = actionOrder[i]; // 행동 서열에서 캐릭터 가져오기
+                    Character character = actionOrder[i].Character; // 행동 서열에서 캐릭터 가져오기
                     CharacterData characterData = character.Data.BaseData; // 캐릭터 데이터 가져오기
 
                     actionOrderUIObjects[i].SetActive(true); // UI 오브젝트 활성화
@@ -77,7 +69,7 @@ namespace TurnBased.Battle.UI
                         if (i == 0) textComponent.text = "0"; // 첫 번째 캐릭터의 경우 남은 행동력을 0으로 설정
                         else
                         {
-                            float remainingTime = TurnManager.instance.GetRemainingTime(character); // 남은 시간 가져오기
+                            float remainingTime = actionOrder[i].RemainingTimeToAct; // 남은 시간 가져오기
                             int remainingTimeInt = Mathf.FloorToInt(remainingTime); // 남은 시간을 정수로 변환
                             textComponent.text = remainingTimeInt.ToString(); // 텍스트 설정
                         }

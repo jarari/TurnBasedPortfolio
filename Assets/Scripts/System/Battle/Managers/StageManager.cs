@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 
 namespace TurnBased.Battle.Managers {
+    [DefaultExecutionOrder(200)]
     public class StageManager : MonoBehaviour {
         public static StageManager instance;
 
@@ -37,10 +38,7 @@ namespace TurnBased.Battle.Managers {
             CombatManager.instance.OnCharacterDeath += HandleCharacterDeath;
             CombatManager.instance.OnCharacterDeathComplete += HandleCharacterDeathComplete;
 
-            CreateStage();
-            SpawnAllyCharacters();
-            SpawnNextWave();
-            StartTurn();
+            InitializeStage();
         }
 
         private void HandleCharacterDeath(Character c, Character killer) {
@@ -79,6 +77,13 @@ namespace TurnBased.Battle.Managers {
             _aliveAllyCount++;
             CharacterManager.instance.SpawnCharacter("Ally_MarkerMan");
             _aliveAllyCount++;
+        }
+
+        public void InitializeStage() {
+            CreateStage();
+            SpawnAllyCharacters();
+            SpawnNextWave();
+            StartTurn();
         }
 
         public void SpawnNextWave() {

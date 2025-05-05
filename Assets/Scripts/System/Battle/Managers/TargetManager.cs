@@ -264,7 +264,10 @@ namespace TurnBased.Battle.Managers {
         private SearchResult GetCharacterOn_Internal(Character c, SearchDirection dir) {
             if (c.Data.Team == CharacterTeam.Enemy) {
                 int d = dir == SearchDirection.Left ? -1 : 1;
-                int idxToTry = CharacterManager.instance.GetEnemyIndex(c) + d;
+                int charIdx = CharacterManager.instance.GetEnemyIndex(c);
+                if (charIdx == -1)
+                    return new SearchResult(null, -1);
+                int idxToTry = charIdx + d;
                 int enemyCount = CharacterManager.instance.GetMaxEnemyCount();
                 Character enemy = null;
                 while (enemy == null && idxToTry >= 0 && idxToTry < enemyCount) {
@@ -278,7 +281,10 @@ namespace TurnBased.Battle.Managers {
             }
             else {
                 int d = dir == SearchDirection.Left ? 1 : -1;
-                int idxToTry = CharacterManager.instance.GetAllyIndex(c) + d;
+                int charIdx = CharacterManager.instance.GetAllyIndex(c);
+                if (charIdx == -1)
+                    return new SearchResult(null, -1);
+                int idxToTry = charIdx + d;
                 int allyCount = CharacterManager.instance.GetMaxAllyCount();
                 Character ally = null;
                 while (ally == null && idxToTry >= 0 && idxToTry < allyCount) {
