@@ -9910,7 +9910,7 @@ GameObject:
   - component: {fileID: 1889910935}
   - component: {fileID: 1889910936}
   m_Layer: 0
-  m_Name: CharactterDataManager
+  m_Name: CharacterDataManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9943,7 +9943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1da0a9f1379fba44eba08b9d8613a2b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterTable: {fileID: 0}
+  _characterTable: {fileID: 11400000, guid: c82b2d58f5cfb994b995035da9857aed, type: 2}
 --- !u!1 &1910982476
 GameObject:
   m_ObjectHideFlags: 0
