@@ -203,7 +203,7 @@ namespace TurnBased.Entities.Field
                     // 에너미 오브젝트를 가져온다
                     enemy = hitCollider.gameObject;
                     OnPlayerNearEnemy(this.gameObject); // 이벤트 호출                    
-                }
+                }                
             }
         }
 
@@ -217,6 +217,10 @@ namespace TurnBased.Entities.Field
         public void hit_signal()
         {
             Debug.Log("플레이어가 공격 애니메이션에서 시그널을 수신받음");
+
+            // 만약 근처에 에너미가 없고 빈곳을 때린다면 그냥 반환한다
+            if (enemy == null)
+                return;
 
             hit_Damage ehit = enemy.GetComponent<hit_Damage>();
             // 에너미의 데미지 함수를 실행한다

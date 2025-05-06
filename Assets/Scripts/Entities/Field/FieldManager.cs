@@ -1,3 +1,4 @@
+using System.Collections;
 using TurnBased.Entities.Field;
 using UnityEngine;
 
@@ -7,49 +8,98 @@ using UnityEngine;
 /// </summary>
 public class FieldManager : MonoBehaviour
 {
-    // 필드 씬에서 움직이는 플레이어 오브젝트
-    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject player; // 플레이어를 움직이기 위한 변수
+    [SerializeField] private Transform[] spawnPoints;   // 플레이어 이동 포인트
+    [SerializeField] private Transform[] EnemyPoints;   // 에너미 스폰 포인트    
+    [SerializeField] private GameObject[] enemyPrefabs; // 에너미 프리펩
+    [SerializeField] private GameObject BossPrefabs; // 보스 에너미 프리펩
 
-    
+
+    private int progress = 0;   // 현재 진행도
+
     private void Start()
     {
-        HandleBattleReturn();
-    }
+        // encounter에서 진행도를 가져온다
+        progress = EncounterManager.Instance.StageProgress;
 
-    private void HandleBattleReturn()
-    {
-        // 전투에서 복귀한것이 아니라면 처리하지 않음
-        if (EncounterManager.Instance.stagedata == null)
-            return;
-
-        // 플레이어를 전투 직전 위치로 이동
-        player.transform.position = EncounterManager.Instance.PlayerSpawnPos;
-
+        // 전투에서 승리했는지 확인  
         if (EncounterManager.Instance.LastBattleResult)
         {
-
-            // 모든 F_Enemy를 찾아 배열에 반환한다
-            F_Enemy[] enemies = GameObject.FindObjectsByType<F_Enemy>(FindObjectsSortMode.None);
-
-            foreach (F_Enemy enemy in enemies)
-            {
-                // F_Enemy들 중에 특정 ID를 가진 녀석이 있다면
-                if (enemy.enemyID == EncounterManager.Instance.EnemyInstanceId)
-                {
-                    // 적을 제거한다
-                    Destroy(enemy.gameObject);
-                    Debug.Log("전투에서 승리하였고 에너미" + EncounterManager.Instance.EnemyInstanceId + "를 제거하였습니다.");
-                    // 찾았다면 종료
-                    break;
-                }
-            }
-
-            // 전투 관련 정보 초기화
-            EncounterManager.Instance.Clear();
-            Debug.Log("EncounterManager 내의 정보 초기화 완료");
+            HandleBattleResult();
         }
-
+        else
+        {
+            // 게임을 처음 시작시 초기 에너미 스폰
+            SpawnInitialEnemy();
+        }
     }
 
+    /// <summary>
+    /// 승리후
+    /// </summary>
+    private void HandleBattleResult()
+    {
+        Debug.Log("전투 승리 확인 - 진행 처리 시작");
 
+        // 진행도를 증가
+        progress++;
+
+        // 증가한 진행도를 저장
+        EncounterManager.Instance.StageProgress = progress;
+
+        // 다음 스폰포인트가 있다면
+        if (progress < spawnPoints.Length)
+        {
+            // 위치의 y값을 0으로
+            Vector3 playerPos = spawnPoints[progress].position;
+            playerPos.y = 0;
+            player.transform.position = playerPos;
+            Debug.Log("플레이어 위치 이동: " + spawnPoints[progress].name);
+
+            Debug.Log(progress);
+
+
+            Vector3 enemyPos = EnemyPoints[progress].position;
+            enemyPos.y = 0;
+            // 에너미 소환
+            int rand = Random.Range(0, enemyPrefabs.Length);
+            if (progress < 2)
+            {
+                Instantiate(enemyPrefabs[rand], enemyPos, Quaternion.identity);
+            }
+            else if (progress >= 2)
+            { 
+                Instantiate(BossPrefabs, enemyPos, Quaternion.identity);
+            }
+            Debug.Log("적 소환 완료");
+
+            // Encounter 상태 초기화
+            EncounterManager.Instance.Clear();
+        }
+        else
+        {
+            Debug.Log("모든 지역 클리어");
+        }
+    }
+
+    // <summary>
+    /// 게임 시작 시 첫 적을 소환
+    /// </summary>
+    private void SpawnInitialEnemy()
+    {
+        Debug.Log("게임 처음 시작 - 첫 적 소환");
+
+        // 플레이어의 위치 조정
+        Vector3 playerPos = spawnPoints[progress].position;
+        playerPos.y = 0;
+        player.transform.position = playerPos;
+
+        // 에너미 소환
+        Vector3 enemyPos = EnemyPoints[progress].position;
+        enemyPos.y = 0;
+        int rand = Random.Range(0, enemyPrefabs.Length);
+        Instantiate(enemyPrefabs[rand], enemyPos, Quaternion.identity);
+        Debug.Log("첫 적 소환");
+    }
 }
+
