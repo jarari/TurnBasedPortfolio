@@ -12,6 +12,8 @@ public class FieldManager : MonoBehaviour
     [SerializeField] private Transform[] spawnPoints;   // 플레이어 이동 포인트
     [SerializeField] private Transform[] EnemyPoints;   // 에너미 스폰 포인트    
     [SerializeField] private GameObject[] enemyPrefabs; // 에너미 프리펩
+    [SerializeField] private GameObject BossPrefabs; // 보스 에너미 프리펩
+
 
     private int progress = 0;   // 현재 진행도
 
@@ -61,7 +63,14 @@ public class FieldManager : MonoBehaviour
             enemyPos.y = 0;
             // 에너미 소환
             int rand = Random.Range(0, enemyPrefabs.Length);
-            Instantiate(enemyPrefabs[rand], enemyPos, Quaternion.identity);
+            if (progress < 2)
+            {
+                Instantiate(enemyPrefabs[rand], enemyPos, Quaternion.identity);
+            }
+            else if (progress >= 2)
+            { 
+                Instantiate(BossPrefabs, enemyPos, Quaternion.identity);
+            }
             Debug.Log("적 소환 완료");
 
             // Encounter 상태 초기화
