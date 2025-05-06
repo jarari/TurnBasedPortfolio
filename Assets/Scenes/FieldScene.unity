@@ -5057,6 +5057,7 @@ MonoBehaviour:
   - {fileID: 5034929945482274156, guid: 93398303a1e9d894fbe4b8543d4c719a, type: 3}
   - {fileID: 5034929945482274156, guid: ca565f900a7b06c4fa2a443ccf16e0d9, type: 3}
   BossPrefabs: {fileID: 5034929945482274156, guid: d51938e881fc8294186c7738c2c4efa2, type: 3}
+  fieldBGM: {fileID: 8300000, guid: c2461fe4934cf154ba7b675e667594b4, type: 3}
 --- !u!4 &908827944
 Transform:
   m_ObjectHideFlags: 0
@@ -5121,8 +5122,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundPacks: []
-  _2dAudioSource: {fileID: 0}
-  _musicAudioSource: {fileID: 0}
+  _2dAudioSource: {fileID: 222475336}
+  _musicAudioSource: {fileID: 608917799}
 --- !u!1 &948911743
 GameObject:
   m_ObjectHideFlags: 0
