@@ -8,71 +8,89 @@ using UnityEngine;
 /// </summary>
 public class FieldManager : MonoBehaviour
 {
-    // 필드 씬에서 움직이는 플레이어 오브젝트
-    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject player; // 플레이어를 움직이기 위한 변수
+    [SerializeField] private Transform[] spawnPoints;   // 플레이어 이동 포인트
+    [SerializeField] private Transform[] EnemyPoints;   // 에너미 스폰 포인트    
+    [SerializeField] private GameObject[] enemyPrefabs; // 에너미 프리펩
+
+    private int progress = 0;   // 현재 진행도
 
     private void Start()
     {
-        HandleBattleReturn();
-        
-    }
-    
-    private void HandleBattleReturn()
-    {
-        // 전투에서 복귀한것이 아니라면 처리하지 않음
-        if (EncounterManager.Instance.stagedata == null)
-            return;               
+        // encounter에서 진행도를 가져온다
+        progress = EncounterManager.Instance.StageProgress;
 
-        // 플레이어를 전투 직전 위치로 이동
-        player.transform.position = EncounterManager.Instance.PlayerSpawnPos;
-
-        Debug.Log("LastBattleResult 값: " + EncounterManager.Instance.LastBattleResult);
-
-        if (EncounterManager.Instance.LastBattleResult == true)
+        // 전투에서 승리했는지 확인  
+        if (EncounterManager.Instance.LastBattleResult)
         {
-            Debug.Log("전투에서 승리하였습니다.");
-
-            StartCoroutine(waitManager());
-                        
+            HandleBattleResult();
         }
         else
         {
-            Debug.Log("전투에서 패배하였습니다.");
+            // 게임을 처음 시작시 초기 에너미 스폰
+            SpawnInitialEnemy();
         }
-
     }
 
-    IEnumerator waitManager()
-    { 
-        yield return null;
+    /// <summary>
+    /// 승리후
+    /// </summary>
+    private void HandleBattleResult()
+    {
+        Debug.Log("전투 승리 확인 - 진행 처리 시작");
 
-        // 전투 진입 메니저에 저장해놓은 에너미 오브젝트를 가져온다
-        GameObject defeatdEnemy = EncounterManager.Instance.enemy;
-        defeatdEnemy.SetActive(true);
+        // 진행도를 증가
+        progress++;
 
-        if (EncounterManager.Instance.LastBattleResult == true)
+        // 증가한 진행도를 저장
+        EncounterManager.Instance.StageProgress = progress;
+
+        // 다음 스폰포인트가 있다면
+        if (progress < spawnPoints.Length)
         {
-            Debug.Log("전투에 참여했던 에너미 오브젝트를 직접 참조하여 제거 시도");
+            // 위치의 y값을 0으로
+            Vector3 playerPos = spawnPoints[progress].position;
+            playerPos.y = 0;
+            player.transform.position = playerPos;
+            Debug.Log("플레이어 위치 이동: " + spawnPoints[progress].name);
 
-            // 필드에 있는 스폰 메니저를 찾아 제거 처리
-            GameObject f_spawnM = GameObject.Find("SpawnManager");
+            Debug.Log(progress);
 
-            if (f_spawnM != null)
-            {
-                SpawnManager spawnManger = f_spawnM.GetComponent<SpawnManager>();
 
-                if (spawnManger != null)
-                {
-                    spawnManger.EnemyDead(defeatdEnemy);
-                    Debug.Log(defeatdEnemy.name + "전투후 제거 완료");
-                }
-            }
-            else
-            {
-                Debug.Log("전투에 참여한 에너미가 null입니다");
-            }
+            Vector3 enemyPos = EnemyPoints[progress].position;
+            enemyPos.y = 0;
+            // 에너미 소환
+            int rand = Random.Range(0, enemyPrefabs.Length);
+            Instantiate(enemyPrefabs[rand], enemyPos, Quaternion.identity);
+            Debug.Log("적 소환 완료");
 
+            // Encounter 상태 초기화
+            EncounterManager.Instance.Clear();
+        }
+        else
+        {
+            Debug.Log("모든 지역 클리어");
         }
     }
 
+    // <summary>
+    /// 게임 시작 시 첫 적을 소환
+    /// </summary>
+    private void SpawnInitialEnemy()
+    {
+        Debug.Log("게임 처음 시작 - 첫 적 소환");
+
+        // 플레이어의 위치 조정
+        Vector3 playerPos = spawnPoints[progress].position;
+        playerPos.y = 0;
+        player.transform.position = playerPos;
+
+        // 에너미 소환
+        Vector3 enemyPos = EnemyPoints[progress].position;
+        enemyPos.y = 0;
+        int rand = Random.Range(0, enemyPrefabs.Length);
+        Instantiate(enemyPrefabs[rand], enemyPos, Quaternion.identity);
+        Debug.Log("첫 적 소환");
+    }
 }
+

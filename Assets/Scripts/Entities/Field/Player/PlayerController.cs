@@ -203,7 +203,7 @@ namespace TurnBased.Entities.Field
                     // 에너미 오브젝트를 가져온다
                     enemy = hitCollider.gameObject;
                     OnPlayerNearEnemy(this.gameObject); // 이벤트 호출                    
-                }
+                }                
             }
         }
 

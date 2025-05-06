@@ -20,6 +20,9 @@ public class EncounterManager : MonoBehaviour
     // 에너미 오브젝트를 저장
     public GameObject enemy;
 
+    // 필드 메니저에서 사용할값
+    public int StageProgress = 0;
+
     private void Awake()
     {
         // 이미 인스턴스가 있다면
@@ -66,6 +69,7 @@ public class EncounterManager : MonoBehaviour
     {
         LastBattleResult = isWin;   // 승패 여부를 가져온다
         SceneManager.LoadScene("FieldScene");   // 필드 씬을 불러온다
+        Destroy(EncounterManager.Instance.enemy);   // 필드의 에너미를 삭제한다
     }
 
     /// <summary>
