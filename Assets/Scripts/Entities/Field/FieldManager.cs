@@ -1,4 +1,5 @@
 using System.Collections;
+using TurnBased.Battle.Managers;
 using TurnBased.Entities.Field;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public class FieldManager : MonoBehaviour
     [SerializeField] private GameObject[] enemyPrefabs; // 에너미 프리펩
     [SerializeField] private GameObject BossPrefabs; // 보스 에너미 프리펩
 
+    [SerializeField] private AudioClip fieldBGM;
 
     private int progress = 0;   // 현재 진행도
 
@@ -21,6 +23,8 @@ public class FieldManager : MonoBehaviour
     {
         // encounter에서 진행도를 가져온다
         progress = EncounterManager.Instance.StageProgress;
+
+        SoundManager.instance.PlayMusic(fieldBGM);
 
         // 전투에서 승리했는지 확인  
         if (EncounterManager.Instance.LastBattleResult)
