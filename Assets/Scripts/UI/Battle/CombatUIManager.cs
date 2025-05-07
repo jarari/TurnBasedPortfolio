@@ -39,6 +39,7 @@ public class CombatUIManager : MonoBehaviour
     public GameObject CurrentWindow;     // 현재 열려 있는 창
 
     private Camera _mainCamera;
+    private List<Transform> _targets = new();
 
     private void Awake()
     {
@@ -83,9 +84,10 @@ public class CombatUIManager : MonoBehaviour
                 OpenEnemyCharacterWindow(); // 적 캐릭터 창 열기
         }
 
-        foreach (var selector in TargetSelectors) {
-            if (selector.gameObject.activeInHierarchy) {
-                selector.LookAt(_mainCamera.transform);
+        for (int i = 0; i < TargetSelectors.Count; ++i) {
+            if (TargetSelectors[i].gameObject.activeInHierarchy) {
+                TargetSelectors[i].position = _targets[i].position;
+                TargetSelectors[i].LookAt(_mainCamera.transform);
             }
         }
     }
@@ -132,6 +134,7 @@ public class CombatUIManager : MonoBehaviour
     }
 
     private void UpdateTargetSelectors() {
+        _targets.Clear();
         var targets = TargetManager.instance.GetTargets();
         if (targets.Count == 0) {
             TargetSelectorRoot.SetActive(false);
@@ -146,6 +149,7 @@ public class CombatUIManager : MonoBehaviour
                     TargetSelectors[i].gameObject.SetActive(true);
                     if (targets[i] != null && targets[i].Chest != null) {
                         TargetSelectors[i].transform.position = targets[i].Chest.transform.position;
+                        _targets.Add(targets[i].Chest);
                     }
                 }
             }

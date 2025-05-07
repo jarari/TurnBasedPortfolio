@@ -38,6 +38,15 @@ public class FieldManager : MonoBehaviour
         }
     }
 
+    IEnumerator DelayedMove() {
+        yield return null;
+        // 위치의 y값을 0으로
+        Vector3 playerPos = spawnPoints[progress].position;
+        playerPos.y = 0;
+        player.transform.position = playerPos;
+        Debug.Log("플레이어 위치 이동: " + spawnPoints[progress].name);
+    }
+
     /// <summary>
     /// 승리후
     /// </summary>
@@ -46,19 +55,12 @@ public class FieldManager : MonoBehaviour
         Debug.Log("전투 승리 확인 - 진행 처리 시작");
 
         // 진행도를 증가
-        progress++;
-
-        // 증가한 진행도를 저장
-        EncounterManager.Instance.StageProgress = progress;
+        progress = EncounterManager.Instance.StageProgress;
 
         // 다음 스폰포인트가 있다면
         if (progress < spawnPoints.Length)
         {
-            // 위치의 y값을 0으로
-            Vector3 playerPos = spawnPoints[progress].position;
-            playerPos.y = 0;
-            player.transform.position = playerPos;
-            Debug.Log("플레이어 위치 이동: " + spawnPoints[progress].name);
+            StartCoroutine(DelayedMove());
 
             Debug.Log(progress);
 
@@ -93,10 +95,7 @@ public class FieldManager : MonoBehaviour
     {
         Debug.Log("게임 처음 시작 - 첫 적 소환");
 
-        // 플레이어의 위치 조정
-        Vector3 playerPos = spawnPoints[progress].position;
-        playerPos.y = 0;
-        player.transform.position = playerPos;
+        StartCoroutine(DelayedMove());
 
         // 에너미 소환
         Vector3 enemyPos = EnemyPoints[progress].position;

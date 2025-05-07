@@ -117,12 +117,8 @@ namespace TurnBased.Battle.Managers
         public void AddUltTurn(Character character)
         {
             int idx = 0;
-            IEnumerator<TurnData> enumerator = _turnQueue.GetEnumerator();
-            while (enumerator.MoveNext() && enumerator.Current.Type != TurnType.Normal)
-            {
+            while (idx < _turnQueue.Count && _turnQueue[idx].Type != TurnType.Normal)
                 idx++;
-                enumerator.MoveNext();
-            }
             _turnQueue.Insert(idx, new TurnData(character, TurnType.Ult));
             if (idx == 0
                 && CurrentCharacter.Data.Team == Data.CharacterTeam.Player
@@ -152,11 +148,8 @@ namespace TurnBased.Battle.Managers
         {
             int idx = 0;
             IEnumerator<TurnData> enumerator = _turnQueue.GetEnumerator();
-            while (enumerator.MoveNext() && enumerator.Current.Type == TurnType.ExtraAttack)
-            {
+            while (idx < _turnQueue.Count && _turnQueue[idx].Type == TurnType.ExtraAttack)
                 idx++;
-                enumerator.MoveNext();
-            }
             _turnQueue.Insert(idx, new TurnData(character, TurnType.ExtraAttack, target));
             OnTurnQueueChanged?.Invoke();
         }

@@ -70,6 +70,7 @@ public class EncounterManager : MonoBehaviour
         LastBattleResult = isWin;   // 승패 여부를 가져온다
         SceneManager.LoadScene("FieldScene");   // 필드 씬을 불러온다
         Destroy(EncounterManager.Instance.enemy);   // 필드의 에너미를 삭제한다
+        StageProgress++;
     }
 
     /// <summary>
