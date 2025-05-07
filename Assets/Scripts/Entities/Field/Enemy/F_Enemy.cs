@@ -236,7 +236,7 @@ namespace TurnBased.Entities.Field {
             int random1 = Random.Range(2, 4);
 
             // 자신의 이름을 먼저 추가
-            currentWave.enemies.Add("Enemy_" + this.name);
+            currentWave.enemies.Add("Enemy_" + name.Replace("(Clone)", ""));
 
             // 랜덤한 적이름을 3~5회 추가
             for (int i = 0; i < random1; i++)

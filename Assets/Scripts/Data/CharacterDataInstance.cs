@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine;
-using UnityEditor.Overlays;
 
 namespace TurnBased.Data {
     public class CharacterDataInstance {

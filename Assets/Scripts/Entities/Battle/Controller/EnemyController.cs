@@ -1,7 +1,3 @@
-using System.Runtime.CompilerServices;
-using Unity.Cinemachine;
-using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

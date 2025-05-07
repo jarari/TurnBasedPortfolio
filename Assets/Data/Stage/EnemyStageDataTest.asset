@@ -13,4 +13,10 @@ MonoBehaviour:
   m_Name: EnemyStageDataTest
   m_EditorClassIdentifier: 
   stagePrefab: {fileID: 8975191739293347640, guid: 26048c2b63fec9840b8bcdc20c87998c, type: 3}
-  waves: []
+  stageBGM: {fileID: 8300000, guid: dfad382e9b30df640a6856199a9e7d13, type: 3}
+  waves:
+  - enemies:
+    - Enemy_EberBird_Boss
+    - Enemy_Machine
+    - Enemy_Alien_Soldier
+    - Enemy_Machine
