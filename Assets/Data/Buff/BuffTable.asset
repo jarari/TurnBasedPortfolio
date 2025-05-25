@@ -25,3 +25,5 @@ MonoBehaviour:
     buffData: {fileID: 11400000, guid: 452f2970c1f84a74198f80064f845875, type: 2}
   - name: Radioactivity
     buffData: {fileID: 11400000, guid: 744bdf1b4557afa498e2d9e79e5063cc, type: 2}
+  - name: ThunderDOT
+    buffData: {fileID: 11400000, guid: e33828a875e4fba4782ceee187e2a8d6, type: 2}
