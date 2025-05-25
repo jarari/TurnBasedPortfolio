@@ -27,7 +27,7 @@ namespace TurnBased.Battle {
         }
 
         private void HandleBeforeTurnStart(TurnContext ctx) {
-            if (ctx.Type != TurnType.Normal || ctx.Character != GetComponent<Character>()) {
+            if (ctx.Character.IsDead || ctx.Type != TurnType.Normal || ctx.Character != GetComponent<Character>()) {
                 return;
             }
 
@@ -36,7 +36,7 @@ namespace TurnBased.Battle {
         }
 
         private void HandleTurnEnd(TurnContext ctx) {
-            if (ctx.Type != TurnType.Normal || ctx.Character != GetComponent<Character>()) {
+            if (ctx.Character.IsDead || ctx.Type != TurnType.Normal || ctx.Character != GetComponent<Character>()) {
                 return;
             }
 
