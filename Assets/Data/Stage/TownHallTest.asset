@@ -13,14 +13,15 @@ MonoBehaviour:
   m_Name: TownHallTest
   m_EditorClassIdentifier: 
   stagePrefab: {fileID: 8975191739293347640, guid: 26048c2b63fec9840b8bcdc20c87998c, type: 3}
-  stageBGM: {fileID: 8300000, guid: fe80791184b260147a4771c2cb0cf7fa, type: 3}
+  stageBGM: {fileID: 8300000, guid: dfad382e9b30df640a6856199a9e7d13, type: 3}
   waves:
   - enemies:
-    - Enemy_Alien_Soldier
-    - Enemy_Eber
-    - Enemy_Eber
-    - Enemy_Eber
-  - enemies:
+    - Enemy_Y_Bot
     - Enemy_Alien_Soldier
     - Enemy_Alien_Soldier
     - Enemy_Y_Bot
+    - Enemy_Y_Bot
+  - enemies:
+    - Enemy_Machine
+    - Enemy_Machine
+    - Enemy_Machine

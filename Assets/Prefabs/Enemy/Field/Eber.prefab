@@ -45589,7 +45589,8 @@ MonoBehaviour:
   findDistnace: 5
   target: {fileID: 0}
   attDistance: 2
-  myStageData: {fileID: 11400000, guid: df0441f1cb0385744957ad7aecdecb79, type: 2}
+  myStageData: {fileID: 11400000, guid: 5259d339f61ef1247b5425cd0bf3108a, type: 2}
+  enemyID: 
 --- !u!143 &8335272991871432197
 CharacterController:
   m_ObjectHideFlags: 0

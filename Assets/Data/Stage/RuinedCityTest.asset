@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5801b61434bc68b4ab8f387c0c7489cb, type: 3}
+  m_Name: RuinedCityTest
+  m_EditorClassIdentifier: 
+  stagePrefab: {fileID: 7144946617032955901, guid: 0e5880d631b9ce946bca330f077e389c, type: 3}
+  stageBGM: {fileID: 8300000, guid: fe80791184b260147a4771c2cb0cf7fa, type: 3}
+  waves:
+  - enemies:
+    - Enemy_Mutant
+    - Enemy_Mutant
+    - Enemy_Mutant
+  - enemies:
+    - Enemy_EberBird_Boss
+    - Enemy_Eber
+    - Enemy_Eber
