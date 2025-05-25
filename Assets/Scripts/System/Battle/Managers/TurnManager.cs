@@ -32,6 +32,7 @@ namespace TurnBased.Battle.Managers
         public event Action OnRoundChanged;
         public event Action<TurnContext> OnBeforeTurnStart;
         public event Action<TurnContext> OnTurnEnd;
+        public event Action OnTurnCannotStart;
         public event Action OnTurnQueueChanged;
 
         private float _roundRemaining;
@@ -180,22 +181,21 @@ namespace TurnBased.Battle.Managers
                         turnData.AdvanceTurn(first.RemainingTimeToAct);
                     }
                     first.Character.TakeTurn();
-                    first.ResetAV();
-                    bool inserted = false;
-                    for (int i = 0; i < _turnQueue.Count; ++i)
-                    {
-                        if (_turnQueue[i].RemainingTimeToAct > first.RemainingTimeToAct)
-                        {
-                            _turnQueue.Insert(i, new TurnData(first));
-                            inserted = true;
-                            break;
+                    if (!first.Character.IsDead) {
+                        first.ResetAV();
+                        bool inserted = false;
+                        for (int i = 0; i < _turnQueue.Count; ++i) {
+                            if (_turnQueue[i].RemainingTimeToAct > first.RemainingTimeToAct) {
+                                _turnQueue.Insert(i, new TurnData(first));
+                                inserted = true;
+                                break;
+                            }
                         }
+                        if (!inserted) {
+                            _turnQueue.Add(first);
+                        }
+                        _turnQueue = _turnQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
                     }
-                    if (!inserted)
-                    {
-                        _turnQueue.Add(first);
-                    }
-                    _turnQueue = _turnQueue.OrderBy(td => td.RemainingTimeToAct).ToList();
                 }
                 else if (first.Type == TurnType.Ult)
                 {
@@ -275,6 +275,7 @@ namespace TurnBased.Battle.Managers
 
             if (_aliveAlliesCount == 0 || _aliveEnemiesCount == 0)
             {
+                OnTurnCannotStart?.Invoke();
                 yield break;
             }
 

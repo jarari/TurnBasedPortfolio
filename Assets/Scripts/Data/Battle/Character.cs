@@ -47,6 +47,7 @@ namespace TurnBased.Battle {
         public event Action<Character, string, string> OnAnimationEvent;
         public event Action<Character, bool> OnVisibilityChange;
         public event Action<Character, Character, DamageResult> OnDamage;
+        public event Action<Character> OnDeath;
         public event Action<Character, Character, float> OnRestoreHealth;
         public event Action<Character, CharacterState> OnCharacterStateChanged;
 
@@ -97,8 +98,6 @@ namespace TurnBased.Battle {
         /// </summary>
         public virtual void TakeTurn() {
             if (IsDead) {
-                TurnManager.instance.EndTurn();
-                OnTurnEnd?.Invoke(this);
                 return;
             }
 
@@ -185,6 +184,10 @@ namespace TurnBased.Battle {
             }
             else if (argument == "DeathComplete") {
                 CombatManager.instance.NotifyCharacterDeathComplete(this);
+                if (TurnManager.instance.CurrentCharacter == this) {
+                    TurnManager.instance.EndTurn();
+                    OnTurnEnd?.Invoke(this);
+                }
             }
             OnAnimationEvent?.Invoke(this, argument, payload);
         }
@@ -295,6 +298,7 @@ namespace TurnBased.Battle {
             WantState = CharacterState.PrepareDead;
             // 명령대기를 하지 않음을 반환
             WantCmd = false;
+            OnDeath?.Invoke(this);
         }
         /// <summary>
         /// 그로기 준비함수
@@ -373,6 +377,9 @@ namespace TurnBased.Battle {
                                     break;
                                 case ElementType.Quantum:
                                     GetComponent<CharacterBuffSystem>().ApplyBuff("QuantumDOT", attacker);
+                                    break;
+                                case ElementType.Lightning:
+                                    GetComponent<CharacterBuffSystem>().ApplyBuff("ThunderDOT", attacker);
                                     break;
                             }
                         }

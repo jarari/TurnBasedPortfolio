@@ -41,7 +41,7 @@ namespace TurnBased.Battle.Managers {
             }
 
             CombatManager.instance.OnCharacterDeath += HandleCharacterDeath;
-            CombatManager.instance.OnCharacterDeathComplete += HandleCharacterDeathComplete;
+            TurnManager.instance.OnTurnCannotStart += HandleOnTurnCannotStart;
 
             InitializeStage();
         }
@@ -56,7 +56,7 @@ namespace TurnBased.Battle.Managers {
             killer.WantCmd = false;
         }
 
-        private void HandleCharacterDeathComplete(Character c) {
+        private void HandleOnTurnCannotStart() {
             if (_aliveAllyCount == 0) {
                 Debug.Log("전투 실패");                
                 StartCoroutine(FinishBattle(false));       // 실패로 종료   =====
