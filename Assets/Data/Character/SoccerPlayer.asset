@@ -17,7 +17,7 @@ MonoBehaviour:
     <MaxToughness>k__BackingField: 0
     <UseUltThreshold>k__BackingField: 100
     <MaxUltPts>k__BackingField: 100
-    <Attack>k__BackingField: 1742
+    <Attack>k__BackingField: 1242
     <Defense>k__BackingField: 529
     <Speed>k__BackingField: 113
     <CritChance>k__BackingField: 0
@@ -40,8 +40,8 @@ MonoBehaviour:
   CharacterImagePath: Images/Characters/Character1
   CharacterRenderTexturePath: Images/Characters/RenderTexture/C1
   AttributeImagePath: Images/Icons/Attributes/Fire
-  BasicAttackImagePath: 
-  SkillImagePath: 
-  UltimateImagePath: 
-  TalentImagePath: 
+  BasicAttackImagePath: Images/Icons/Soccer/throwing_ball
+  SkillImagePath: Images/Icons/Soccer/kicking_ball
+  UltimateImagePath: Images/Icons/Soccer/kicking_ball
+  TalentImagePath: Images/Icons/Soccer/throwing_ball
   TechniqueImagePath: 

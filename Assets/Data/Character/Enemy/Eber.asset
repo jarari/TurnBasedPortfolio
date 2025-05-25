@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Eber
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 3284
+    <MaxHP>k__BackingField: 7284
     <MaxToughness>k__BackingField: 120
     <UseUltThreshold>k__BackingField: 0
     <MaxUltPts>k__BackingField: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
   ClassName: Enemy_Eber
   Attribute: 
   BreakEffect: 0
-  CharacterImagePath: 
+  CharacterImagePath: Images/Characters/Eber
   CharacterRenderTexturePath: 
   AttributeImagePath: 
   BasicAttackImagePath: 

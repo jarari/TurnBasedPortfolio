@@ -40,8 +40,8 @@ MonoBehaviour:
   CharacterImagePath: Images/Characters/Character4
   CharacterRenderTexturePath: Images/Characters/RenderTexture/C4
   AttributeImagePath: Images/Icons/Attributes/Thunder
-  BasicAttackImagePath: 
-  SkillImagePath: 
-  UltimateImagePath: 
+  BasicAttackImagePath: Images/Icons/MarkerMan/BasicAttack
+  SkillImagePath: Images/Icons/MarkerMan/SkillAttack
+  UltimateImagePath: Images/Icons/MarkerMan/UltiAttack
   TalentImagePath: 
   TechniqueImagePath: 

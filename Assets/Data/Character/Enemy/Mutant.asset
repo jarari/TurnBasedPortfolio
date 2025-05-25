@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Mutant
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 1972
+    <MaxHP>k__BackingField: 2972
     <MaxToughness>k__BackingField: 100
     <UseUltThreshold>k__BackingField: 0
     <MaxUltPts>k__BackingField: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
   ClassName: Enemy_Mutant
   Attribute: 
   BreakEffect: 0
-  CharacterImagePath: 
+  CharacterImagePath: Images/Characters/Mutant
   CharacterRenderTexturePath: 
   AttributeImagePath: 
   BasicAttackImagePath: 

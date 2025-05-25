@@ -37,7 +37,7 @@ MonoBehaviour:
   ClassName: Enemy_EberBird_Boss
   Attribute: 
   BreakEffect: 0
-  CharacterImagePath: 
+  CharacterImagePath: Images/Characters/EberBird
   CharacterRenderTexturePath: 
   AttributeImagePath: 
   BasicAttackImagePath: 

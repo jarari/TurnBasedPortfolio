@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Machine
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 4128
+    <MaxHP>k__BackingField: 6128
     <MaxToughness>k__BackingField: 140
     <UseUltThreshold>k__BackingField: 0
     <MaxUltPts>k__BackingField: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
   ClassName: Enemy_Machine
   Attribute: 
   BreakEffect: 0
-  CharacterImagePath: 
+  CharacterImagePath: Images/Characters/Machine
   CharacterRenderTexturePath: 
   AttributeImagePath: 
   BasicAttackImagePath: 

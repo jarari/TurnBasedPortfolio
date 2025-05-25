@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Y_Bot
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 1542
+    <MaxHP>k__BackingField: 2542
     <MaxToughness>k__BackingField: 80
     <UseUltThreshold>k__BackingField: 0
     <MaxUltPts>k__BackingField: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
   ClassName: Enemy_Y_Bot
   Attribute: 
   BreakEffect: 0
-  CharacterImagePath: 
+  CharacterImagePath: Images/Characters/YBot
   CharacterRenderTexturePath: 
   AttributeImagePath: 
   BasicAttackImagePath: 

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Alien_Soldier
   m_EditorClassIdentifier: 
   stats:
-    <MaxHP>k__BackingField: 1433
-    <MaxToughness>k__BackingField: 80
+    <MaxHP>k__BackingField: 2833
+    <MaxToughness>k__BackingField: 60
     <UseUltThreshold>k__BackingField: 0
     <MaxUltPts>k__BackingField: 0
     <Attack>k__BackingField: 643
@@ -23,7 +23,7 @@ MonoBehaviour:
     <CritChance>k__BackingField: 0
     <CritMult>k__BackingField: 1.5
     <ElementType>k__BackingField: 0
-    <Weakness>k__BackingField: 65
+    <Weakness>k__BackingField: 66
   team: 1
   attackTable:
     normalAttack: {fileID: 11400000, guid: 50050958cabe07f40992e3aa12a2560a, type: 2}
@@ -37,7 +37,7 @@ MonoBehaviour:
   ClassName: Enemy_Alien_Soldier
   Attribute: 
   BreakEffect: 0
-  CharacterImagePath: 
+  CharacterImagePath: Images/Characters/AlienSoldier
   CharacterRenderTexturePath: 
   AttributeImagePath: 
   BasicAttackImagePath: 
