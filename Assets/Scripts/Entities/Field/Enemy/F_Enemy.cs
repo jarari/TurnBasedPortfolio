@@ -212,7 +212,7 @@ namespace TurnBased.Entities.Field {
             phit.Damage();
 
             // 스테이지 데이터에 에너미 이름 추가
-            PrepareWaveData();
+            //PrepareWaveData();
 
             // EncounterManger 에 전투 데이터 전달 + 씬 호출
             EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position, enemyID, this.gameObject);
@@ -275,7 +275,7 @@ namespace TurnBased.Entities.Field {
             anim.SetTrigger("Damage");
 
             // 스테이지 데이터에 에너미 이름 추가
-            PrepareWaveData();
+            //PrepareWaveData();
 
             // EncounterManger 에 전투 데이터 전달 + 씬 호출
             EncounterManager.Instance.StartEncounter(myStageData, cc.gameObject.name, transform.position, enemyID, this.gameObject);
