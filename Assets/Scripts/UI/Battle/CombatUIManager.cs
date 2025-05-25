@@ -40,6 +40,7 @@ public class CombatUIManager : MonoBehaviour
 
     private Camera _mainCamera;
     private List<Transform> _targets = new();
+    private Dictionary<Character, GameObject> _targetSelectorDict = new();
 
     private void Awake()
     {
@@ -133,8 +134,20 @@ public class CombatUIManager : MonoBehaviour
         }
     }
 
+    private void HandleCharacterDeath(Character c) {
+        if (_targetSelectorDict.ContainsKey(c)) {
+            _targetSelectorDict[c].SetActive(false);
+            _targetSelectorDict.Remove(c);
+        }
+        c.OnDeath -= HandleCharacterDeath;
+    }
+
     private void UpdateTargetSelectors() {
         _targets.Clear();
+        foreach (var kvp in _targetSelectorDict) {
+            kvp.Key.OnDeath -= HandleCharacterDeath;
+        }
+        _targetSelectorDict.Clear();
         var targets = TargetManager.instance.GetTargets();
         if (targets.Count == 0) {
             TargetSelectorRoot.SetActive(false);
@@ -150,6 +163,8 @@ public class CombatUIManager : MonoBehaviour
                     if (targets[i] != null && targets[i].Chest != null) {
                         TargetSelectors[i].transform.position = targets[i].Chest.transform.position;
                         _targets.Add(targets[i].Chest);
+                        targets[i].OnDeath += HandleCharacterDeath;
+                        _targetSelectorDict.Add(targets[i], TargetSelectors[i].gameObject);
                     }
                 }
             }
